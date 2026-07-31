@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @dsCard group="Screens" name="1-5 · 通話 テキスト入力" viewport="402x874" subtitle="キーボードに切替。入力欄がせり上がり、像は上に残る" -->
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; background: #0B0A0C; }
+    a { color: #E9B26A; text-decoration: none; }
+    a:hover { color: #F2C88C; }
+    @keyframes lt3-scale { 0%,100% { transform: scale(1) } 50% { transform: scale(1.018) } }
+    @keyframes lt3-drift { 0% { -webkit-mask-position:0 0; mask-position:0 0 } 100% { -webkit-mask-position:38px 58px; mask-position:38px 58px } }
+    @keyframes lt3-blink { 0%,92%,100% { opacity:1 } 95%,97% { opacity:.05 } }
+    @keyframes lt3-caret { 0%,49% { opacity:1 } 50%,100% { opacity:0 } }
+  </style>
+</helmet>
+<div style="width:402px;height:874px;position:relative;overflow:hidden;border-radius:55px;background:#0B0A0C;color:#F5F1EA;font-family:'Zen Kaku Gothic New','Hiragino Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased">
+
+  <div style="position:absolute;inset:0;background:radial-gradient(120% 300px at 50% 0%,rgba(233,178,106,.10) 0%,rgba(233,178,106,0) 62%);pointer-events:none;z-index:1"></div>
+
+  <div style="position:absolute;left:0;right:0;top:-40px;height:640px;z-index:2;filter:blur(3.6px);opacity:.8">
+    <div style="position:absolute;inset:0;transform-origin:50% 82%;animation:lt3-scale 4s ease-in-out infinite">
+      <div style="position:absolute;inset:0;background:radial-gradient(190px 160px at 201px 428px,rgba(245,241,234,.44) 0%,rgba(245,241,234,.30) 56%,rgba(245,241,234,0) 84%),radial-gradient(46px 78px at 201px 300px,rgba(245,241,234,.44) 0%,rgba(245,241,234,.30) 60%,rgba(245,241,234,0) 88%),radial-gradient(100px 118px at 201px 208px,rgba(245,241,234,.42) 0%,rgba(245,241,234,.28) 58%,rgba(245,241,234,0) 84%);-webkit-mask-image:radial-gradient(circle,#000 34%,rgba(0,0,0,0) 36%);mask-image:radial-gradient(circle,#000 34%,rgba(0,0,0,0) 36%);-webkit-mask-size:4.8px 4.8px;mask-size:4.8px 4.8px;animation:lt3-drift 12s linear infinite"></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;top:0;height:210px;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.45) 46%,rgba(0,0,0,0) 100%);pointer-events:none;z-index:10"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;height:440px;background:linear-gradient(0deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.62) 30%,rgba(0,0,0,.45) 52%,rgba(0,0,0,0) 82%);pointer-events:none;z-index:10"></div>
+
+  <div style="position:absolute;top:11px;left:50%;transform:translateX(-50%);width:126px;height:37px;border-radius:19px;background:#000;z-index:40"></div>
+  <div style="position:absolute;top:19px;left:32px;font-size:15px;font-weight:500;z-index:39">10:57</div>
+  <div style="position:absolute;top:22px;right:32px;display:flex;align-items:flex-end;gap:6px;z-index:39">
+    <div style="display:flex;align-items:flex-end;gap:2px">
+      <div style="width:3px;height:5px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:7px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:9px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:11px;border-radius:1px;background:rgba(245,241,234,.38)"></div>
+    </div>
+    <div style="width:24px;height:12px;border-radius:3px;border:1px solid rgba(245,241,234,.5);padding:1.5px;box-sizing:border-box">
+      <div style="width:62%;height:100%;border-radius:1.5px;background:#F5F1EA"></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;top:62px;padding:8px 24px 14px;display:flex;flex-direction:column;gap:10px;z-index:20">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">COUNSELING · 01:12 / 05:00</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:#E9B26A">Q2 / 5</div>
+    </div>
+    <div style="display:flex;gap:4px">
+      <div style="flex:1;height:2px;background:#E9B26A"></div>
+      <div style="flex:1;height:2px;background:#E9B26A"></div>
+      <div style="flex:1;height:2px;background:rgba(255,255,255,.10)"></div>
+      <div style="flex:1;height:2px;background:rgba(255,255,255,.10)"></div>
+      <div style="flex:1;height:2px;background:rgba(255,255,255,.10)"></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;right:20px;top:140px;width:76px;height:100px;border-radius:16px;overflow:hidden;background:#151318;border:1px solid rgba(255,255,255,.10);z-index:22">
+    <image-slot src="" id="onb-self-5" shape="rect" fit="cover" placeholder="自分"></image-slot>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:352px;z-index:24;padding:0 24px;display:flex;flex-direction:column;gap:10px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">AI</div>
+    <div style="font-size:18px;line-height:1.7;color:#F5F1EA;text-wrap:pretty">生まれた日を教えてください。年齢は相手に見えますが、日付は見えません。</div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:290px;z-index:24;padding:0 20px;display:flex;align-items:center;gap:10px">
+    <div style="flex:1;height:52px;border-radius:26px;background:#1E1B22;border:1px solid rgba(255,255,255,.10);display:flex;align-items:center;padding:0 20px;font-size:15px;color:#F5F1EA">1994 年 6 月<span style="display:inline-block;width:2px;height:19px;background:#E9B26A;margin-left:2px;animation:lt3-caret 1s step-end infinite"></span></div>
+    <div style="width:52px;height:52px;border-radius:26px;background:#E9B26A;display:flex;align-items:center;justify-content:center">
+      <div style="width:11px;height:19px;border-radius:6px;background:#0B0A0C"></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:0;height:288px;background:#151318;border-top:1px solid rgba(255,255,255,.10);z-index:26;display:flex;flex-direction:column">
+    <div style="height:42px;display:flex;align-items:center;gap:18px;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.10);font-size:14px;color:rgba(245,241,234,.64)">
+      <div>1994年6月</div>
+      <div style="color:rgba(245,241,234,.38)">1994 年 6 月</div>
+      <div style="color:rgba(245,241,234,.38)">いちきゅうきゅうよん</div>
+    </div>
+    <div style="flex:1;padding:8px 6px;display:grid;grid-template-columns:repeat(5,1fr);grid-auto-rows:1fr;gap:6px">
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(245,241,234,.38)">A/1</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">あ</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">か</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">さ</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(245,241,234,.38)">DEL</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(245,241,234,.38)">全角</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">た</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">な</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">は</div>
+      <div style="border-radius:6px;background:#1E1B22;grid-row:span 2;display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(245,241,234,.64)">空白</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(245,241,234,.38)">あいう</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">ま</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">や</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">ら</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(245,241,234,.38)">記号</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:17px;color:#F5F1EA">゛小゜</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">わ</div>
+      <div style="border-radius:6px;background:#1E1B22;display:flex;align-items:center;justify-content:center;font-size:19px;color:#F5F1EA">、。?</div>
+      <div style="border-radius:6px;background:rgba(233,178,106,.16);border:1px solid #E9B26A;display:flex;align-items:center;justify-content:center;font-size:14px;color:#E9B26A">送信</div>
+    </div>
+    <div style="height:34px"></div>
+  </div>
+
+  <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:140px;height:5px;border-radius:3px;background:rgba(245,241,234,.32);z-index:30"></div>
+</div>
+
+</x-dc>
+</body>
+</html>

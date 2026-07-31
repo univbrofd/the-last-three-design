@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @dsCard group="Screens" name="1-0 · Before / After（チャット → 通話）" viewport="1280x1180" subtitle="バブル廃止・像の full-bleed・字幕化。像のパラメータ分解つき" -->
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body { margin: 0; background: #0B0A0C; }
+    a { color: #E9B26A; text-decoration: none; }
+    a:hover { color: #F2C88C; }
+  </style>
+</helmet>
+<div style="width:1280px;min-height:1180px;box-sizing:border-box;background:#0B0A0C;color:#F5F1EA;font-family:'Zen Kaku Gothic New','Hiragino Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:56px 56px 64px;display:flex;flex-direction:column;gap:40px">
+
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">ONBOARDING · CHAT → CALL</div>
+    <div style="font-family:'Instrument Serif',Georgia,serif;font-size:38px;line-height:1.2;color:#F5F1EA">面接を受けている、5 分。</div>
+    <div style="font-size:15px;line-height:1.7;color:rgba(245,241,234,.64);max-width:620px;text-wrap:pretty">会話ログを読む画面から、相手に見られている画面へ。バブルを全廃し、AI は粒子で結ばれた像として full-bleed で映る。発話は下 1/3 の字幕に落ちる。</div>
+  </div>
+
+  <div style="display:flex;gap:40px;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">BEFORE</div>
+        <div style="font-size:13px;color:rgba(245,241,234,.38)">チャットバブル版</div>
+      </div>
+      <div style="width:402px;height:874px;border-radius:55px;overflow:hidden;border:1px solid rgba(255,255,255,.10);filter:grayscale(.5) contrast(1.02);opacity:.7">
+        <dc-import name="OnboardingChatView" hint-size="402px,874px"></dc-import>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:#E9B26A">AFTER</div>
+        <div style="font-size:13px;color:rgba(245,241,234,.64)">ビデオ通話版 / シーン 2 発話中</div>
+      </div>
+      <div style="width:402px;height:874px;border-radius:55px;overflow:hidden;border:1px solid rgba(255,255,255,.10)">
+        <dc-import name="OnboardingCall_2_Speaking" hint-size="402px,874px"></dc-import>
+      </div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;gap:28px;padding-top:34px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">改善</div>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="padding:14px 0;border-bottom:1px solid rgba(255,255,255,.10);display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:14px;font-weight:500;color:#F5F1EA">バブルと会話ログを全廃</div>
+            <div style="font-size:13px;line-height:1.65;color:rgba(245,241,234,.64)">読み返せる履歴があると「面接」ではなく「やりとり」になる。発話は一度だけ流れて消える字幕へ。</div>
+          </div>
+          <div style="padding:14px 0;border-bottom:1px solid rgba(255,255,255,.10);display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:14px;font-weight:500;color:#F5F1EA">相手が full-bleed、自分は小窓</div>
+            <div style="font-size:13px;line-height:1.65;color:rgba(245,241,234,.64)">画面の 60% 以上を像が占め、見られている側という立場が視覚で決まる。小窓は 96×128 / 角丸 18。</div>
+          </div>
+          <div style="padding:14px 0;border-bottom:1px solid rgba(255,255,255,.10);display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:14px;font-weight:500;color:#F5F1EA">字幕は下 1/3 に固定</div>
+            <div style="font-size:13px;line-height:1.65;color:rgba(245,241,234,.64)">20px / 1.7。行数が増えても顔にかからない。スクリムは下端から立ち上がる規定形。</div>
+          </div>
+          <div style="padding:14px 0;border-bottom:1px solid rgba(255,255,255,.10);display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:14px;font-weight:500;color:#F5F1EA">音声が既定・キーボードは切替</div>
+            <div style="font-size:13px;line-height:1.65;color:rgba(245,241,234,.64)">操作はミュートとキーボードのみ。通話終了ボタンは置かない（離脱導線を作らない）。</div>
+          </div>
+          <div style="padding:14px 0;display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:14px;font-weight:500;color:#F5F1EA">灯りは進捗・選択・CTA だけ</div>
+            <div style="font-size:13px;line-height:1.65;color:rgba(245,241,234,.64)">赤い REC も緑の応答ボタンも使わない。録音中は --text-3 の mono ラベルのみ。</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">像のパラメータ（Flutter は音声振幅で駆動）</div>
+        <div style="border:1px solid rgba(255,255,255,.10);border-radius:18px;background:#151318;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:14px;font-size:13px;line-height:1.6"><div style="width:88px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);padding-top:3px">口</div><div style="color:rgba(245,241,234,.64)">口領域（201, 262 / 30×13・ピッチ 4.2px）の密度 0 → 1。振幅にリニア。閉口時は 0.12 まで残す</div></div>
+          <div style="display:flex;gap:14px;font-size:13px;line-height:1.6"><div style="width:88px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);padding-top:3px">まばたき</div><div style="color:rgba(245,241,234,.64)">目領域の一瞬の消失。5〜8s 間隔・120ms・不透明度 1 → 0.05</div></div>
+          <div style="display:flex;gap:14px;font-size:13px;line-height:1.6"><div style="width:88px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);padding-top:3px">呼吸</div><div style="color:rgba(245,241,234,.64)">像全体を 4s ease-in-out で 1.000 → 1.018 スケール。静止させない</div></div>
+          <div style="display:flex;gap:14px;font-size:13px;line-height:1.6"><div style="width:88px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);padding-top:3px">流れ</div><div style="color:rgba(245,241,234,.64)">粒子の位相を 7〜20s で移動。無形ほど速く、結像するほど止まる</div></div>
+          <div style="display:flex;gap:14px;font-size:13px;line-height:1.6"><div style="width:88px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);padding-top:3px">距離</div><div style="color:rgba(245,241,234,.64)">通常 1.00 / 山場 1.14。山場だけ視線の高さが上がる</div></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">収束の 4 段階（1 体だけ・顔の造作は最後まで描かない）</div>
+        <div style="border:1px solid rgba(255,255,255,.10);border-radius:18px;background:#151318;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:14px;font-size:13px;line-height:1.6"><div style="width:88px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);padding-top:3px">S0 無形</div><div style="color:rgba(245,241,234,.64)">シーン 1。人型を持たない粒子の雲。ピッチ 6.4px / ぼかし 6.5px。声だけの存在</div></div>
+          <div style="display:flex;gap:14px;font-size:13px;line-height:1.6"><div style="width:88px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);padding-top:3px">S1 輪郭</div><div style="color:rgba(245,241,234,.64)">シーン 2・3・5。肩と頭が読める。目はまだ無い。ピッチ 4.8px / ぼかし 3.4px</div></div>
+          <div style="display:flex;gap:14px;font-size:13px;line-height:1.6"><div style="width:88px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);padding-top:3px">S2 半結像</div><div style="color:rgba(245,241,234,.64)">シーン 4。目のあたりの密度が立ち、視線が生まれる。ピッチ 3.6px / ぼかし 1.6px</div></div>
+          <div style="display:flex;gap:14px;font-size:13px;line-height:1.6"><div style="width:88px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);padding-top:3px">S3 結像</div><div style="color:rgba(245,241,234,.64)">シーン 6。最も締まり、一段近づく。ピッチ 2.6px / ぼかし 0.3px</div></div>
+          <div style="display:flex;gap:14px;font-size:13px;line-height:1.6"><div style="width:88px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);padding-top:3px">結晶</div><div style="color:rgba(245,241,234,.64)">シーン 7。像が 300×402 / 角丸 18 のカードに収まり、動きが止まる。灯りは CTA だけ</div></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <div style="height:36px;display:flex;align-items:center;padding:0 14px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:#151318;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">1 入場</div>
+        <div style="height:36px;display:flex;align-items:center;padding:0 14px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:#151318;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">2 発話中</div>
+        <div style="height:36px;display:flex;align-items:center;padding:0 14px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:#151318;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">3 応答待ち</div>
+        <div style="height:36px;display:flex;align-items:center;padding:0 14px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:#151318;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">4 選択肢</div>
+        <div style="height:36px;display:flex;align-items:center;padding:0 14px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:#151318;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">5 テキスト</div>
+        <div style="height:36px;display:flex;align-items:center;padding:0 14px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:#151318;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">6 山場</div>
+        <div style="height:36px;display:flex;align-items:center;padding:0 14px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:#151318;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">7 完了</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>

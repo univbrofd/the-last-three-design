@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @dsCard group="Screens" name="1-1 · 通話 入場" viewport="402x874" subtitle="暗転から像がフェードイン。接続中 → ヒアリング開始" -->
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; background: #0B0A0C; }
+    a { color: #E9B26A; text-decoration: none; }
+    a:hover { color: #F2C88C; }
+    @keyframes lt3-breathe { 0%,100% { opacity:.28 } 50% { opacity:.9 } }
+    @keyframes lt3-scale { 0%,100% { transform: scale(1) } 50% { transform: scale(1.018) } }
+    @keyframes lt3-drift { 0% { -webkit-mask-position:0 0; mask-position:0 0 } 100% { -webkit-mask-position:34px 56px; mask-position:34px 56px } }
+    @keyframes lt3-blink { 0%,92%,100% { opacity:1 } 95%,97% { opacity:.05 } }
+    @keyframes lt3-in { 0% { opacity:0; filter:blur(18px) } 100% { opacity:1; filter:blur(6.5px) } }
+  </style>
+</helmet>
+<div style="width:402px;height:874px;position:relative;overflow:hidden;border-radius:55px;background:#0B0A0C;color:#F5F1EA;font-family:'Zen Kaku Gothic New','Hiragino Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased">
+
+  <div style="position:absolute;inset:0;background:radial-gradient(120% 300px at 50% 0%,rgba(233,178,106,.10) 0%,rgba(233,178,106,0) 62%);pointer-events:none;z-index:1"></div>
+
+  <div style="position:absolute;left:0;right:0;top:84px;height:640px;z-index:2;animation:lt3-in 2.4s ease-out both">
+    <div style="position:absolute;inset:0;transform-origin:50% 82%;animation:lt3-scale 4s ease-in-out infinite">
+      <div style="position:absolute;inset:0;background:radial-gradient(206px 224px at 201px 336px,rgba(245,241,234,.26) 0%,rgba(245,241,234,.14) 52%,rgba(245,241,234,0) 84%),radial-gradient(126px 146px at 138px 246px,rgba(245,241,234,.16) 0%,rgba(245,241,234,0) 80%),radial-gradient(148px 126px at 268px 432px,rgba(245,241,234,.16) 0%,rgba(245,241,234,0) 80%);-webkit-mask-image:radial-gradient(circle,#000 30%,rgba(0,0,0,0) 32%);mask-image:radial-gradient(circle,#000 30%,rgba(0,0,0,0) 32%);-webkit-mask-size:6.4px 6.4px;mask-size:6.4px 6.4px;animation:lt3-drift 7s linear infinite"></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;top:0;height:210px;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.45) 46%,rgba(0,0,0,0) 100%);pointer-events:none;z-index:10"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;height:340px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 34%,rgba(0,0,0,0) 68%);pointer-events:none;z-index:10"></div>
+
+  <div style="position:absolute;top:11px;left:50%;transform:translateX(-50%);width:126px;height:37px;border-radius:19px;background:#000;z-index:40"></div>
+  <div style="position:absolute;top:19px;left:32px;font-size:15px;font-weight:500;z-index:39">10:57</div>
+  <div style="position:absolute;top:22px;right:32px;display:flex;align-items:flex-end;gap:6px;z-index:39">
+    <div style="display:flex;align-items:flex-end;gap:2px">
+      <div style="width:3px;height:5px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:7px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:9px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:11px;border-radius:1px;background:rgba(245,241,234,.38)"></div>
+    </div>
+    <div style="width:24px;height:12px;border-radius:3px;border:1px solid rgba(245,241,234,.5);padding:1.5px;box-sizing:border-box">
+      <div style="width:62%;height:100%;border-radius:1.5px;background:#F5F1EA"></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;top:62px;padding:8px 24px 14px;display:flex;flex-direction:column;gap:10px;z-index:20">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">COUNSELING · 00:03 / 05:00</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">Q1 / 5</div>
+    </div>
+    <div style="display:flex;gap:4px">
+      <div style="flex:1;height:2px;background:rgba(255,255,255,.10)"></div>
+      <div style="flex:1;height:2px;background:rgba(255,255,255,.10)"></div>
+      <div style="flex:1;height:2px;background:rgba(255,255,255,.10)"></div>
+      <div style="flex:1;height:2px;background:rgba(255,255,255,.10)"></div>
+      <div style="flex:1;height:2px;background:rgba(255,255,255,.10)"></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;right:20px;top:140px;width:96px;height:128px;border-radius:18px;overflow:hidden;background:#151318;border:1px solid rgba(255,255,255,.10);z-index:22;opacity:.45">
+    <image-slot src="" id="onb-self-1" shape="rect" fit="cover" placeholder="自分（インカメラ）"></image-slot>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:34px;z-index:24;padding:0 24px 22px;display:flex;flex-direction:column;gap:26px">
+    <div style="display:flex;flex-direction:column;gap:14px;min-height:120px;justify-content:flex-end">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:5px;height:5px;border-radius:50%;background:rgba(245,241,234,.38);animation:lt3-breathe 2.4s ease-in-out infinite"></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">CONNECTING</div>
+      </div>
+      <div style="font-size:20px;line-height:1.7;color:rgba(245,241,234,.64);text-wrap:pretty">まだ姿はありません。5 分だけ、話を聞かせてください。</div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:center;gap:22px">
+      <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;opacity:.4">
+        <div style="width:20px;height:14px;border:1.6px solid rgba(245,241,234,.38);border-radius:4px"></div>
+      </div>
+      <div style="width:64px;height:64px;border-radius:32px;background:#1E1B22;border:1px solid rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;opacity:.4">
+        <div style="width:12px;height:20px;border-radius:6px;background:rgba(245,241,234,.38)"></div>
+      </div>
+      <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;opacity:.4">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="width:20px;height:2px;background:rgba(245,241,234,.38)"></div>
+          <div style="width:20px;height:2px;background:rgba(245,241,234,.38)"></div>
+          <div style="width:20px;height:2px;background:rgba(245,241,234,.38)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:140px;height:5px;border-radius:3px;background:rgba(245,241,234,.32);z-index:30"></div>
+</div>
+
+</x-dc>
+</body>
+</html>

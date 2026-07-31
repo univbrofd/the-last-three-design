@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @dsCard group="Screens" name="1 · OnboardingCallView 一覧" viewport="1848x2100" subtitle="7 シーン + Before/After のまとめ（bundle 用）" -->
+<helmet>
+  <meta name="design_doc_mode" content="canvas" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body { margin: 0; background: #0B0A0C; }
+    a { color: #E9B26A; text-decoration: none; }
+    a:hover { color: #F2C88C; }
+  </style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#0B0A0C"/><circle cx="60" cy="48" r="16" fill="#F5F1EA" opacity="0.5"/><path d="M30 96c0-16 13.4-26 30-26s30 10 30 26z" fill="#F5F1EA" opacity="0.35"/><rect x="30" y="103" width="60" height="3" rx="1.5" fill="#E9B26A"/></svg></template>
+<div style="width:1848px;box-sizing:border-box;background:#0B0A0C;color:#F5F1EA;font-family:'Zen Kaku Gothic New','Hiragino Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:64px 56px 80px;display:flex;flex-direction:column;gap:56px">
+
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">THE LAST THREE · ONBOARDING CALL VIEW</div>
+    <div style="font-family:'Instrument Serif',Georgia,serif;font-size:44px;line-height:1.2;color:#F5F1EA">登録ヒアリングを、通話にする。</div>
+    <div style="font-size:15px;line-height:1.7;color:rgba(245,241,234,.64);max-width:700px;text-wrap:pretty">チャットバブルを全廃。画面に映るのは 1 体だけ。最初は形のない粒子の集まりで、答えるほど収束し、最後にカードとして結晶する。灯りは進捗・選択・CTA だけに点く。</div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:40px">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">1 · 入場 / S0 無形</div>
+      <div style="width:402px;height:874px;border-radius:55px;overflow:hidden;border:1px solid rgba(255,255,255,.10)"><dc-import name="OnboardingCall_1_Enter" hint-size="402px,874px"></dc-import></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">2 · AI 発話中 / S1 輪郭</div>
+      <div style="width:402px;height:874px;border-radius:55px;overflow:hidden;border:1px solid rgba(255,255,255,.10)"><dc-import name="OnboardingCall_2_Speaking" hint-size="402px,874px"></dc-import></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">3 · 応答待ち / S1 輪郭</div>
+      <div style="width:402px;height:874px;border-radius:55px;overflow:hidden;border:1px solid rgba(255,255,255,.10)"><dc-import name="OnboardingCall_3_Listening" hint-size="402px,874px"></dc-import></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">4 · 選択肢提示 / S2 半結像</div>
+      <div style="width:402px;height:874px;border-radius:55px;overflow:hidden;border:1px solid rgba(255,255,255,.10)"><dc-import name="OnboardingCall_4_Choices" hint-size="402px,874px"></dc-import></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">5 · テキスト入力 / S1 輪郭</div>
+      <div style="width:402px;height:874px;border-radius:55px;overflow:hidden;border:1px solid rgba(255,255,255,.10)"><dc-import name="OnboardingCall_5_Keyboard" hint-size="402px,874px"></dc-import></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:#E9B26A">6 · 山場 / S3 結像</div>
+      <div style="width:402px;height:874px;border-radius:55px;overflow:hidden;border:1px solid rgba(255,255,255,.10)"><dc-import name="OnboardingCall_6_Climax" hint-size="402px,874px"></dc-import></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">7 · 完了 / 結晶</div>
+      <div style="width:402px;height:874px;border-radius:55px;overflow:hidden;border:1px solid rgba(255,255,255,.10)"><dc-import name="OnboardingCall_7_Complete" hint-size="402px,874px"></dc-import></div>
+    </div>
+  </div>
+
+  <div style="height:1px;background:rgba(255,255,255,.10)"></div>
+
+  <dc-import name="OnboardingCall_0_BeforeAfter" hint-size="1280px,1180px"></dc-import>
+</div>
+
+</x-dc>
+</body>
+</html>
