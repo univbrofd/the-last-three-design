@@ -1,0 +1,65 @@
+/* ============================================================================
+   THE LAST THREE DESIGN SYSTEM — Color & Type tokens (v0.1 確定)
+   Source of truth: この repo が色の canonical。Flutter 側
+   lib/component/ui/resource/DesignColors/DesignColors.dart がこれを鏡写しする。
+   ブランド: 暗い部屋に、三つだけ灯りがある。写真が主役、UI は縁に徹する。
+   アクセントは提灯色 --primary 1 色のみ。危機は赤ではなく退色で表す。
+   ========================================================================== */
+
+/* ---- Webfonts -------------------------------------------------------------
+   Instrument Serif = ブランド／数字（喪失の時間）
+   Zen Kaku Gothic New = UI 日本語 / IBM Plex Mono = メタラベル */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  /* === BASE ============================================================= */
+  --black: #000000;
+  --white: #ffffff;
+
+  /* ======================================================================
+     ROLE TOKENS — コンポーネントは必ずこの役割トークンを使う。
+     直値・Material 定数色は使わない。
+     ====================================================================== */
+  /* 面 */
+  --bg:             #0B0A0C; /* 画面地。ほぼ黒、わずかに紫寄りの冷たさ */
+  --surface:        #151318; /* カード・シート */
+  --surface-raised: #1E1B22; /* 入力欄・チップ・モーダル */
+  --surface-input:  #1E1B22; /* = surface-raised（旧トークン互換） */
+  /* Borders */
+  --border:          rgba(255, 255, 255, 0.10); /* 1px ヘアラインのみ。太い枠は使わない */
+  --border-hairline: rgba(255, 255, 255, 0.10);
+
+  /* 灯り（唯一のアクセント。埋まった枠 / 絆 / CTA / 通知のみ） */
+  --primary:    #E9B26A;
+  --on-primary: #0B0A0C;
+
+  /* 文字 */
+  --text-1:        #F5F1EA;                   /* 見出し・本文 */
+  --text-2:        rgba(245, 241, 234, 0.64); /* 補助・キャプション */
+  --text-3:        rgba(245, 241, 234, 0.38); /* メタ・非活性 */
+  --text-disabled: rgba(245, 241, 234, 0.38); /* = text-3（非活性は色替えで表す） */
+
+  /* 写真上の可読性の下限。これより薄いスクリムで文字を置かない */
+  --scrim-min: rgba(0, 0, 0, 0.45);
+
+  /* State — 赤・緑のセマンティックカラーは使わない（危機 = 退色で表す） */
+
+  /* === TYPE ============================================================= */
+  --font-brand: 'Instrument Serif', Georgia, serif;
+  --font-ui:    'Zen Kaku Gothic New', 'Hiragino Sans', system-ui, sans-serif;
+  --font-meta:  'IBM Plex Mono', ui-monospace, monospace;
+  /* 旧エイリアス */
+  --font-latin: var(--font-brand);
+  --font-jp:    var(--font-ui);
+
+  --type-display: 400 34px/1.15 var(--font-brand);
+  --type-title:   700 20px/1.4  var(--font-ui);
+  --type-body:    400 15px/1.65 var(--font-ui);
+  --type-caption: 400 13px/1.5  var(--font-ui);
+  --type-meta:    500 10px/1.2  var(--font-meta); /* letter-spacing: .16em; 常に大文字 */
+  --type-count:   400 40px/1    var(--font-brand); /* font-variant-numeric: tabular-nums */
+
+  /* legacy aliases (card.css 互換) */
+  --fg-2: var(--text-2);
+  --fg-3: var(--text-3);
+}

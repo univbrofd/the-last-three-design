@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @dsCard group="Prototype" name="プロトタイプ（3 人マッチ済み）" viewport="402x874" subtitle="3 枠すべて埋まった日常状態から開始。タイムライン・いいね・リプライを操作可能" -->
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; background: #0B0A0C; }
+    a { color: #E9B26A; text-decoration: none; }
+    a:hover { color: #F2C88C; }
+    @keyframes lt3-breathe { 0%,100% { opacity: .28 } 50% { opacity: .9 } }
+    @keyframes lt3-ring { 0% { transform: scale(.72); opacity: .55 } 100% { transform: scale(1.5); opacity: 0 } }
+    @keyframes lt3-in { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+    @keyframes lt3-drop { from { opacity: 0; transform: translateY(-14px) } to { opacity: 1; transform: none } }
+    input::placeholder { color: rgba(245,241,234,.38); }
+  </style>
+</helmet>
+<div style="width:402px;height:874px;position:relative;overflow:hidden;border-radius:55px;background:#0B0A0C;color:#F5F1EA;font-family:'Zen Kaku Gothic New','Hiragino Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;user-select:none">
+
+  <div style="position:absolute;top:11px;left:50%;transform:translateX(-50%);width:126px;height:37px;border-radius:19px;background:#000;z-index:40"></div>
+  <div style="position:absolute;top:19px;left:32px;font-size:15px;font-weight:500;z-index:39">10:57</div>
+  <div style="position:absolute;top:22px;right:32px;display:flex;align-items:flex-end;gap:6px;z-index:39">
+    <div style="display:flex;align-items:flex-end;gap:2px">
+      <div style="width:3px;height:5px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:7px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:9px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:11px;border-radius:1px;background:rgba(245,241,234,.38)"></div>
+    </div>
+    <div style="width:24px;height:12px;border-radius:3px;border:1px solid rgba(245,241,234,.5);padding:1.5px;box-sizing:border-box">
+      <div style="width:62%;height:100%;border-radius:1.5px;background:#F5F1EA"></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;top:59px;bottom:34px;display:flex;flex-direction:column">
+
+    <sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="position:absolute;left:0;right:0;top:-59px;height:300px;background:radial-gradient(120% 62% at 50% 0%,rgba(233,178,106,.10) 0%,rgba(233,178,106,0) 62%);pointer-events:none"></div>
+        <div style="padding:8px 24px 14px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">COUNSELING · 5 MIN</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:#E9B26A">{{ qLabel }}</div>
+          </div>
+          <div style="height:2px;background:rgba(255,255,255,.10)">
+            <div style="height:100%;background:#E9B26A;transition:width 500ms ease;width:{{ progressPct }}"></div>
+          </div>
+        </div>
+        <div ref="{{ chatRef }}" style="flex:1;overflow-y:auto;padding:6px 24px 12px;display:flex;flex-direction:column;gap:18px;min-height:0">
+          <sc-for list="{{ messages }}" as="m" hint-placeholder-count="2">
+            <div>
+              <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;justify-content:flex-end;animation:lt3-in 240ms ease">
+                  <div style="max-width:74%;background:#1E1B22;border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:15px;line-height:1.6;color:rgba(245,241,234,.86)">{{ m.text }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ m.isAi }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:8px;animation:lt3-in 240ms ease">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.38)">AI</div>
+                  <div style="font-size:16px;line-height:1.75;color:#F5F1EA;text-wrap:pretty">{{ m.text }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ m.isHighlight }}" hint-placeholder-val="{{ false }}">
+                <div style="border:1px solid rgba(233,178,106,.34);border-radius:20px;background:#151318;padding:20px 20px 22px;display:flex;flex-direction:column;gap:14px;animation:lt3-in 340ms ease">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <div style="width:5px;height:5px;border-radius:50%;background:#E9B26A;animation:lt3-breathe 4s ease-in-out infinite"></div>
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:#E9B26A">THE ONE THAT MATTERS</div>
+                  </div>
+                  <div style="font-family:'Instrument Serif',Georgia,serif;font-size:26px;line-height:1.35;text-wrap:pretty">{{ m.text }}</div>
+                  <div style="font-size:13.5px;line-height:1.7;color:rgba(245,241,234,.64)">好きなものより、これが合うかどうかで決まります。答えは誰にも公開されません。</div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{ typing }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:6px;padding-left:2px">
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(245,241,234,.38);animation:lt3-breathe 1.4s ease-in-out infinite"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(245,241,234,.38);animation:lt3-breathe 1.4s ease-in-out .2s infinite"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(245,241,234,.38);animation:lt3-breathe 1.4s ease-in-out .4s infinite"></div>
+            </div>
+          </sc-if>
+        </div>
+        <div style="padding:0 20px 6px;display:flex;flex-direction:column;gap:8px">
+          <sc-if value="{{ showChips }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;animation:lt3-in 240ms ease">
+              <sc-for list="{{ chips }}" as="c" hint-placeholder-count="3">
+                <div onClick="{{ c.pick }}" style="height:44px;display:flex;align-items:center;padding:0 16px;border-radius:22px;border:1px solid rgba(255,255,255,.10);background:#151318;font-size:14px;color:rgba(245,241,234,.72);cursor:pointer" style-hover="border-color:rgba(233,178,106,.5);color:#F5F1EA" style-active="transform:scale(.97)">{{ c.label }}</div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ onboardingDone }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ goWaiting }}" style="height:52px;border-radius:26px;background:#E9B26A;color:#0B0A0C;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;animation:lt3-in 340ms ease" style-active="transform:scale(.98)">待機をはじめる</div>
+          </sc-if>
+          <div style="display:flex;align-items:center;gap:10px;padding-top:4px">
+            <div style="flex:1;height:52px;border-radius:26px;background:#1E1B22;border:1px solid rgba(255,255,255,.10);display:flex;align-items:center;padding:0 20px;font-size:15px;color:rgba(245,241,234,.38)">話す、または打つ</div>
+            <div style="width:52px;height:52px;border-radius:26px;background:#E9B26A;display:flex;align-items:center;justify-content:center;flex:none">
+              <div style="width:11px;height:19px;border-radius:6px;background:#0B0A0C"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isWaiting }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="height:52px;display:flex;align-items:center;justify-content:center">
+          <div style="font-family:'Instrument Serif',Georgia,serif;font-size:19px;color:rgba(245,241,234,.64)">the last three</div>
+        </div>
+        <sc-if value="{{ notif }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:0 16px;animation:lt3-drop 420ms cubic-bezier(.2,.8,.2,1)">
+            <div onClick="{{ openSlot }}" style="border-radius:20px;background:rgba(30,27,34,.92);border:1px solid rgba(233,178,106,.34);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer" style-active="transform:scale(.99)">
+              <div style="width:34px;height:34px;border-radius:9px;background:#E9B26A;display:flex;align-items:center;justify-content:center;flex:none">
+                <div style="font-family:'Instrument Serif',Georgia,serif;font-size:17px;color:#0B0A0C;line-height:1">3</div>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.38)">THE LAST THREE</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:rgba(245,241,234,.38)">now</div>
+                </div>
+                <div style="font-size:14.5px;font-weight:700;margin-top:3px">1 枠が埋まりました</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div style="position:relative;width:184px;height:184px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;width:184px;height:184px;border-radius:50%;border:1px solid rgba(233,178,106,.45);animation:lt3-ring 4.4s ease-out infinite"></div>
+            <div style="position:absolute;width:184px;height:184px;border-radius:50%;border:1px solid rgba(233,178,106,.45);animation:lt3-ring 4.4s ease-out 1.5s infinite"></div>
+            <div style="position:absolute;width:184px;height:184px;border-radius:50%;border:1px solid rgba(233,178,106,.45);animation:lt3-ring 4.4s ease-out 3s infinite"></div>
+            <div style="width:9px;height:9px;border-radius:50%;background:#E9B26A;animation:lt3-breathe 4.4s ease-in-out infinite"></div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);margin-top:14px">SEARCHING</div>
+          <div style="font-size:17px;margin-top:12px">AI が、あなたに向く人を探しています</div>
+          <div style="font-size:13px;line-height:1.7;margin-top:8px;color:rgba(245,241,234,.38);text-align:center;max-width:250px;text-wrap:pretty">自分から探すことはできません。見つかったときだけ、ここに届きます。</div>
+        </div>
+        <div style="padding:0 16px 12px;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 4px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">YOUR THREE</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:#E9B26A">{{ slotCount }}</div>
+          </div>
+          <sc-if value="{{ notif }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ openSlot }}" style="position:relative;height:96px;border-radius:18px;overflow:hidden;border:1px solid rgba(233,178,106,.42);background:linear-gradient(180deg,#2a2114 0%,#151318 100%);display:flex;align-items:center;justify-content:space-between;padding:0 18px;cursor:pointer;animation:lt3-in 420ms ease" style-active="transform:scale(.99)">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:#E9B26A">UNOPENED</div>
+                <div style="font-size:16px;font-weight:700">この人が、選ばれました</div>
+                <div style="font-size:12px;color:rgba(245,241,234,.38)">開くと 24 時間の絆がはじまります</div>
+              </div>
+              <div style="height:44px;padding:0 20px;border-radius:22px;background:#E9B26A;color:#0B0A0C;font-size:14px;font-weight:700;display:flex;align-items:center;flex:none">開く</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ notifNot }}" hint-placeholder-val="{{ true }}">
+            <div style="height:62px;border-radius:18px;border:1px dashed rgba(255,255,255,.14);display:flex;align-items:center;padding:0 18px;gap:12px">
+              <div style="width:8px;height:8px;border-radius:50%;border:1px solid rgba(245,241,234,.38)"></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(245,241,234,.38)">EMPTY — AI が探しています</div>
+            </div>
+          </sc-if>
+          <div style="height:62px;border-radius:18px;border:1px dashed rgba(255,255,255,.14);display:flex;align-items:center;padding:0 18px;gap:12px">
+            <div style="width:8px;height:8px;border-radius:50%;border:1px solid rgba(245,241,234,.38)"></div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(245,241,234,.38)">EMPTY — AI が探しています</div>
+          </div>
+          <div style="height:62px;border-radius:18px;border:1px dashed rgba(255,255,255,.14);display:flex;align-items:center;padding:0 18px;gap:12px">
+            <div style="width:8px;height:8px;border-radius:50%;border:1px solid rgba(245,241,234,.38)"></div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(245,241,234,.38)">EMPTY — AI が探しています</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMain }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="flex:1;display:flex;flex-direction:column;gap:0;min-height:0">
+          <sc-for list="{{ people }}" as="p" hint-placeholder-count="3">
+            <div onClick="{{ p.open }}" style="flex:1;position:relative;overflow:hidden;background:#151318;cursor:pointer" style-active="transform:scale(.995)">
+              <div style="position:absolute;inset:0;transition:filter 800ms ease;filter:{{ p.filter }}">
+                <video src="{{ p.video }}" autoPlay muted loop playsInline onCanPlay="{{ vidReady }}" onTimeUpdate="{{ clipLoop }}" style="width:100%;height:100%;object-fit:cover;display:block"></video>
+              </div>
+              <div style="position:absolute;left:0;right:0;top:0;height:74px;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+              <div style="position:absolute;left:0;right:0;bottom:0;height:104px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 40%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+              <div style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:9px">
+                <div onClick="{{ p.openProfile }}" style="width:28px;height:28px;border-radius:50%;background:#3A2E20;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',Georgia,serif;font-size:14px;color:{{ p.ring }};cursor:pointer" style-active="transform:scale(.92)">{{ p.initial }}</div>
+                <div style="font-size:15px;font-weight:700">{{ p.name }}</div>
+              </div>
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;padding:0 24px"><div style="background:rgba(0,0,0,.55);border-radius:12px;padding:9px 14px;text-align:center;max-width:86%">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.64)">{{ p.theme }}</div>
+                <div style="font-size:14px;margin-top:5px">{{ p.caption }}</div>
+              </div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex:none;height:66px;border-top:1px solid rgba(255,255,255,.10);background:#0B0A0C;display:flex;align-items:center;justify-content:space-around">
+          <div onClick="{{ goMain }}" style="width:64px;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer" style-active="opacity:.6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1v-8Z" stroke="{{ homeColor }}" stroke-width="1.7" stroke-linejoin="round"></path></svg>
+          </div>
+          <div style="position:relative;flex:none;margin-bottom:4px">
+            <sc-if value="{{ camActive }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ camTap }}" style="position:absolute;bottom:64px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#151318;border:1px solid rgba(233,178,106,.42);border-radius:14px;padding:9px 14px;text-align:center;cursor:pointer;animation:lt3-in 340ms ease" style-active="transform:translateX(-50%) scale(.97)">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;color:#E9B26A">TODAY'S THEME</div>
+                <div style="font-size:13.5px;font-weight:700;margin-top:3px">平日の昼ごはん</div>
+                <div style="position:absolute;left:50%;bottom:-5px;width:9px;height:9px;transform:translateX(-50%) rotate(45deg);background:#151318;border-right:1px solid rgba(233,178,106,.42);border-bottom:1px solid rgba(233,178,106,.42)"></div>
+              </div>
+            </sc-if>
+            <div onClick="{{ camTap }}" style="width:54px;height:54px;border-radius:27px;background:{{ camBg }};display:flex;align-items:center;justify-content:center;cursor:pointer" style-active="transform:scale(.94)">
+              <div style="width:21px;height:16px;border:1.7px solid {{ camFg }};border-radius:4px;display:flex;align-items:center;justify-content:center">
+                <div style="width:7px;height:7px;border-radius:50%;border:1.5px solid {{ camFg }}"></div>
+              </div>
+            </div>
+          </div>
+          <div onClick="{{ openMyProfile }}" style="width:64px;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer" style-active="opacity:.6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="{{ profColor }}" stroke-width="1.7"></circle><path d="M5.5 19c1.4-3 4-4.4 6.5-4.4s5.1 1.4 6.5 4.4" stroke="{{ profColor }}" stroke-width="1.7" stroke-linecap="round"></path></svg>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMyProfile }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="height:52px;display:flex;align-items:center;justify-content:center;flex:none">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">MY PROFILE</div>
+        </div>
+        <div style="flex:1;overflow-y:auto;min-height:0;padding:12px 16px 20px;display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div style="width:96px;height:96px;flex:none">
+              <image-slot id="my-icon" shape="circle" placeholder="アイコン"></image-slot>
+            </div>
+            <div style="font-size:20px;font-weight:700">ユキ</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(245,241,234,.64)">31歳 · 東京 · 中野</div>
+          </div>
+          <div style="border-radius:18px;background:#151318;border:1px solid rgba(233,178,106,.24);padding:16px 18px 18px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:#E9B26A">恋愛観</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(245,241,234,.38);cursor:pointer">編集</div>
+            </div>
+            <div style="font-size:15px;line-height:1.8;margin-top:8px;text-wrap:pretty">同じテンポで暮らせる人。無理に話さなくても平気な関係がいい。</div>
+          </div>
+          <div style="border-radius:18px;background:#151318;border:1px solid rgba(255,255,255,.08);overflow:hidden;display:flex;flex-direction:column">
+            <sc-for list="{{ myRows }}" as="r" hint-placeholder-count="6">
+              <div style="height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer" style-active="background:#1E1B22">
+                <div style="font-size:13.5px;color:rgba(245,241,234,.64)">{{ r.k }}</div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="font-size:14px;font-weight:500">{{ r.v }}</div>
+                  <div style="width:7px;height:7px;border-right:1.4px solid rgba(245,241,234,.38);border-top:1.4px solid rgba(245,241,234,.38);transform:rotate(45deg)"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="flex:none;height:66px;border-top:1px solid rgba(255,255,255,.10);background:#0B0A0C;display:flex;align-items:center;justify-content:space-around">
+          <div onClick="{{ goMain }}" style="width:64px;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer" style-active="opacity:.6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1v-8Z" stroke="{{ homeColor }}" stroke-width="1.7" stroke-linejoin="round"></path></svg>
+          </div>
+          <div style="position:relative;flex:none;margin-bottom:4px">
+            <sc-if value="{{ camActive }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ camTap }}" style="position:absolute;bottom:64px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#151318;border:1px solid rgba(233,178,106,.42);border-radius:14px;padding:9px 14px;text-align:center;cursor:pointer;animation:lt3-in 340ms ease" style-active="transform:translateX(-50%) scale(.97)">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;color:#E9B26A">TODAY'S THEME</div>
+                <div style="font-size:13.5px;font-weight:700;margin-top:3px">平日の昼ごはん</div>
+                <div style="position:absolute;left:50%;bottom:-5px;width:9px;height:9px;transform:translateX(-50%) rotate(45deg);background:#151318;border-right:1px solid rgba(233,178,106,.42);border-bottom:1px solid rgba(233,178,106,.42)"></div>
+              </div>
+            </sc-if>
+            <div onClick="{{ camTap }}" style="width:54px;height:54px;border-radius:27px;background:{{ camBg }};display:flex;align-items:center;justify-content:center;cursor:pointer" style-active="transform:scale(.94)">
+              <div style="width:21px;height:16px;border:1.7px solid {{ camFg }};border-radius:4px;display:flex;align-items:center;justify-content:center">
+                <div style="width:7px;height:7px;border-radius:50%;border:1.5px solid {{ camFg }}"></div>
+              </div>
+            </div>
+          </div>
+          <div onClick="{{ openMyProfile }}" style="width:64px;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer" style-active="opacity:.6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="{{ profColor }}" stroke-width="1.7"></circle><path d="M5.5 19c1.4-3 4-4.4 6.5-4.4s5.1 1.4 6.5 4.4" stroke="{{ profColor }}" stroke-width="1.7" stroke-linecap="round"></path></svg>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCamera }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:0;right:0;top:-59px;bottom:-34px;animation:lt3-in 240ms ease;background:#000;z-index:30">
+        <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-58%);aspect-ratio:16/9;overflow:hidden">
+          <video src="{{ camVideo }}" autoPlay muted loop playsInline onCanPlay="{{ vidReady }}" onTimeUpdate="{{ clipLoop }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+          <div style="position:absolute;right:8px;bottom:6px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;color:rgba(245,241,234,.6);pointer-events:none">16:9</div>
+        </div>
+        <div style="position:absolute;left:0;right:0;top:0;height:110px;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:190px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 50%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+        <div onClick="{{ closeCamera }}" style="position:absolute;left:12px;top:67px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:22px;color:#F5F1EA;z-index:2" style-active="opacity:.6">×</div>
+        <div style="position:absolute;left:0;right:0;top:75px;display:flex;justify-content:center;pointer-events:none">
+          <div style="background:rgba(0,0,0,.55);border-radius:12px;padding:7px 14px;text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;color:#E9B26A">TODAY'S THEME</div>
+            <div style="font-size:14px;font-weight:700;margin-top:2px">平日の昼ごはん</div>
+          </div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:60px;display:flex;flex-direction:column;align-items:center;gap:12px">
+          <sc-if value="{{ rec }}" hint-placeholder-val="{{ false }}">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:#E9B26A">● REC {{ recLabel }}</div>
+          </sc-if>
+          <div onClick="{{ startRec }}" style="width:76px;height:76px;border-radius:50%;border:4px solid {{ recRing }};display:flex;align-items:center;justify-content:center;cursor:pointer" style-active="transform:scale(.95)">
+            <div style="width:58px;height:58px;border-radius:50%;background:{{ recCore }};transition:all 200ms ease"></div>
+          </div>
+          <div style="width:180px;height:2px;background:rgba(255,255,255,.18);border-radius:1px">
+            <div style="height:100%;background:#E9B26A;border-radius:1px;width:{{ recPct }}"></div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCompose }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none">
+          <div onClick="{{ openCamera }}" style="height:44px;display:flex;align-items:center;gap:8px;cursor:pointer;padding:0 4px" style-active="opacity:.6">
+            <div style="width:10px;height:10px;border-left:1.6px solid #F5F1EA;border-bottom:1.6px solid #F5F1EA;transform:rotate(45deg)"></div>
+            <div style="font-size:14px;color:rgba(245,241,234,.64)">撮り直す</div>
+          </div>
+        </div>
+        <div style="flex:1;position:relative;min-height:0;display:flex;align-items:center">
+          <div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#151318">
+          <video src="{{ camVideo }}" autoPlay muted loop playsInline onCanPlay="{{ vidReady }}" onTimeUpdate="{{ clipLoop }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;padding:0 24px">
+            <sc-if value="{{ hasPostText }}" hint-placeholder-val="{{ false }}">
+              <div style="background:rgba(0,0,0,.55);border-radius:12px;padding:9px 14px;text-align:center;max-width:86%">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.64)">月曜 10:57</div>
+                <div style="font-size:14px;margin-top:5px">{{ postText }}</div>
+              </div>
+            </sc-if>
+          </div>
+          </div>
+        </div>
+        <div style="padding:12px 14px 8px;display:flex;flex-direction:column;gap:10px;flex:none">
+          <input value="{{ postText }}" onChange="{{ onPostText }}" placeholder="ひとことを添える（そのまま動画に載ります）" style="height:48px;border-radius:24px;background:#1E1B22;border:1px solid rgba(255,255,255,.10);padding:0 18px;font-size:14.5px;color:#F5F1EA;outline:none;font-family:inherit;box-sizing:border-box" />
+          <div onClick="{{ post }}" style="height:52px;border-radius:26px;background:#E9B26A;color:#0B0A0C;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer" style-active="transform:scale(.98)">投稿する</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.10);flex:none">
+          <div onClick="{{ closeProfile }}" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer" style-active="opacity:.6">
+            <div style="width:11px;height:11px;border-left:1.6px solid #F5F1EA;border-bottom:1.6px solid #F5F1EA;transform:rotate(45deg);margin-left:4px"></div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">PROFILE</div>
+          <div style="width:44px;flex:none"></div>
+        </div>
+        <div style="flex:1;overflow-y:auto;min-height:0;padding:20px 16px 24px;display:flex;flex-direction:column;gap:20px">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:64px;height:64px;border-radius:50%;background:#3A2E20;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',Georgia,serif;font-size:28px;color:{{ profRing }};flex:none">{{ profInitial }}</div>
+            <div style="min-width:0">
+              <div style="font-size:22px;font-weight:700">{{ profName }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(245,241,234,.64);margin-top:4px">{{ profMeta }}</div>
+            </div>
+          </div>
+          <div style="border-radius:18px;background:#151318;border:1px solid rgba(233,178,106,.24);padding:16px 18px 18px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:#E9B26A">恋愛観</div>
+            <div style="font-size:15px;line-height:1.8;margin-top:8px;text-wrap:pretty">{{ profView }}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <sc-for list="{{ profFacts }}" as="f" hint-placeholder-count="6">
+              <div style="border-radius:14px;background:#151318;border:1px solid rgba(255,255,255,.08);padding:12px 14px">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;color:rgba(245,241,234,.38)">{{ f.k }}</div>
+                <div style="font-size:14px;font-weight:500;margin-top:5px">{{ f.v }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;padding:0 2px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">POSTS — これまでのお題</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#E9B26A">{{ profCount }}</div>
+            </div>
+            <sc-for list="{{ profPosts }}" as="pp" hint-placeholder-count="2">
+              <div style="position:relative;height:170px;border-radius:16px;overflow:hidden;background:#151318;flex:none">
+                <div style="position:absolute;inset:0;filter:{{ pp.filter }}">
+                  <sc-if value="{{ pp.hasVideo }}" hint-placeholder-val="{{ false }}">
+                    <video src="{{ pp.video }}" autoPlay muted loop playsInline onCanPlay="{{ vidReady }}" onTimeUpdate="{{ clipLoop }}" style="width:100%;height:100%;object-fit:cover;display:block"></video>
+                  </sc-if>
+                  <sc-if value="{{ pp.hasImg }}" hint-placeholder-val="{{ false }}">
+                    <div style="{{ pp.imgStyle }}"></div>
+                  </sc-if>
+                </div>
+                <div style="position:absolute;left:0;right:0;bottom:0;height:84px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+                <div style="position:absolute;left:14px;right:14px;bottom:10px;pointer-events:none">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;color:rgba(245,241,234,.64)">お題「{{ pp.theme }}」 · {{ pp.meta }}</div>
+                  <sc-if value="{{ pp.hasCaption }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:13.5px;margin-top:3px">{{ pp.caption }}</div>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ profMore }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ expandPosts }}" style="height:48px;border-radius:24px;border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:13.5px;color:rgba(245,241,234,.64);cursor:pointer" style-active="transform:scale(.98)">{{ profMoreLabel }}</div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPair }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.10);flex:none">
+          <div onClick="{{ goMain }}" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer" style-active="opacity:.6">
+            <div style="width:11px;height:11px;border-left:1.6px solid #F5F1EA;border-bottom:1.6px solid #F5F1EA;transform:rotate(45deg);margin-left:4px"></div>
+          </div>
+          <div style="font-size:16px;font-weight:700">{{ active.name }}</div>
+          <div onClick="{{ openProfile }}" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer" style-active="transform:scale(.92)">
+            <div style="width:34px;height:34px;border-radius:50%;background:#3A2E20;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',Georgia,serif;font-size:16px;color:{{ active.ring }}">{{ active.initial }}</div>
+          </div>
+        </div>
+
+        <sc-if value="{{ activeFading }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 20px 14px;display:flex;flex-direction:column;align-items:center;gap:7px;border-bottom:1px solid rgba(255,255,255,.10);flex:none">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);animation:lt3-breathe 4s ease-in-out infinite">AUTO-RELEASE IN</div>
+            <div style="font-family:'Instrument Serif',Georgia,serif;font-size:46px;line-height:1;font-variant-numeric:tabular-nums">{{ countdown }}</div>
+            <div style="font-size:12.5px;color:rgba(245,241,234,.64);text-align:center;text-wrap:pretty">72 時間、どちらからも反応がありません。</div>
+          </div>
+        </sc-if>
+        <div ref="{{ tlRef }}" style="flex:1;overflow-y:auto;padding:14px 14px 10px;display:flex;flex-direction:column;gap:12px;min-height:0">
+          <sc-for list="{{ entries }}" as="e" hint-placeholder-count="3">
+            <div>
+              <sc-if value="{{ e.isDiv }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="flex:1;height:1px;background:rgba(255,255,255,.10)"></div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.38)">{{ e.label }}</div>
+                  <div style="flex:1;height:1px;background:rgba(255,255,255,.10)"></div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ e.isPostTheirs }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="position:relative;height:180px;border-radius:16px;overflow:hidden;background:#151318">
+                    <div style="position:absolute;inset:0;transition:filter 800ms ease;filter:{{ e.filter }}">
+                      <sc-if value="{{ e.hasVideo }}" hint-placeholder-val="{{ false }}">
+                        <video src="{{ e.video }}" autoPlay muted loop playsInline onCanPlay="{{ vidReady }}" onTimeUpdate="{{ clipLoop }}" style="width:100%;height:100%;object-fit:cover;display:block"></video>
+                      </sc-if>
+                      <sc-if value="{{ e.hasImg }}" hint-placeholder-val="{{ false }}">
+                        <div style="{{ e.imgStyle }}"></div>
+                      </sc-if>
+                    </div>
+                    <sc-if value="{{ e.grain }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.055) 0 1px,rgba(0,0,0,0) 1px 2px),repeating-linear-gradient(90deg,rgba(0,0,0,.09) 0 1px,rgba(0,0,0,0) 1px 2px)"></div>
+                    </sc-if>
+                    <sc-if value="{{ e.showChip }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;padding:0 24px"><div style="background:rgba(0,0,0,.55);border-radius:12px;padding:8px 13px;text-align:center;max-width:86%">
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:rgba(245,241,234,.64)">{{ e.meta }}</div>
+                        <sc-if value="{{ e.hasCaption }}" hint-placeholder-val="{{ false }}">
+                          <div style="font-size:14px;margin-top:4px">{{ e.caption }}</div>
+                        </sc-if>
+                      </div></div>
+                    </sc-if>
+                  </div>
+                  <sc-if value="{{ e.likeable }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;align-items:center;gap:2px;padding-left:2px">
+                      <div onClick="{{ e.like }}" style="height:44px;display:flex;align-items:center;gap:7px;padding:0 12px 0 6px;cursor:pointer" style-active="transform:scale(.96)">
+                        <div style="font-size:19px;transition:transform 160ms ease;color:{{ e.heartColor }}">{{ e.heart }}</div>
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(245,241,234,.64)">{{ e.likeLabel }}</div>
+                      </div>
+                      <div onClick="{{ focusInput }}" style="height:44px;display:flex;align-items:center;gap:7px;padding:0 12px;cursor:pointer" style-active="opacity:.6">
+                        <div style="font-size:18px;color:rgba(245,241,234,.64)">↩</div>
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(245,241,234,.64)">リプライ</div>
+                      </div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{ e.isPostMine }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;justify-content:flex-end;animation:lt3-in 240ms ease">
+                  <div style="width:76%;position:relative;height:150px;border-radius:16px;overflow:hidden;background:#151318">
+                    <sc-if value="{{ e.hasVideo }}" hint-placeholder-val="{{ false }}">
+                      <video src="{{ e.video }}" autoPlay muted loop playsInline onCanPlay="{{ vidReady }}" onTimeUpdate="{{ clipLoop }}" style="width:100%;height:100%;object-fit:cover;display:block"></video>
+                    </sc-if>
+                    <sc-if value="{{ e.hasImg }}" hint-placeholder-val="{{ false }}">
+                      <div style="{{ e.imgStyle }}"></div>
+                    </sc-if>
+                    <sc-if value="{{ e.showChip }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;padding:0 18px"><div style="background:rgba(0,0,0,.55);border-radius:12px;padding:7px 12px;text-align:center;max-width:88%">
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:rgba(245,241,234,.64)">{{ e.meta }}</div>
+                        <sc-if value="{{ e.hasCaption }}" hint-placeholder-val="{{ false }}">
+                          <div style="font-size:13.5px;margin-top:4px">{{ e.caption }}</div>
+                        </sc-if>
+                      </div></div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ e.isTheir }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;justify-content:flex-start;animation:lt3-in 240ms ease">
+                  <div style="max-width:78%;background:#151318;border:1px solid rgba(255,255,255,.10);border-radius:18px 18px 18px 4px;padding:12px 16px;font-size:14.5px;line-height:1.6;color:rgba(245,241,234,.86)">{{ e.text }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ e.isMine }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;justify-content:flex-end;animation:lt3-in 240ms ease">
+                  <div style="max-width:78%;background:#1E1B22;border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:14.5px;line-height:1.6">{{ e.text }}</div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ activeFading }}" hint-placeholder-val="{{ false }}">
+          <div style="border-top:1px solid rgba(255,255,255,.10);background:#151318;padding:14px 16px 8px;display:flex;flex-direction:column;gap:8px;flex:none">
+            <div onClick="{{ rescue }}" style="height:52px;border-radius:26px;background:#E9B26A;color:#0B0A0C;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer" style-active="transform:scale(.98)">リプライして繋ぎ止める</div>
+            <div onClick="{{ release }}" style="height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(245,241,234,.38);cursor:pointer" style-active="opacity:.6">この枠を手放す</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.7;color:rgba(245,241,234,.38);text-align:center">自分から手放す・放置して解除 → 14 日間の待機</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ activeNotFading }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:10px 14px 8px;display:flex;align-items:center;gap:8px;border-top:1px solid rgba(255,255,255,.10);flex:none">
+            <div onClick="{{ postImage }}" style="width:48px;height:48px;border-radius:24px;background:#1E1B22;border:1px solid rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none" style-active="transform:scale(.94)">
+              <div style="width:18px;height:15px;border:1.6px solid rgba(245,241,234,.72);border-radius:4px;position:relative;overflow:hidden">
+                <div style="position:absolute;left:2px;top:2px;width:4px;height:4px;border-radius:50%;border:1.2px solid rgba(245,241,234,.72)"></div>
+                <div style="position:absolute;right:-4px;bottom:-5px;width:11px;height:11px;transform:rotate(45deg);border-left:1.6px solid rgba(245,241,234,.72);border-top:1.6px solid rgba(245,241,234,.72)"></div>
+              </div>
+            </div>
+            <input ref="{{ inputRef }}" value="{{ draft }}" onChange="{{ onDraft }}" placeholder="リプライを送る" style="flex:1;height:48px;border-radius:24px;background:#1E1B22;border:1px solid rgba(255,255,255,.10);padding:0 18px;font-size:14.5px;color:#F5F1EA;outline:none;font-family:inherit;box-sizing:border-box" />
+            <div onClick="{{ send }}" style="width:48px;height:48px;border-radius:24px;background:#E9B26A;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none" style-active="transform:scale(.94)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="display:block;transform:translate(-1px,1px)"><path d="M3 11.5 21 3l-6.5 18-3.2-7.3L3 11.5Z" stroke="#0B0A0C" stroke-width="1.8" stroke-linejoin="round"></path><path d="m11.3 13.7 4.2-4.2" stroke="#0B0A0C" stroke-width="1.8" stroke-linecap="round"></path></svg>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:140px;height:5px;border-radius:3px;background:rgba(245,241,234,.32)"></div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 402, &quot;height&quot;: 874}, &quot;startScreen&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;main&quot;, &quot;waiting&quot;, &quot;onboarding&quot;], &quot;default&quot;: &quot;main&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;プロトタイプ&quot;}, &quot;breakupMode&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;プロトタイプ&quot;}}">
+class Component extends DCLogic {
+  script = [
+    { q: 'はじめまして。5 分だけ、あなたの話を聞かせてください。いちばん時間を注いできたことは？', chips: ['10 年、厨房に立っていた', '絵を描くこと', '仕事一筋でした'] },
+    { q: 'この先の 10 年、どこで暮らしていたいですか。', chips: ['海の近く', '今の街のまま', 'まだ決めていない'] },
+    { q: '休みの日、気づくとしていることは？', chips: ['市場めぐり', '銭湯', '何もしない'] },
+    { q: '許せないことを、ひとつだけ教えてください。', chips: ['嘘をつく人', '時間にルーズ', '店員への態度'], highlight: true },
+    { q: '最後に。同時に繋がれるのは 3 人だけです。それでも？', chips: ['それがいい', '少し怖い、でも'] }
+  ];
+  profiles = {
+    azumi: { age: 29, area: '東京 · 世田谷', view: '一緒に台所に立てる人がいい。恋愛は、生活の延長にあるものだと思う。', facts: [['結婚願望', '2〜3 年のうちに'], ['子ども', '欲しい'], ['趣味', '料理・市場めぐり'], ['好きな動物', '猫'], ['タバコ', '吸わない'], ['お酒', 'ときどき']] },
+    nosuke: { age: 33, area: '神奈川 · 鎌倉', view: '一度決めたら変えない性格。恋愛も、長く静かに続けたい。', facts: [['結婚願望', 'いい人がいれば'], ['子ども', 'どちらでも'], ['趣味', '散歩・喫茶店'], ['好きな動物', '犬'], ['タバコ', '吸わない'], ['お酒', '飲まない']] },
+    mio: { age: 27, area: '京都 · 左京区', view: '返事は遅いけれど、忘れているわけではない。距離感を大事にしたい。', facts: [['結婚願望', 'まだ考え中'], ['子ども', '欲しい'], ['趣味', '植物・古本'], ['好きな動物', 'うさぎ'], ['タバコ', 'たまに'], ['お酒', '好き']] }
+  };
+  profilePosts(id) {
+    const V = {
+      flower: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+      bbb: 'https://www.w3schools.com/html/mov_bbb.mp4',
+      bbb2: 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4'
+    };
+    return {
+      azumi: [
+        { video: V.flower, theme: '平日の昼ごはん', meta: '月曜 12:41', caption: 'まかないの残りで。' },
+        { img: 'https://picsum.photos/seed/lt3-az-sky/700/480', theme: 'いま見えている空', meta: '金曜 19:03', caption: '' },
+        { video: V.flower, theme: '最近一番の買い物', meta: '先週水曜', caption: '古い鉄鍋。一生もの' },
+        { img: 'https://picsum.photos/seed/lt3-az-market/700/480', theme: '休日の過ごし方', meta: '先週日曜', caption: '朝の市場' },
+        { img: 'https://picsum.photos/seed/lt3-az-dish/700/480', theme: '今日の一皿', meta: '2 週間前', caption: '' }
+      ],
+      nosuke: [
+        { video: V.bbb, theme: '平日の昼ごはん', meta: '月曜 11:02', caption: '今日も同じ店。' },
+        { img: 'https://picsum.photos/seed/lt3-no-sky/700/480', theme: 'いま見えている空', meta: '金曜 17:55', caption: '' },
+        { video: V.bbb, theme: '最近一番の買い物', meta: '先週水曜', caption: '靴。どこまでも歩ける' },
+        { img: 'https://picsum.photos/seed/lt3-no-walk/700/480', theme: '休日の過ごし方', meta: '先週土曜', caption: '海まで歩いた' },
+        { img: 'https://picsum.photos/seed/lt3-no-cafe/700/480', theme: '行きつけの場所', meta: '2 週間前', caption: '窓際の席' }
+      ],
+      mio: [
+        { video: V.bbb2, theme: '最近一番の買い物', meta: '先週水曜', caption: '観葉植物。名前はまだない' },
+        { img: 'https://picsum.photos/seed/lt3-mio-book/700/480', theme: '休日の過ごし方', meta: '先週日曜', caption: '古本市' },
+        { img: 'https://picsum.photos/seed/lt3-mio-plant/700/480', theme: '行きつけの場所', meta: '2 週間前', caption: '' },
+        { img: 'https://picsum.photos/seed/lt3-mio-sky/700/480', theme: 'いま見えている空', meta: '3 週間前', caption: '' }
+      ]
+    }[id];
+  }
+  state = {
+    screen: this.props.startScreen ?? 'main',
+    profAll: false, profFrom: 'main',
+    qi: 0,
+    messages: [{ isAi: true, text: this.scriptText(0) }],
+    typing: false, showChips: true, done: false,
+    notif: false, activeId: null, draft: '',
+    liked: { azumi: true, nosuke: false, mio: false },
+    bonds: { azumi: 84, nosuke: 41, mio: 7 },
+    mioFading: this.props.breakupMode ?? false,
+    cd: 5 * 3600 + 48 * 60 + 12,
+    extra: { azumi: [], nosuke: [], mio: [] },
+    likedP: { 'az-nabe': true },
+    rec: false, recP: 0, postText: '', posted: false
+  };
+  scriptText(i) {
+    return ['はじめまして。5 分だけ、あなたの話を聞かせてください。いちばん時間を注いできたことは？'][i] || '';
+  }
+  kickVideos() {
+    clearTimeout(this.vidKick);
+    this.vidKick = setTimeout(() => document.querySelectorAll('video').forEach(v => { v.muted = true; v.volume = 0; const p = v.play(); if (p && p.catch) p.catch(() => {}); }), 60);
+  }
+  componentDidMount() {
+    this.kickVideos();
+    this.chatRef = React.createRef(); this.tlRef = React.createRef(); this.inputRef = React.createRef();
+    this.timer = setInterval(() => {
+      if (this.state.mioFading && this.state.cd > 0) this.setState(s => ({ cd: s.cd - 1 }));
+    }, 1000);
+    this.forceUpdate();
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.t2); clearTimeout(this.t3); }
+  componentDidUpdate() {
+    this.kickVideos();
+    const c = this.chatRef && this.chatRef.current; if (c) c.scrollTop = c.scrollHeight;
+    const t = this.tlRef && this.tlRef.current; if (t && this.scrollTl) { t.scrollTop = t.scrollHeight; this.scrollTl = false; }
+  }
+  fmt(sec) {
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    const p = n => String(n).padStart(2, '0');
+    return p(h) + ':' + p(m) + ':' + p(s);
+  }
+  pick(label) {
+    if (this.state.typing) return;
+    this.setState(s => ({ messages: [...s.messages, { isUser: true, text: label }], typing: true, showChips: false }));
+    this.t2 = setTimeout(() => {
+      this.setState(s => {
+        const qi = s.qi + 1;
+        if (qi < this.script.length) {
+          const step = this.script[qi];
+          return { qi, typing: false, showChips: true, messages: [...s.messages, { isAi: !step.highlight, isHighlight: !!step.highlight, text: step.q }] };
+        }
+        return { qi, typing: false, showChips: false, done: true, messages: [...s.messages, { isAi: true, text: '登録は以上です。ここから先は、AI が探します。届いたときが、はじまりです。' }] };
+      });
+    }, 1100);
+  }
+  personData() {
+    const { liked, bonds, mioFading } = this.state;
+    const heart = id => (liked[id] ? '♥' : '♡');
+    const hc = id => (liked[id] ? '#E9B26A' : 'rgba(245,241,234,.72)');
+    return [
+      { id: 'azumi', name: 'アズミ', initial: 'A', slot: 'mv-1', video: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', ph: 'アズミ の今日のお題写真', time: '2H AGO', theme: '月曜 12:41', caption: 'まかないの残りで。', ring: '#E9B26A', filter: 'none', fading: false, bondLabel: '絆 ' + bonds.azumi + '% · 残り 62:14' },
+      { id: 'nosuke', name: 'ノスケ', initial: 'N', slot: 'mv-2', video: 'https://www.w3schools.com/html/mov_bbb.mp4', ph: 'ノスケ の今日のお題写真', time: '7H AGO', theme: '月曜 11:02', caption: '今日も同じ店。', ring: '#E9B26A', filter: 'none', fading: false, bondLabel: '絆 ' + bonds.nosuke + '%' },
+      { id: 'mio', name: 'ミオ', initial: 'M', slot: 'mv-3', video: 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4', ph: 'ミオ の今日のお題写真', time: '3D AGO', theme: '金曜 19:24', caption: mioFading ? '反応がないと、写真から色が消えます。' : 'また、色が戻りました。', ring: mioFading ? 'rgba(245,241,234,.38)' : '#E9B26A', filter: mioFading ? 'grayscale(.85) contrast(1.05) brightness(.85)' : 'none', fading: mioFading, bondLabel: '絆 ' + bonds.mio + '%' }
+    ].map(p => ({
+      ...p, notFading: !p.fading,
+      bondPct: bonds[p.id] + '%',
+      heart: heart(p.id), heartColor: hc(p.id),
+      open: () => this.setState({ screen: 'pair', activeId: p.id }),
+      openProfile: e => { e.stopPropagation(); this.setState({ screen: 'profile', activeId: p.id, profAll: false, profFrom: this.state.screen }); },
+      like: e => { e.stopPropagation(); this.setState(s => ({ liked: { ...s.liked, [p.id]: !s.liked[p.id] } })); }
+    }));
+  }
+  entriesFor(p) {
+    const V = {
+      flower: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+      friday: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4',
+      bbb: 'https://www.w3schools.com/html/mov_bbb.mp4',
+      bbb2: 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4'
+    };
+    const fade = p.id === 'mio' && this.state.mioFading;
+    const gray = x => (fade ? `grayscale(${x}) contrast(1.05) brightness(.84)` : 'none');
+    // 自分のお題投稿（3 人のタイムラインで共通）
+    const M1 = { post: true, mine: true, video: V.bbb, meta: '水曜 21:15', caption: 'ようやく買い替えた' };
+    const M2 = { post: true, mine: true, video: V.friday, meta: '金曜 18:40', caption: '帰り道' };
+    const M3 = { post: true, mine: true, video: V.bbb2, meta: '月曜 13:08', caption: '結局コンビニ' };
+    const base = {
+      azumi: [
+        { isDiv: true, label: '先週水曜 — お題「最近一番の買い物」' },
+        { post: true, k: 'az-nabe', video: V.flower, meta: '水曜 18:02', caption: '古い鉄鍋。一生もの', likeable: true },
+        M1,
+        { ttext: 'いい色。今度それで作ってよ' },
+        { isDiv: true, label: '金曜 — お題「いま見えている空」' },
+        M2,
+        { post: true, k: 'az-sky', img: 'https://picsum.photos/seed/lt3-az-sky/700/480', meta: '金曜 19:03', caption: '', likeable: true },
+        { isDiv: true, label: '月曜 — お題「平日の昼ごはん」' },
+        { post: true, k: 'az-lunch', video: V.flower, meta: '月曜 12:41', caption: 'まかないの残りで。', likeable: true },
+        M3,
+        { ttext: 'コンビニの日もあっていい' }
+      ],
+      nosuke: [
+        { isDiv: true, label: '先週水曜 — お題「最近一番の買い物」' },
+        M1,
+        { post: true, k: 'no-shoes', video: V.bbb, meta: '水曜 23:50', caption: '靴。どこまでも歩ける', likeable: true },
+        { isDiv: true, label: '金曜 — お題「いま見えている空」' },
+        { post: true, k: 'no-sky', img: 'https://picsum.photos/seed/lt3-no-sky/700/480', meta: '金曜 17:55', caption: '', likeable: true },
+        M2,
+        { ttext: '今日の空は当たりだった' },
+        { isDiv: true, label: '月曜 — お題「平日の昼ごはん」' },
+        { post: true, k: 'no-lunch', video: V.bbb, meta: '月曜 11:02', caption: '今日も同じ店。', likeable: true },
+        M3
+      ],
+      mio: [
+        { isDiv: true, label: '先週水曜 — お題「最近一番の買い物」' },
+        M1,
+        { post: true, k: 'mio-plant', video: V.bbb2, meta: '水曜 22:10', caption: '観葉植物。名前はまだない', filter: gray(1), grain: fade, likeable: true },
+        { isDiv: true, label: '金曜 — お題「いま見えている空」' },
+        M2,
+        { isDiv: true, label: fade ? 'FADING — それから返事がない' : '月曜 — お題「平日の昼ごはん」' }
+      ].concat(fade ? [] : [
+        { post: true, k: 'mio-lunch', video: V.flower, meta: '月曜 12:02', caption: '色が戻った。', likeable: true },
+        M3
+      ])
+    };
+    const extras = this.state.extra[p.id].map(x =>
+      x.kind === 'img'
+        ? { post: true, mine: true, img: x.v, meta: 'たった今', caption: '' }
+        : { isMine: true, text: x.v }
+    );
+    return [...base[p.id], ...extras].map(e => {
+      const liked = e.k ? !!this.state.likedP[e.k] : false;
+      return {
+        ...e,
+        isPostTheirs: !!e.post && !e.mine,
+        isPostMine: !!e.post && !!e.mine,
+        hasVideo: !!e.video, hasImg: !!e.img, hasCaption: !!e.caption, showChip: !e.img,
+        imgStyle: e.img ? { width: '100%', height: '100%', backgroundImage: 'url(' + e.img + ')', backgroundSize: 'cover', backgroundPosition: 'center' } : null,
+        isTheir: !!e.ttext, text: e.ttext || e.text,
+        filter: e.filter || 'none',
+        heart: liked ? '♥' : '♡',
+        heartColor: liked ? '#E9B26A' : 'rgba(245,241,234,.64)',
+        likeLabel: liked ? 'いいね済み' : 'いいね',
+        like: () => this.setState(s => ({ likedP: { ...s.likedP, [e.k]: !s.likedP[e.k] } }))
+      };
+    });
+  }
+  renderVals() {
+    const s = this.state;
+    const people = this.personData();
+    const active = people.find(p => p.id === s.activeId) || people[0];
+    const activeFading = s.screen === 'pair' && active.id === 'mio' && s.mioFading;
+    return {
+      isOnboarding: s.screen === 'onboarding', isWaiting: s.screen === 'waiting',
+      isMain: s.screen === 'main', isPair: s.screen === 'pair',
+      qLabel: 'Q' + Math.min(s.qi + 1, 5) + ' / 5',
+      progressPct: Math.min(((s.qi + 1) / 5) * 100, 100) + '%',
+      messages: s.messages, typing: s.typing,
+      showChips: s.showChips && !s.done,
+      chips: (this.script[s.qi] ? this.script[s.qi].chips : []).map(label => ({ label, pick: () => this.pick(label) })),
+      onboardingDone: s.done,
+      goWaiting: () => { this.setState({ screen: 'waiting' }); this.t3 = setTimeout(() => this.setState({ notif: true }), 3200); },
+      notif: s.notif, notifNot: !s.notif,
+      slotCount: (s.notif ? 1 : 0) + ' / 3',
+      openSlot: () => this.setState({ screen: 'main' }),
+      people,
+      goMain: () => this.setState({ screen: 'main', draft: '' }),
+      active, activeFading, activeNotFading: !activeFading,
+      countdown: this.fmt(s.cd),
+      clipLoop: e => { e.target.muted = true; e.target.volume = 0; if (e.target.currentTime > 2) e.target.currentTime = 0; },
+      vidReady: e => { e.target.muted = true; e.target.volume = 0; const pr = e.target.play(); if (pr && pr.catch) pr.catch(() => {}); },
+      isCamera: s.screen === 'camera', isCompose: s.screen === 'compose',
+      camVideo: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+      themeBarText: s.posted ? '投稿しました — 平日の昼ごはん' : '平日の昼ごはん',
+      themeBarCta: s.posted ? '撮り直す' : '撮る',
+      openCamera: () => { clearInterval(this.recTimer); this.setState({ screen: 'camera', rec: false, recP: 0 }); },
+      closeCamera: () => { clearInterval(this.recTimer); this.setState({ screen: 'main', rec: false, recP: 0 }); },
+      rec: s.rec, recNot: !s.rec,
+      recRing: s.rec ? '#E9B26A' : 'rgba(245,241,234,.92)',
+      recCore: s.rec ? '#E9B26A' : 'rgba(233,178,106,.9)',
+      recPct: Math.round(s.recP * 100) + '%',
+      recLabel: '0:0' + Math.min(2, Math.floor(s.recP * 2)) + ' / 0:02',
+      startRec: () => {
+        if (this.state.rec) return;
+        this.setState({ rec: true, recP: 0 });
+        this.recTimer = setInterval(() => {
+          this.setState(st => {
+            const recP = st.recP + 0.04;
+            if (recP >= 1) { clearInterval(this.recTimer); return { recP: 1, rec: false, screen: 'compose' }; }
+            return { recP };
+          });
+        }, 80);
+      },
+      postText: s.postText, hasPostText: s.postText.trim().length > 0,
+      onPostText: e => this.setState({ postText: e.target.value }),
+      post: () => this.setState({ screen: 'main', posted: true }),
+      entries: this.entriesFor(active),
+      draft: s.draft,
+      onDraft: e => this.setState({ draft: e.target.value }),
+      send: () => {
+        const t = s.draft.trim(); if (!t) return;
+        this.scrollTl = true;
+        this.setState(st => ({ draft: '', extra: { ...st.extra, [active.id]: [...st.extra[active.id], { kind: 'text', v: t }] }, bonds: { ...st.bonds, [active.id]: Math.min(st.bonds[active.id] + 4, 100) } }));
+      },
+      focusInput: () => { const i = this.inputRef && this.inputRef.current; if (i) i.focus(); },
+      postImage: () => {
+        this.scrollTl = true;
+        const url = 'https://picsum.photos/seed/lt3-' + active.id + '-' + (this.state.extra[active.id].length + 1) + '/700/480';
+        this.setState(st => ({ extra: { ...st.extra, [active.id]: [...st.extra[active.id], { kind: 'img', v: url }] }, bonds: { ...st.bonds, [active.id]: Math.min(st.bonds[active.id] + 4, 100) } }));
+      },
+      rescue: () => {
+        this.scrollTl = true;
+        this.setState(st => ({ mioFading: false, bonds: { ...st.bonds, mio: 24 }, extra: { ...st.extra, mio: [...st.extra.mio, { kind: 'text', v: 'ごめん、返事が遅くなった。その植物、名前つけよう' }] } }));
+      },
+      release: () => this.setState(st => ({ screen: 'main' })),
+      isMyProfile: s.screen === 'myprofile',
+      openMyProfile: () => this.setState({ screen: 'myprofile' }),
+      camTap: () => { if (!s.posted) { clearInterval(this.recTimer); this.setState({ screen: 'camera', rec: false, recP: 0 }); } },
+      camActive: !s.posted,
+      camBg: !s.posted ? '#E9B26A' : '#1E1B22',
+      camFg: !s.posted ? '#0B0A0C' : 'rgba(245,241,234,.30)',
+      homeColor: s.screen === 'main' ? '#E9B26A' : 'rgba(245,241,234,.55)',
+      profColor: s.screen === 'myprofile' ? '#E9B26A' : 'rgba(245,241,234,.55)',
+      myRows: [['年齢', '31'], ['地域', '東京 · 中野'], ['結婚願望', 'いずれは'], ['子ども', '欲しい'], ['趣味', '銭湯・写真'], ['好きな動物', '猫'], ['タバコ', '吸わない'], ['お酒', 'ときどき']].map(r => ({ k: r[0], v: r[1] })),
+      isProfile: s.screen === 'profile',
+      profName: active.name, profInitial: active.initial, profRing: active.ring,
+      profMeta: (this.profiles[active.id].age) + '歳 · ' + this.profiles[active.id].area,
+      profView: this.profiles[active.id].view,
+      profFacts: this.profiles[active.id].facts.map(f => ({ k: f[0], v: f[1] })),
+      profPosts: (s.profAll ? this.profilePosts(active.id) : this.profilePosts(active.id).slice(0, 2)).map(pp => ({
+        ...pp, hasVideo: !!pp.video, hasImg: !!pp.img, hasCaption: !!pp.caption,
+        imgStyle: pp.img ? { width: '100%', height: '100%', backgroundImage: 'url(' + pp.img + ')', backgroundSize: 'cover', backgroundPosition: 'center' } : null,
+        filter: active.id === 'mio' && s.mioFading ? 'grayscale(.85) contrast(1.05) brightness(.85)' : 'none'
+      })),
+      profCount: this.profilePosts(active.id).length + ' 投稿',
+      profMore: !s.profAll && this.profilePosts(active.id).length > 2,
+      profMoreLabel: 'すべて見る（' + this.profilePosts(active.id).length + '）',
+      expandPosts: () => this.setState({ profAll: true }),
+      openProfile: () => this.setState({ screen: 'profile', profAll: false, profFrom: 'pair' }),
+      closeProfile: () => this.setState({ screen: s.profFrom || 'main' }),
+      chatRef: this.chatRef, tlRef: this.tlRef, inputRef: this.inputRef
+    };
+  }
+}
+
+</script>
+</body>
+</html>
+

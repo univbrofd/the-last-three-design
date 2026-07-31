@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @dsCard group="Foundations" name="Colors & Type" viewport="700x520" subtitle="役割トークンの確定値と書体スケール" -->
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body { margin: 0; background: #0B0A0C; }
+    a { color: #E9B26A; text-decoration: none; }
+    a:hover { color: #F2C88C; }
+  </style>
+</helmet>
+<div style="width:700px;background:#0B0A0C;color:#F5F1EA;font-family:'Zen Kaku Gothic New','Hiragino Sans',system-ui,sans-serif;padding:28px 28px 32px;box-sizing:border-box;display:flex;flex-direction:column;gap:26px">
+
+  <div style="display:flex;align-items:baseline;gap:14px">
+    <div style="font-family:'Instrument Serif',Georgia,serif;font-size:34px;line-height:1">the last three</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">BRAND / v0.1</div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">SURFACES</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="height:56px;border-radius:10px;background:#0B0A0C;border:1px solid rgba(255,255,255,.10)"></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(245,241,234,.64)">--bg<br /><span style="color:rgba(245,241,234,.38)">#0B0A0C</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="height:56px;border-radius:10px;background:#151318;border:1px solid rgba(255,255,255,.10)"></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(245,241,234,.64)">--surface<br /><span style="color:rgba(245,241,234,.38)">#151318</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="height:56px;border-radius:10px;background:#1E1B22;border:1px solid rgba(255,255,255,.10)"></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(245,241,234,.64)">--surface-raised<br /><span style="color:rgba(245,241,234,.38)">#1E1B22</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="height:56px;border-radius:10px;background:#0B0A0C;border:1px solid rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center">
+          <div style="width:82%;height:1px;background:rgba(255,255,255,.10)"></div>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(245,241,234,.64)">--border<br /><span style="color:rgba(245,241,234,.38)">#fff 10%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">LIGHT — 唯一のアクセント</div>
+      <div style="height:56px;border-radius:10px;background:#E9B26A"></div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(245,241,234,.64)">--primary #E9B26A<br /><span style="color:rgba(245,241,234,.38)">埋まった枠 / 絆 / CTA / 通知のみ</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">SCRIM — 写真上の下限</div>
+      <div style="height:56px;border-radius:10px;overflow:hidden;position:relative;background:repeating-linear-gradient(115deg,#3a2f1c 0 9px,#2a2214 9px 18px)">
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;padding-left:12px;font-size:13px;color:#F5F1EA">写真の上の文字</div>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(245,241,234,.64)">--scrim-min rgba(0,0,0,.45)<br /><span style="color:rgba(245,241,234,.38)">これ未満の膜で文字を置かない</span></div>
+    </div>
+  </div>
+
+  <div style="height:1px;background:rgba(255,255,255,.10)"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">TYPE</div>
+      <div>
+        <div style="font-family:'Instrument Serif',Georgia,serif;font-size:34px;line-height:1.15">Instrument Serif</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(245,241,234,.38);margin-top:2px">display 34 / count 40 — ブランド・数字</div>
+      </div>
+      <div>
+        <div style="font-size:20px;font-weight:700;line-height:1.4">日本語のUI見出し 20/700</div>
+        <div style="font-size:15px;line-height:1.65;color:rgba(245,241,234,.64)">本文 15/1.65。短く、断定で書く。</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(245,241,234,.38);margin-top:4px">Zen Kaku Gothic New</div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em">TODAY'S THEME / 03:41:07</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(245,241,234,.38);margin-top:4px">IBM Plex Mono 10 / .16em — メタラベル</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">TEXT ROLES</div>
+      <div style="font-size:15px;color:#F5F1EA">--text-1 &nbsp;見出し・本文</div>
+      <div style="font-size:15px;color:rgba(245,241,234,.64)">--text-2 &nbsp;補助・キャプション</div>
+      <div style="font-size:15px;color:rgba(245,241,234,.38)">--text-3 &nbsp;メタ・非活性</div>
+      <div style="margin-top:6px;display:flex;gap:8px;align-items:center">
+        <div style="height:44px;padding:0 22px;border-radius:22px;background:#E9B26A;color:#0B0A0C;font-size:14px;font-weight:700;display:flex;align-items:center">主要 CTA</div>
+        <div style="height:44px;padding:0 22px;border-radius:22px;border:1px solid rgba(255,255,255,.10);color:rgba(245,241,234,.64);font-size:14px;display:flex;align-items:center">副次</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>

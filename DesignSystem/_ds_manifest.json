@@ -1,0 +1,19 @@
+{
+  "name": "the last three — Design System v0.1",
+  "generated": "2026-07-28",
+  "note": "@dsCard タグ付きの specimen 一覧。paths は design repo ルート相対。",
+  "tokens": "DesignSystem/colors_and_type.css",
+  "docs": ["DesignSystem/taste.md", "DesignSystem/USAGE_RULES.md"],
+  "globalCssPaths": ["DesignSystem/colors_and_type.css", "DesignSystem/preview/card.css"],
+  "fonts": ["Instrument Serif", "Zen Kaku Gothic New", "IBM Plex Mono"],
+  "cards": [
+    { "file": "handoff/AppPrototype/colors_and_type.dc.html", "group": "Foundations", "name": "Colors & Type", "viewport": "700x520" },
+    { "file": "handoff/AppPrototype/OnboardingChatView.dc.html", "group": "Screens", "name": "1 · OnboardingChatView", "viewport": "402x874" },
+    { "file": "handoff/AppPrototype/WaitingView.dc.html", "group": "Screens", "name": "2 · WaitingView", "viewport": "402x874" },
+    { "file": "handoff/AppPrototype/MainView.dc.html", "group": "Screens", "name": "3 · MainView", "viewport": "402x874" },
+    { "file": "handoff/AppPrototype/MainViewSlotStates.dc.html", "group": "Screens", "name": "3b · MainView 枠の状態", "viewport": "700x300" },
+    { "file": "handoff/AppPrototype/PairTimelineView.dc.html", "group": "Screens", "name": "4 · PairTimelineView", "viewport": "402x874" },
+    { "file": "handoff/AppPrototype/BreakupView.dc.html", "group": "Screens", "name": "5 · BreakupView", "viewport": "402x874" },
+    { "file": "handoff/AppPrototype/Prototype.dc.html", "group": "Prototype", "name": "インタラクティブ・プロトタイプ", "viewport": "402x874" }
+  ]
+}

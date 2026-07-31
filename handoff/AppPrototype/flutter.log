@@ -1,0 +1,18 @@
+Changing current working directory to: /Users/ko/development/the_last_three
+Launching lib/main.dart on iPhone 17 (the-last-three) in debug mode...
+Running Xcode build...                                          
+Xcode build done.                                            6.1s
+Target native_assets required define SdkRoot but it was not provided
+Syncing files to device iPhone 17 (the-last-three)...               39ms
+
+Flutter run key commands.
+r Hot reload. 🔥🔥🔥
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+
+A Dart VM Service on iPhone 17 (the-last-three) is available at: http://127.0.0.1:63669/0Jrknrr5RFs=/
+The Dart Tooling Daemon is available at: ws://127.0.0.1:63668/yGTKDP2-u3c=
+The Flutter DevTools debugger and profiler on iPhone 17 (the-last-three) is available at: http://127.0.0.1:63669/0Jrknrr5RFs=/devtools/?uri=ws://127.0.0.1:63669/0Jrknrr5RFs=/ws

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @dsCard group="Prototype" name="インタラクティブ・プロトタイプ" viewport="402x874" subtitle="登録対話 → 待機 → 通知 → 3 枠 → タイムライン → 解除接近まで通しで操作可能" -->
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; background: #0B0A0C; }
+    a { color: #E9B26A; text-decoration: none; }
+    a:hover { color: #F2C88C; }
+    @keyframes lt3-breathe { 0%,100% { opacity: .28 } 50% { opacity: .9 } }
+    @keyframes lt3-ring { 0% { transform: scale(.72); opacity: .55 } 100% { transform: scale(1.5); opacity: 0 } }
+    @keyframes lt3-in { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+    @keyframes lt3-drop { from { opacity: 0; transform: translateY(-14px) } to { opacity: 1; transform: none } }
+    input::placeholder { color: rgba(245,241,234,.38); }
+  </style>
+</helmet>
+<div style="width:402px;height:874px;position:relative;overflow:hidden;border-radius:55px;background:#0B0A0C;color:#F5F1EA;font-family:'Zen Kaku Gothic New','Hiragino Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;user-select:none">
+
+  <div style="position:absolute;top:11px;left:50%;transform:translateX(-50%);width:126px;height:37px;border-radius:19px;background:#000;z-index:40"></div>
+  <div style="position:absolute;top:19px;left:32px;font-size:15px;font-weight:500;z-index:39">10:57</div>
+  <div style="position:absolute;top:22px;right:32px;display:flex;align-items:flex-end;gap:6px;z-index:39">
+    <div style="display:flex;align-items:flex-end;gap:2px">
+      <div style="width:3px;height:5px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:7px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:9px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:11px;border-radius:1px;background:rgba(245,241,234,.38)"></div>
+    </div>
+    <div style="width:24px;height:12px;border-radius:3px;border:1px solid rgba(245,241,234,.5);padding:1.5px;box-sizing:border-box">
+      <div style="width:62%;height:100%;border-radius:1.5px;background:#F5F1EA"></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;top:59px;bottom:34px;display:flex;flex-direction:column">
+
+    <sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="position:absolute;left:0;right:0;top:-59px;height:300px;background:radial-gradient(120% 62% at 50% 0%,rgba(233,178,106,.10) 0%,rgba(233,178,106,0) 62%);pointer-events:none"></div>
+        <div style="padding:8px 24px 14px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">COUNSELING · 5 MIN</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:#E9B26A">{{ qLabel }}</div>
+          </div>
+          <div style="height:2px;background:rgba(255,255,255,.10)">
+            <div style="height:100%;background:#E9B26A;transition:width 500ms ease;width:{{ progressPct }}"></div>
+          </div>
+        </div>
+        <div ref="{{ chatRef }}" style="flex:1;overflow-y:auto;padding:6px 24px 12px;display:flex;flex-direction:column;gap:18px;min-height:0">
+          <sc-for list="{{ messages }}" as="m" hint-placeholder-count="2">
+            <div>
+              <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;justify-content:flex-end;animation:lt3-in 240ms ease">
+                  <div style="max-width:74%;background:#1E1B22;border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:15px;line-height:1.6;color:rgba(245,241,234,.86)">{{ m.text }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ m.isAi }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:8px;animation:lt3-in 240ms ease">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.38)">AI</div>
+                  <div style="font-size:16px;line-height:1.75;color:#F5F1EA;text-wrap:pretty">{{ m.text }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ m.isHighlight }}" hint-placeholder-val="{{ false }}">
+                <div style="border:1px solid rgba(233,178,106,.34);border-radius:20px;background:#151318;padding:20px 20px 22px;display:flex;flex-direction:column;gap:14px;animation:lt3-in 340ms ease">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <div style="width:5px;height:5px;border-radius:50%;background:#E9B26A;animation:lt3-breathe 4s ease-in-out infinite"></div>
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:#E9B26A">THE ONE THAT MATTERS</div>
+                  </div>
+                  <div style="font-family:'Instrument Serif',Georgia,serif;font-size:26px;line-height:1.35;text-wrap:pretty">{{ m.text }}</div>
+                  <div style="font-size:13.5px;line-height:1.7;color:rgba(245,241,234,.64)">好きなものより、これが合うかどうかで決まります。答えは誰にも公開されません。</div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{ typing }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:6px;padding-left:2px">
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(245,241,234,.38);animation:lt3-breathe 1.4s ease-in-out infinite"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(245,241,234,.38);animation:lt3-breathe 1.4s ease-in-out .2s infinite"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(245,241,234,.38);animation:lt3-breathe 1.4s ease-in-out .4s infinite"></div>
+            </div>
+          </sc-if>
+        </div>
+        <div style="padding:0 20px 6px;display:flex;flex-direction:column;gap:8px">
+          <sc-if value="{{ showChips }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;animation:lt3-in 240ms ease">
+              <sc-for list="{{ chips }}" as="c" hint-placeholder-count="3">
+                <div onClick="{{ c.pick }}" style="height:44px;display:flex;align-items:center;padding:0 16px;border-radius:22px;border:1px solid rgba(255,255,255,.10);background:#151318;font-size:14px;color:rgba(245,241,234,.72);cursor:pointer" style-hover="border-color:rgba(233,178,106,.5);color:#F5F1EA" style-active="transform:scale(.97)">{{ c.label }}</div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ onboardingDone }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ goWaiting }}" style="height:52px;border-radius:26px;background:#E9B26A;color:#0B0A0C;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;animation:lt3-in 340ms ease" style-active="transform:scale(.98)">待機をはじめる</div>
+          </sc-if>
+          <div style="display:flex;align-items:center;gap:10px;padding-top:4px">
+            <div style="flex:1;height:52px;border-radius:26px;background:#1E1B22;border:1px solid rgba(255,255,255,.10);display:flex;align-items:center;padding:0 20px;font-size:15px;color:rgba(245,241,234,.38)">話す、または打つ</div>
+            <div style="width:52px;height:52px;border-radius:26px;background:#E9B26A;display:flex;align-items:center;justify-content:center;flex:none">
+              <div style="width:11px;height:19px;border-radius:6px;background:#0B0A0C"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isWaiting }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="height:52px;display:flex;align-items:center;justify-content:center">
+          <div style="font-family:'Instrument Serif',Georgia,serif;font-size:19px;color:rgba(245,241,234,.64)">the last three</div>
+        </div>
+        <sc-if value="{{ notif }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:0 16px;animation:lt3-drop 420ms cubic-bezier(.2,.8,.2,1)">
+            <div onClick="{{ openSlot }}" style="border-radius:20px;background:rgba(30,27,34,.92);border:1px solid rgba(233,178,106,.34);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer" style-active="transform:scale(.99)">
+              <div style="width:34px;height:34px;border-radius:9px;background:#E9B26A;display:flex;align-items:center;justify-content:center;flex:none">
+                <div style="font-family:'Instrument Serif',Georgia,serif;font-size:17px;color:#0B0A0C;line-height:1">3</div>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.38)">THE LAST THREE</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:rgba(245,241,234,.38)">now</div>
+                </div>
+                <div style="font-size:14.5px;font-weight:700;margin-top:3px">1 枠が埋まりました</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div style="position:relative;width:184px;height:184px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;width:184px;height:184px;border-radius:50%;border:1px solid rgba(233,178,106,.45);animation:lt3-ring 4.4s ease-out infinite"></div>
+            <div style="position:absolute;width:184px;height:184px;border-radius:50%;border:1px solid rgba(233,178,106,.45);animation:lt3-ring 4.4s ease-out 1.5s infinite"></div>
+            <div style="position:absolute;width:184px;height:184px;border-radius:50%;border:1px solid rgba(233,178,106,.45);animation:lt3-ring 4.4s ease-out 3s infinite"></div>
+            <div style="width:9px;height:9px;border-radius:50%;background:#E9B26A;animation:lt3-breathe 4.4s ease-in-out infinite"></div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);margin-top:14px">SEARCHING</div>
+          <div style="font-size:17px;margin-top:12px">AI が、あなたに向く人を探しています</div>
+          <div style="font-size:13px;line-height:1.7;margin-top:8px;color:rgba(245,241,234,.38);text-align:center;max-width:250px;text-wrap:pretty">自分から探すことはできません。見つかったときだけ、ここに届きます。</div>
+        </div>
+        <div style="padding:0 16px 12px;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 4px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38)">YOUR THREE</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:#E9B26A">{{ slotCount }}</div>
+          </div>
+          <sc-if value="{{ notif }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ openSlot }}" style="position:relative;height:96px;border-radius:18px;overflow:hidden;border:1px solid rgba(233,178,106,.42);background:linear-gradient(180deg,#2a2114 0%,#151318 100%);display:flex;align-items:center;justify-content:space-between;padding:0 18px;cursor:pointer;animation:lt3-in 420ms ease" style-active="transform:scale(.99)">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:#E9B26A">UNOPENED</div>
+                <div style="font-size:16px;font-weight:700">この人が、選ばれました</div>
+                <div style="font-size:12px;color:rgba(245,241,234,.38)">開くと 24 時間の絆がはじまります</div>
+              </div>
+              <div style="height:44px;padding:0 20px;border-radius:22px;background:#E9B26A;color:#0B0A0C;font-size:14px;font-weight:700;display:flex;align-items:center;flex:none">開く</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ notifNot }}" hint-placeholder-val="{{ true }}">
+            <div style="height:62px;border-radius:18px;border:1px dashed rgba(255,255,255,.14);display:flex;align-items:center;padding:0 18px;gap:12px">
+              <div style="width:8px;height:8px;border-radius:50%;border:1px solid rgba(245,241,234,.38)"></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(245,241,234,.38)">EMPTY — AI が探しています</div>
+            </div>
+          </sc-if>
+          <div style="height:62px;border-radius:18px;border:1px dashed rgba(255,255,255,.14);display:flex;align-items:center;padding:0 18px;gap:12px">
+            <div style="width:8px;height:8px;border-radius:50%;border:1px solid rgba(245,241,234,.38)"></div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(245,241,234,.38)">EMPTY — AI が探しています</div>
+          </div>
+          <div style="height:62px;border-radius:18px;border:1px dashed rgba(255,255,255,.14);display:flex;align-items:center;padding:0 18px;gap:12px">
+            <div style="width:8px;height:8px;border-radius:50%;border:1px solid rgba(245,241,234,.38)"></div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(245,241,234,.38)">EMPTY — AI が探しています</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMain }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 14px">
+          <div style="width:44px"></div>
+          <div style="height:36px;padding:0 18px;border-radius:18px;background:#1E1B22;border:1px solid rgba(255,255,255,.10);display:flex;align-items:center;gap:8px">
+            <div style="font-size:14px;font-weight:500">日常</div>
+            <div style="width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid rgba(245,241,234,.64)"></div>
+          </div>
+          <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center">
+            <div style="width:19px;height:16px;border:1.6px solid #F5F1EA;border-radius:9px;position:relative">
+              <div style="position:absolute;left:3px;bottom:-5px;width:6px;height:6px;border-left:1.6px solid #F5F1EA;border-bottom:1.6px solid #F5F1EA;transform:skewX(-20deg);background:#0B0A0C"></div>
+            </div>
+          </div>
+        </div>
+        <div style="height:18px;display:flex;align-items:center;justify-content:center;gap:7px">
+          <div style="width:6px;height:6px;border-radius:50%;background:#E9B26A"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#E9B26A"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:#E9B26A"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.38);margin-left:6px">3 / 3 FULL</div>
+        </div>
+        <div style="flex:1;padding:8px 14px 0;display:flex;flex-direction:column;gap:10px;min-height:0">
+          <sc-for list="{{ people }}" as="p" hint-placeholder-count="3">
+            <div onClick="{{ p.open }}" style="flex:1;position:relative;border-radius:18px;overflow:hidden;background:#151318;cursor:pointer" style-active="transform:scale(.995)">
+              <div style="position:absolute;inset:0;transition:filter 800ms ease;filter:{{ p.filter }}">
+                <image-slot id="{{ p.slot }}" shape="rect" fit="cover" placeholder="{{ p.ph }}"></image-slot>
+              </div>
+              <div style="position:absolute;left:0;right:0;top:0;height:74px;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+              <div style="position:absolute;left:0;right:0;bottom:0;height:104px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 40%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+              <div style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:9px;pointer-events:none">
+                <div style="width:28px;height:28px;border-radius:50%;background:#3A2E20;border:1.5px solid {{ p.ring }};display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',Georgia,serif;font-size:14px;color:{{ p.ring }}">{{ p.initial }}</div>
+                <div style="font-size:15px;font-weight:700">{{ p.name }}</div>
+              </div>
+              <div style="position:absolute;right:14px;top:16px;pointer-events:none">
+                <sc-if value="{{ p.fading }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#F5F1EA;background:rgba(0,0,0,.55);padding:4px 8px;border-radius:6px">解除まで {{ countdown }}</div>
+                </sc-if>
+                <sc-if value="{{ p.notFading }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:rgba(245,241,234,.64)">{{ p.time }}</div>
+                </sc-if>
+              </div>
+              <div style="position:absolute;left:14px;bottom:16px;pointer-events:none">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.64)">{{ p.theme }}</div>
+                <div style="font-size:14px;margin-top:5px">{{ p.caption }}</div>
+              </div>
+              <div style="position:absolute;right:2px;bottom:6px;display:flex;flex-direction:column;align-items:center">
+                <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:21px;color:#F5F1EA">↩</div>
+                <div onClick="{{ p.like }}" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;transition:transform 160ms ease;color:{{ p.heartColor }}" style-active="transform:scale(1.25)">{{ p.heart }}</div>
+              </div>
+              <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.10);pointer-events:none">
+                <div style="height:100%;background:#E9B26A;transition:width 800ms ease;width:{{ p.bondPct }}"></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPair }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:lt3-in 240ms ease">
+        <div style="height:58px;display:flex;align-items:center;gap:4px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.10);flex:none">
+          <div onClick="{{ goMain }}" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer" style-active="opacity:.6">
+            <div style="width:11px;height:11px;border-left:1.6px solid #F5F1EA;border-bottom:1.6px solid #F5F1EA;transform:rotate(45deg);margin-left:4px"></div>
+          </div>
+          <div style="width:34px;height:34px;border-radius:50%;background:#3A2E20;border:1.5px solid {{ active.ring }};display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',Georgia,serif;font-size:16px;color:{{ active.ring }};flex:none">{{ active.initial }}</div>
+          <div style="flex:1;min-width:0;margin-left:10px;display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:16px;font-weight:700">{{ active.name }}</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:86px;height:2px;background:rgba(255,255,255,.10);border-radius:1px"><div style="height:100%;background:#E9B26A;border-radius:1px;transition:width 800ms ease;width:{{ active.bondPct }}"></div></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:rgba(245,241,234,.38)">{{ active.bondLabel }}</div>
+            </div>
+          </div>
+          <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex:none">
+            <div style="width:19px;height:16px;border:1.6px solid #F5F1EA;border-radius:9px;position:relative">
+              <div style="position:absolute;left:3px;bottom:-5px;width:6px;height:6px;border-left:1.6px solid #F5F1EA;border-bottom:1.6px solid #F5F1EA;transform:skewX(-20deg);background:#0B0A0C"></div>
+            </div>
+          </div>
+        </div>
+
+        <sc-if value="{{ activeFading }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 20px 14px;display:flex;flex-direction:column;align-items:center;gap:7px;border-bottom:1px solid rgba(255,255,255,.10);flex:none">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:rgba(245,241,234,.38);animation:lt3-breathe 4s ease-in-out infinite">AUTO-RELEASE IN</div>
+            <div style="font-family:'Instrument Serif',Georgia,serif;font-size:46px;line-height:1;font-variant-numeric:tabular-nums">{{ countdown }}</div>
+            <div style="font-size:12.5px;color:rgba(245,241,234,.64);text-align:center;text-wrap:pretty">72 時間、どちらからも反応がありません。</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ activeNotFading }}" hint-placeholder-val="{{ true }}">
+          <div style="margin:12px 14px 0;border-radius:16px;background:#151318;border:1px solid rgba(233,178,106,.30);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none">
+            <div style="min-width:0">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:#E9B26A">TODAY'S THEME</div>
+              <div style="font-size:16px;font-weight:700;margin-top:4px">平日の昼ごはん</div>
+            </div>
+            <div style="height:44px;padding:0 18px;border-radius:22px;background:#E9B26A;color:#0B0A0C;font-size:14px;font-weight:700;display:flex;align-items:center;flex:none;cursor:pointer" style-active="transform:scale(.97)">撮る</div>
+          </div>
+        </sc-if>
+
+        <div ref="{{ tlRef }}" style="flex:1;overflow-y:auto;padding:14px 14px 10px;display:flex;flex-direction:column;gap:12px;min-height:0">
+          <sc-for list="{{ entries }}" as="e" hint-placeholder-count="3">
+            <div>
+              <sc-if value="{{ e.isDiv }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="flex:1;height:1px;background:rgba(255,255,255,.10)"></div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.38)">{{ e.label }}</div>
+                  <div style="flex:1;height:1px;background:rgba(255,255,255,.10)"></div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ e.isPhoto }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="position:relative;height:180px;border-radius:16px;overflow:hidden;background:#151318">
+                    <div style="position:absolute;inset:0;transition:filter 800ms ease;filter:{{ e.filter }}">
+                      <image-slot id="{{ e.slot }}" shape="rect" fit="cover" placeholder="{{ e.ph }}"></image-slot>
+                    </div>
+                    <sc-if value="{{ e.grain }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.055) 0 1px,rgba(0,0,0,0) 1px 2px),repeating-linear-gradient(90deg,rgba(0,0,0,.09) 0 1px,rgba(0,0,0,0) 1px 2px)"></div>
+                    </sc-if>
+                    <div style="position:absolute;left:0;right:0;bottom:0;height:80px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 44%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+                    <div style="position:absolute;left:14px;bottom:12px;pointer-events:none">
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:rgba(245,241,234,.64)">{{ e.meta }}</div>
+                      <div style="font-size:14px;margin-top:4px">{{ e.caption }}</div>
+                    </div>
+                  </div>
+                  <sc-if value="{{ e.likeable }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;align-items:center;gap:2px;padding-left:2px">
+                      <div onClick="{{ e.like }}" style="height:44px;display:flex;align-items:center;gap:7px;padding:0 12px 0 6px;cursor:pointer" style-active="transform:scale(.96)">
+                        <div style="font-size:19px;transition:transform 160ms ease;color:{{ e.heartColor }}">{{ e.heart }}</div>
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(245,241,234,.64)">{{ e.likeLabel }}</div>
+                      </div>
+                      <div onClick="{{ focusInput }}" style="height:44px;display:flex;align-items:center;gap:7px;padding:0 12px;cursor:pointer" style-active="opacity:.6">
+                        <div style="font-size:18px;color:rgba(245,241,234,.64)">↩</div>
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(245,241,234,.64)">リプライ</div>
+                      </div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{ e.isMine }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;justify-content:flex-end;animation:lt3-in 240ms ease">
+                  <div style="max-width:78%;background:#1E1B22;border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:14.5px;line-height:1.6">{{ e.text }}</div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ activeFading }}" hint-placeholder-val="{{ false }}">
+          <div style="border-top:1px solid rgba(255,255,255,.10);background:#151318;padding:14px 16px 8px;display:flex;flex-direction:column;gap:8px;flex:none">
+            <div onClick="{{ rescue }}" style="height:52px;border-radius:26px;background:#E9B26A;color:#0B0A0C;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer" style-active="transform:scale(.98)">リプライして繋ぎ止める</div>
+            <div onClick="{{ release }}" style="height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(245,241,234,.38);cursor:pointer" style-active="opacity:.6">この枠を手放す</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.7;color:rgba(245,241,234,.38);text-align:center">自分から手放す・放置して解除 → 14 日間の待機</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ activeNotFading }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:10px 14px 8px;display:flex;align-items:center;gap:10px;border-top:1px solid rgba(255,255,255,.10);flex:none">
+            <input ref="{{ inputRef }}" value="{{ draft }}" onChange="{{ onDraft }}" placeholder="この写真にリプライ" style="flex:1;height:48px;border-radius:24px;background:#1E1B22;border:1px solid rgba(255,255,255,.10);padding:0 18px;font-size:14.5px;color:#F5F1EA;outline:none;font-family:inherit;box-sizing:border-box" />
+            <div onClick="{{ send }}" style="width:48px;height:48px;border-radius:24px;background:#E9B26A;display:flex;align-items:center;justify-content:center;font-size:19px;color:#0B0A0C;cursor:pointer;flex:none" style-active="transform:scale(.94)">↑</div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:140px;height:5px;border-radius:3px;background:rgba(245,241,234,.32)"></div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:402,&quot;height&quot;:874},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;onboarding&quot;,&quot;waiting&quot;,&quot;main&quot;],&quot;default&quot;:&quot;onboarding&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;プロトタイプ&quot;},&quot;breakupMode&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;プロトタイプ&quot;}}">
+class Component extends DCLogic {
+  script = [
+    { q: 'はじめまして。5 分だけ、あなたの話を聞かせてください。いちばん時間を注いできたことは？', chips: ['10 年、厨房に立っていた', '絵を描くこと', '仕事一筋でした'] },
+    { q: 'この先の 10 年、どこで暮らしていたいですか。', chips: ['海の近く', '今の街のまま', 'まだ決めていない'] },
+    { q: '休みの日、気づくとしていることは？', chips: ['市場めぐり', '銭湯', '何もしない'] },
+    { q: '許せないことを、ひとつだけ教えてください。', chips: ['嘘をつく人', '時間にルーズ', '店員への態度'], highlight: true },
+    { q: '最後に。同時に繋がれるのは 3 人だけです。それでも？', chips: ['それがいい', '少し怖い、でも'] }
+  ];
+  state = {
+    screen: this.props.startScreen ?? 'onboarding',
+    qi: 0,
+    messages: [{ isAi: true, text: this.scriptText(0) }],
+    typing: false, showChips: true, done: false,
+    notif: false, activeId: null, draft: '',
+    liked: { azumi: true, nosuke: false, mio: false },
+    bonds: { azumi: 84, nosuke: 41, mio: 7 },
+    mioFading: this.props.breakupMode ?? true,
+    cd: 5 * 3600 + 48 * 60 + 12,
+    extra: { azumi: [], nosuke: [], mio: [] }
+  };
+  scriptText(i) {
+    return ['はじめまして。5 分だけ、あなたの話を聞かせてください。いちばん時間を注いできたことは？'][i] || '';
+  }
+  componentDidMount() {
+    this.chatRef = React.createRef(); this.tlRef = React.createRef(); this.inputRef = React.createRef();
+    this.timer = setInterval(() => {
+      if (this.state.mioFading && this.state.cd > 0) this.setState(s => ({ cd: s.cd - 1 }));
+    }, 1000);
+    this.forceUpdate();
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.t2); clearTimeout(this.t3); }
+  componentDidUpdate() {
+    const c = this.chatRef && this.chatRef.current; if (c) c.scrollTop = c.scrollHeight;
+    const t = this.tlRef && this.tlRef.current; if (t && this.scrollTl) { t.scrollTop = t.scrollHeight; this.scrollTl = false; }
+  }
+  fmt(sec) {
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    const p = n => String(n).padStart(2, '0');
+    return p(h) + ':' + p(m) + ':' + p(s);
+  }
+  pick(label) {
+    if (this.state.typing) return;
+    this.setState(s => ({ messages: [...s.messages, { isUser: true, text: label }], typing: true, showChips: false }));
+    this.t2 = setTimeout(() => {
+      this.setState(s => {
+        const qi = s.qi + 1;
+        if (qi < this.script.length) {
+          const step = this.script[qi];
+          return { qi, typing: false, showChips: true, messages: [...s.messages, { isAi: !step.highlight, isHighlight: !!step.highlight, text: step.q }] };
+        }
+        return { qi, typing: false, showChips: false, done: true, messages: [...s.messages, { isAi: true, text: '登録は以上です。ここから先は、AI が探します。届いたときが、はじまりです。' }] };
+      });
+    }, 1100);
+  }
+  personData() {
+    const { liked, bonds, mioFading } = this.state;
+    const heart = id => (liked[id] ? '♥' : '♡');
+    const hc = id => (liked[id] ? '#E9B26A' : 'rgba(245,241,234,.72)');
+    return [
+      { id: 'azumi', name: 'アズミ', initial: 'A', slot: 'mv-1', ph: 'アズミ の今日のお題写真', time: '2H AGO', theme: '平日の昼ごはん', caption: 'まかないの残りで。', ring: '#E9B26A', filter: 'none', fading: false, bondLabel: '絆 ' + bonds.azumi + '% · 残り 62:14' },
+      { id: 'nosuke', name: 'ノスケ', initial: 'N', slot: 'mv-2', ph: 'ノスケ の今日のお題写真', time: '7H AGO', theme: '平日の昼ごはん', caption: '今日も同じ店。', ring: '#E9B26A', filter: 'none', fading: false, bondLabel: '絆 ' + bonds.nosuke + '%' },
+      { id: 'mio', name: 'ミオ', initial: 'M', slot: 'mv-3', ph: 'ミオ の今日のお題写真', time: '3D AGO', theme: '3 日前 · 最近一番の買い物', caption: mioFading ? '反応がないと、写真から色が消えます。' : 'また、色が戻りました。', ring: mioFading ? 'rgba(245,241,234,.38)' : '#E9B26A', filter: mioFading ? 'grayscale(.85) contrast(1.05) brightness(.85)' : 'none', fading: mioFading, bondLabel: '絆 ' + bonds.mio + '%' }
+    ].map(p => ({
+      ...p, notFading: !p.fading,
+      bondPct: bonds[p.id] + '%',
+      heart: heart(p.id), heartColor: hc(p.id),
+      open: () => this.setState({ screen: 'pair', activeId: p.id }),
+      like: e => { e.stopPropagation(); this.setState(s => ({ liked: { ...s.liked, [p.id]: !s.liked[p.id] } })); }
+    }));
+  }
+  entriesFor(p) {
+    const base = {
+      azumi: [
+        { isDiv: true, label: 'TODAY' },
+        { isPhoto: true, slot: 'pt-1', ph: 'アズミ の写真', meta: 'アズミ · 12:41', caption: 'まかないの残りで。', filter: 'none', likeable: true },
+        { isMine: true, text: 'その厨房、10 年前と同じ皿だ' },
+        { isPhoto: true, slot: 'pt-2', ph: 'あなたの写真', meta: 'あなた · 13:08', caption: '', filter: 'none' }
+      ],
+      nosuke: [
+        { isDiv: true, label: 'TODAY' },
+        { isPhoto: true, slot: 'nk-1', ph: 'ノスケ の写真', meta: 'ノスケ · 11:02', caption: '今日も同じ店。', filter: 'none', likeable: true }
+      ],
+      mio: [
+        { isDiv: true, label: this.state.mioFading ? 'FADING — 22 DAYS TOGETHER' : '22 DAYS TOGETHER' },
+        { isPhoto: true, slot: 'bu-1', ph: 'ふたりの思い出写真', meta: '3 日前 · 最近一番の買い物', caption: this.state.mioFading ? 'まだ返事をしていない。' : '色が戻った。', filter: this.state.mioFading ? 'grayscale(1) contrast(1.06) brightness(.82)' : 'none', grain: this.state.mioFading, likeable: true },
+        { isPhoto: true, slot: 'bu-2', ph: '思い出 2', meta: '9 日前 · 平日の昼ごはん', caption: '', filter: this.state.mioFading ? 'grayscale(.7) brightness(.85)' : 'none', grain: this.state.mioFading }
+      ]
+    };
+    const extras = this.state.extra[p.id].map(t => ({ isMine: true, text: t }));
+    return [...base[p.id], ...extras].map(e => ({
+      ...e,
+      heart: this.state.liked[p.id] ? '♥' : '♡',
+      heartColor: this.state.liked[p.id] ? '#E9B26A' : 'rgba(245,241,234,.64)',
+      likeLabel: this.state.liked[p.id] ? 'いいね済み' : 'いいね',
+      like: () => this.setState(s => ({ liked: { ...s.liked, [p.id]: !s.liked[p.id] } }))
+    }));
+  }
+  renderVals() {
+    const s = this.state;
+    const people = this.personData();
+    const active = people.find(p => p.id === s.activeId) || people[0];
+    const activeFading = s.screen === 'pair' && active.id === 'mio' && s.mioFading;
+    return {
+      isOnboarding: s.screen === 'onboarding', isWaiting: s.screen === 'waiting',
+      isMain: s.screen === 'main', isPair: s.screen === 'pair',
+      qLabel: 'Q' + Math.min(s.qi + 1, 5) + ' / 5',
+      progressPct: Math.min(((s.qi + 1) / 5) * 100, 100) + '%',
+      messages: s.messages, typing: s.typing,
+      showChips: s.showChips && !s.done,
+      chips: (this.script[s.qi] ? this.script[s.qi].chips : []).map(label => ({ label, pick: () => this.pick(label) })),
+      onboardingDone: s.done,
+      goWaiting: () => { this.setState({ screen: 'waiting' }); this.t3 = setTimeout(() => this.setState({ notif: true }), 3200); },
+      notif: s.notif, notifNot: !s.notif,
+      slotCount: (s.notif ? 1 : 0) + ' / 3',
+      openSlot: () => this.setState({ screen: 'main' }),
+      people,
+      goMain: () => this.setState({ screen: 'main', draft: '' }),
+      active, activeFading, activeNotFading: !activeFading,
+      countdown: this.fmt(s.cd),
+      entries: this.entriesFor(active),
+      draft: s.draft,
+      onDraft: e => this.setState({ draft: e.target.value }),
+      send: () => {
+        const t = s.draft.trim(); if (!t) return;
+        this.scrollTl = true;
+        this.setState(st => ({ draft: '', extra: { ...st.extra, [active.id]: [...st.extra[active.id], t] }, bonds: { ...st.bonds, [active.id]: Math.min(st.bonds[active.id] + 4, 100) } }));
+      },
+      focusInput: () => { const i = this.inputRef && this.inputRef.current; if (i) i.focus(); },
+      rescue: () => {
+        this.scrollTl = true;
+        this.setState(st => ({ mioFading: false, bonds: { ...st.bonds, mio: 24 }, extra: { ...st.extra, mio: [...st.extra.mio, 'ごめん、返事が遅くなった。この靴、似合ってる'] } }));
+      },
+      release: () => this.setState(st => ({ screen: 'main' })),
+      chatRef: this.chatRef, tlRef: this.tlRef, inputRef: this.inputRef
+    };
+  }
+}
+
+</script>
+</body>
+</html>

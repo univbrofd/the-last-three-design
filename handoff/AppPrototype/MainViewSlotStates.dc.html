@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @dsCard group="Screens" name="3b · MainView 枠の状態" viewport="700x300" subtitle="満／空き枠／クールダウン中の 3 状態" -->
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; background: #0B0A0C; }
+    a { color: #E9B26A; text-decoration: none; }
+    a:hover { color: #F2C88C; }
+  </style>
+</helmet>
+<div style="width:700px;background:#0B0A0C;color:#F5F1EA;font-family:'Zen Kaku Gothic New','Hiragino Sans',system-ui,sans-serif;padding:24px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px">
+
+  <div style="position:relative;height:150px;border-radius:18px;overflow:hidden;background:#151318">
+    <image-slot id="slotstate-full" shape="rect" fit="cover" placeholder="お題写真"></image-slot>
+    <div style="position:absolute;left:0;right:0;top:0;height:64px;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:88px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 40%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+    <div style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:9px;pointer-events:none">
+      <div style="width:28px;height:28px;border-radius:50%;background:#3A2E20;border:1.5px solid #E9B26A;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',Georgia,serif;font-size:14px;color:#E9B26A">A</div>
+      <div style="font-size:15px;font-weight:700">アズミ</div>
+    </div>
+    <div style="position:absolute;left:14px;bottom:14px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.64);pointer-events:none">FULL — 絆 84% · 平日の昼ごはん</div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.10)"><div style="width:84%;height:100%;background:#E9B26A"></div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div style="height:96px;border-radius:18px;border:1px dashed rgba(255,255,255,.14);display:flex;flex-direction:column;justify-content:center;gap:6px;padding:0 18px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.38)">EMPTY</div>
+      <div style="font-size:14px;color:rgba(245,241,234,.64)">AI が探しています</div>
+      <div style="font-size:12px;color:rgba(245,241,234,.38)">写真も枠線も持たない。灯りは点かない。</div>
+    </div>
+    <div style="height:96px;border-radius:18px;background:#151318;border:1px solid rgba(255,255,255,.10);display:flex;flex-direction:column;justify-content:center;gap:6px;padding:0 18px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.38)">COOLDOWN · 13D 04:22:10</div>
+      <div style="font-size:14px;color:rgba(245,241,234,.64)">自分から手放した枠</div>
+      <div style="font-size:12px;color:rgba(245,241,234,.38)">14 日間、この枠は埋まらない。</div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>

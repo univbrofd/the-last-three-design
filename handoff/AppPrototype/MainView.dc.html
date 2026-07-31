@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @dsCard group="Screens" name="3 · MainView" viewport="402x874" subtitle="横長写真カード 3 枠固定。1 画面に収まる（添付レイアウトの翻案）" -->
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; background: #0B0A0C; }
+    a { color: #E9B26A; text-decoration: none; }
+    a:hover { color: #F2C88C; }
+  </style>
+</helmet>
+<div style="width:402px;height:874px;position:relative;overflow:hidden;border-radius:55px;background:#0B0A0C;color:#F5F1EA;font-family:'Zen Kaku Gothic New','Hiragino Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased">
+
+  <div style="position:absolute;top:11px;left:50%;transform:translateX(-50%);width:126px;height:37px;border-radius:19px;background:#000;z-index:40"></div>
+  <div style="position:absolute;top:19px;left:32px;font-size:15px;font-weight:500;z-index:39">10:57</div>
+  <div style="position:absolute;top:22px;right:32px;display:flex;align-items:flex-end;gap:6px;z-index:39">
+    <div style="display:flex;align-items:flex-end;gap:2px">
+      <div style="width:3px;height:5px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:7px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:9px;border-radius:1px;background:#F5F1EA"></div>
+      <div style="width:3px;height:11px;border-radius:1px;background:rgba(245,241,234,.38)"></div>
+    </div>
+    <div style="width:24px;height:12px;border-radius:3px;border:1px solid rgba(245,241,234,.5);padding:1.5px;box-sizing:border-box">
+      <div style="width:62%;height:100%;border-radius:1.5px;background:#F5F1EA"></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;top:59px;bottom:34px;display:flex;flex-direction:column">
+
+    <div style="height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 14px">
+      <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center">
+        <div style="width:11px;height:11px;border-left:1.6px solid #F5F1EA;border-bottom:1.6px solid #F5F1EA;transform:rotate(45deg);margin-left:4px"></div>
+      </div>
+      <div style="height:36px;padding:0 18px;border-radius:18px;background:#1E1B22;border:1px solid rgba(255,255,255,.10);display:flex;align-items:center;gap:8px">
+        <div style="font-size:14px;font-weight:500">日常</div>
+        <div style="width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid rgba(245,241,234,.64)"></div>
+      </div>
+      <div style="display:flex;align-items:center">
+        <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center">
+          <div style="width:14px;height:16px;border:1.6px solid #F5F1EA;border-top:none;border-radius:0 0 3px 3px;position:relative">
+            <div style="position:absolute;left:50%;top:-11px;transform:translateX(-50%);width:1.6px;height:11px;background:#F5F1EA"></div>
+            <div style="position:absolute;left:50%;top:-11px;transform:translateX(-50%) rotate(45deg);width:8px;height:8px;border-left:1.6px solid #F5F1EA;border-top:1.6px solid #F5F1EA"></div>
+          </div>
+        </div>
+        <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center">
+          <div style="width:19px;height:16px;border:1.6px solid #F5F1EA;border-radius:9px;position:relative">
+            <div style="position:absolute;left:3px;bottom:-5px;width:6px;height:6px;border-left:1.6px solid #F5F1EA;border-bottom:1.6px solid #F5F1EA;transform:skewX(-20deg);background:#0B0A0C"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:18px;display:flex;align-items:center;justify-content:center;gap:7px">
+      <div style="width:6px;height:6px;border-radius:50%;background:#E9B26A"></div>
+      <div style="width:6px;height:6px;border-radius:50%;background:#E9B26A"></div>
+      <div style="width:6px;height:6px;border-radius:50%;background:#E9B26A"></div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.38);margin-left:6px">3 / 3 FULL</div>
+    </div>
+
+    <div style="flex:1;padding:8px 14px 0;display:flex;flex-direction:column;gap:10px">
+
+      <div style="flex:1;position:relative;border-radius:18px;overflow:hidden;background:#151318">
+        <image-slot id="mv-1" shape="rect" fit="cover" placeholder="アズミ の今日のお題写真"></image-slot>
+        <div style="position:absolute;left:0;right:0;top:0;height:74px;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:104px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 40%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+        <div style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:9px;pointer-events:none">
+          <div style="width:28px;height:28px;border-radius:50%;background:#3A2E20;border:1.5px solid #E9B26A;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',Georgia,serif;font-size:14px;color:#E9B26A">A</div>
+          <div style="font-size:15px;font-weight:700">アズミ</div>
+        </div>
+        <div style="position:absolute;right:14px;top:16px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:rgba(245,241,234,.64);pointer-events:none">2H AGO</div>
+        <div style="position:absolute;left:14px;bottom:16px;pointer-events:none">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.64)">平日の昼ごはん</div>
+          <div style="font-size:14px;margin-top:5px">まかないの残りで。</div>
+        </div>
+        <div style="position:absolute;right:2px;bottom:6px;display:flex;flex-direction:column;align-items:center">
+          <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:21px;color:#F5F1EA">↩</div>
+          <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#E9B26A">♥</div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.10);pointer-events:none">
+          <div style="width:84%;height:100%;background:#E9B26A"></div>
+        </div>
+      </div>
+
+      <div style="flex:1;position:relative;border-radius:18px;overflow:hidden;background:#151318">
+        <image-slot id="mv-2" shape="rect" fit="cover" placeholder="ノスケ の今日のお題写真"></image-slot>
+        <div style="position:absolute;left:0;right:0;top:0;height:74px;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:104px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 40%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+        <div style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:9px;pointer-events:none">
+          <div style="width:28px;height:28px;border-radius:50%;background:#3A2E20;border:1.5px solid #E9B26A;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',Georgia,serif;font-size:14px;color:#E9B26A">N</div>
+          <div style="font-size:15px;font-weight:700">ノスケ</div>
+        </div>
+        <div style="position:absolute;right:14px;top:16px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:rgba(245,241,234,.64);pointer-events:none">7H AGO</div>
+        <div style="position:absolute;left:14px;bottom:16px;pointer-events:none">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.64)">平日の昼ごはん</div>
+          <div style="font-size:14px;margin-top:5px">今日も同じ店。</div>
+        </div>
+        <div style="position:absolute;right:2px;bottom:6px;display:flex;flex-direction:column;align-items:center">
+          <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:21px;color:#F5F1EA">↩</div>
+          <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;color:rgba(245,241,234,.72)">♡</div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.10);pointer-events:none">
+          <div style="width:41%;height:100%;background:#E9B26A"></div>
+        </div>
+      </div>
+
+      <div style="flex:1;position:relative;border-radius:18px;overflow:hidden;background:#151318">
+        <div style="position:absolute;inset:0;filter:grayscale(.55) contrast(1.04)">
+          <image-slot id="mv-3" shape="rect" fit="cover" placeholder="ミオ の今日のお題写真"></image-slot>
+        </div>
+        <div style="position:absolute;left:0;right:0;top:0;height:74px;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:104px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 40%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
+        <div style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:9px;pointer-events:none">
+          <div style="width:28px;height:28px;border-radius:50%;background:#26242A;border:1.5px solid rgba(245,241,234,.38);display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',Georgia,serif;font-size:14px;color:rgba(245,241,234,.64)">M</div>
+          <div style="font-size:15px;font-weight:700">ミオ</div>
+        </div>
+        <div style="position:absolute;right:14px;top:16px;display:flex;align-items:center;gap:6px;pointer-events:none">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#F5F1EA;background:rgba(0,0,0,.55);padding:4px 8px;border-radius:6px">解除まで 06:12:44</div>
+        </div>
+        <div style="position:absolute;left:14px;bottom:16px;pointer-events:none">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(245,241,234,.64)">3 日前 · 最近一番の買い物</div>
+          <div style="font-size:14px;margin-top:5px;color:rgba(245,241,234,.64)">反応がないと、写真から色が消えます。</div>
+        </div>
+        <div style="position:absolute;right:2px;bottom:6px;display:flex;flex-direction:column;align-items:center">
+          <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:21px;color:#F5F1EA">↩</div>
+          <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;color:rgba(245,241,234,.72)">♡</div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.10);pointer-events:none">
+          <div style="width:9%;height:100%;background:#E9B26A"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:140px;height:5px;border-radius:3px;background:rgba(245,241,234,.32)"></div>
+</div>
+
+</x-dc>
+</body>
+</html>
