@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>the last three — AppFlow プロトタイプ</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../../DesignSystem/colors_and_type.css">
+<link rel="stylesheet" href="../../DesignSystem/preview/card.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="lt3-body">
+
+<div class="lt3-stage">
+  <!-- iPhone 17 / 402×874 (DesignSystem/preview/card.css の .phone が canonical) -->
+  <div class="phone">
+    <div class="dynamic-island"></div>
+    <div class="statusbar">
+      <div class="time">9:41</div>
+      <div class="sys">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="#fff"><path d="M8.5 11.4 5.9 8.6a3.7 3.7 0 0 1 5.2 0zM3.4 6.1a7.3 7.3 0 0 1 10.2 0l1.7-1.8a9.7 9.7 0 0 0-13.6 0z"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" fill="none" stroke="rgba(255,255,255,.4)"/><rect x="2" y="2" width="16" height="9" rx="2" fill="#fff"/><path d="M24 4.5v4a2.2 2.2 0 0 0 0-4z" fill="rgba(255,255,255,.5)"/></svg>
+      </div>
+    </div>
+
+    <div class="screen" id="screen"></div>
+
+    <div class="home-ind"></div>
+  </div>
+
+  <!-- プロトタイプ専用の状態パネル (Flutter 実装には無い。各状態を出すための足場) -->
+  <aside class="lt3-panel" id="panel"></aside>
+</div>
+
+<script src="data/mock.js"></script>
+<script src="figure.js"></script>
+<script src="app.js"></script>
+<script src="screens.js"></script>
+</body>
+</html>

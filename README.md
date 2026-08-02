@@ -14,6 +14,7 @@ The Last Three のデザインの**単一ソース**。純 HTML/CSS で、Flutte
 
 - `assets/` — **共有アセットの単一ソース**（`icons/` `images/` `sample/`）。1ファイル1コピー。per-View に複製しない。specimen は深さに応じた相対で参照（`handoff/{View}/x.html` → `../../assets/...`）。
 - `DesignSystem/` — foundation（トークンと美学の一次情報）。`colors_and_type.css`（役割トークン・**色の canonical**）/ `taste.md`（ブランド確定後に作成）/ `USAGE_RULES.md`（同）/ `preview/`（コンポーネント specimen `comp-*.html` ＋共有 `components.css` / `card.css`）/ `_ds_manifest.json`（全索引）。
+- `handoff/AppFlow/` — **アプリの全動作が動く HTML プロトタイプ**（実装準拠の正）。`index.html` を開けば登録対話 → 3 枠 → タイムライン → 撮影 → 投稿 → 解除接近まで通しで操作できる。12 画面ぶんの実体は `app.css` / `screens.js`。`handoff/AppPrototype/` は 2026-07 のデザイン初稿で、実装が進んだ分は AppFlow にしかない。
 - `handoff/{View}/` — 1 View = タスク単位フォルダ。`HANDOFF.md`（この repo 内で完結する spec）＋ その View 固有 specimen（`comp-*.html` / `clean.html`）＋ `shots/`。**foundation CSS・アセットは持たず共有を参照**（View 固有上書きが要るときだけ `{View}.css` に差分だけ）。
 - `preview/` — design↔flutter の比較合成 PNG（`{View}.png`）。アプリ側スキルが出力する成果物。
 

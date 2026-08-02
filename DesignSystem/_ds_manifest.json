@@ -6,6 +6,16 @@
   "docs": ["DesignSystem/taste.md", "DesignSystem/USAGE_RULES.md"],
   "globalCssPaths": ["DesignSystem/colors_and_type.css", "DesignSystem/preview/card.css"],
   "fonts": ["Instrument Serif", "Zen Kaku Gothic New", "IBM Plex Mono"],
+  "prototypes": [
+    {
+      "entry": "handoff/AppFlow/index.html",
+      "handoff": "handoff/AppFlow/HANDOFF.md",
+      "name": "AppFlow — アプリの全動作が動く HTML プロトタイプ",
+      "viewport": "402x874",
+      "note": "Flutter 実装の写し。12 画面を通しで操作できる素の HTML/CSS/JS。実装準拠の正で、AppPrototype (初稿) の後継。状態は ?route= / ?phase= / ?slots= で直接開ける",
+      "files": ["handoff/AppFlow/app.css", "handoff/AppFlow/app.js", "handoff/AppFlow/screens.js", "handoff/AppFlow/figure.js", "handoff/AppFlow/data/mock.js"]
+    }
+  ],
   "cards": [
     { "file": "handoff/AppPrototype/colors_and_type.dc.html", "group": "Foundations", "name": "Colors & Type", "viewport": "700x520" },
     { "file": "handoff/AppPrototype/OnboardingChatView.dc.html", "group": "Screens", "name": "1 · OnboardingChatView (旧・チャット版)", "viewport": "402x874" },
