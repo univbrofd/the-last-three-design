@@ -7,7 +7,10 @@
 (function (global) {
   'use strict';
 
-  var TEXT1 = '245,241,234';
+  // 白い面の上に置くので、粒はインク（--neutral-900）で打つ。
+  // 暗い地のときと同じ濃度では薄く沈むので、密度を GAIN 倍して読ませる。
+  var TEXT1 = '20,24,28';
+  var GAIN = 2.0, CEIL = 0.82;
 
   // _Blob(cx, cy, rx, ry, [[alpha, stop], ...])
   function blob(cx, cy, rx, ry, stops) {
@@ -95,7 +98,7 @@
 
   function gradientOf(b, alphaScale) {
     var stops = b.stops.map(function (s) {
-      return 'rgba(' + TEXT1 + ',' + (s[0] * alphaScale).toFixed(3) + ') ' + (s[1] * 100) + '%';
+      return 'rgba(' + TEXT1 + ',' + (s[0] === 0 ? 0 : Math.min(CEIL, s[0] * alphaScale * GAIN)).toFixed(3) + ') ' + (s[1] * 100) + '%';
     });
     return 'radial-gradient(' + b.rx + 'px ' + b.ry + 'px at ' + b.cx + 'px ' + b.cy + 'px,' + stops.join(',') + ')';
   }

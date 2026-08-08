@@ -1,0 +1,17 @@
+/* Motion. Short, snappy, no bounce except on stickers/badges/reactions. */
+:root{
+  --dur-instant:80ms; /* @kind other */
+  --dur-fast:140ms; /* @kind other */
+  --dur-base:200ms; /* @kind other */
+  --dur-slow:320ms; /* @kind other */
+  --dur-sheet:380ms; /* @kind other */
+  --ease-out:cubic-bezier(.16,1,.3,1); /* @kind other */
+  --ease-in-out:cubic-bezier(.4,0,.2,1); /* @kind other */
+  --ease-in:cubic-bezier(.4,0,1,1); /* @kind other */
+  --ease-pop:cubic-bezier(.34,1.56,.64,1); /* @kind other */
+  --transition-press:transform var(--dur-instant) var(--ease-out),background-color var(--dur-fast) var(--ease-in-out); /* @kind other */
+  --press-scale:.97; /* @kind other */
+  --press-scale-tile:.94; /* @kind other */
+  --hover-tint:var(--ink-a04); /* @kind color */
+  --press-tint:var(--ink-a08); /* @kind color */
+}

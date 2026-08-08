@@ -1,14 +1,20 @@
 /* ============================================================================
    the last three — AppFlow prototype
-   Flutter 実装 (lib/feature/**) の写し。色・書体は DesignSystem/colors_and_type.css
-   を参照するだけで、ここには View 固有の差分だけを置く。
-   数値は Flutter の実装値そのまま (402×874 の論理 px = CSS px)。
+   Kaiwa Design System 準拠。色・書体・余白・角丸・陰影・モーションは
+   すべて Kaiwa のトークン (var(--*)) が正で、ここには View 固有の差分だけを置く。
+   守っている作法:
+     ・アクセントは Kaiwa green 1 色。地は白か薄グレーの平面（グラデーション無し）
+     ・分けるのは 1px のヘアライン。カードは「影 か 線」のどちらか片方だけ
+     ・ボタン・チップ・検索欄はピル。カード 14 / フィールド 10 / シート 20 / 吹き出し 18
+     ・写真の上の文字はインクの平面（scrim）で敷く。ぼかしのグラデーションは使わない
+     ・押下 80ms / 色 200ms / 画面送り 320ms / シート 380ms
+   レイアウト数値は Flutter 実装のまま (402×874 の論理 px = CSS px)。
    ========================================================================== */
 
 /* ---- stage (プレビュー台。アプリの外側) ---------------------------------- */
 body.lt3-body {
   padding: 28px 24px;
-  background: #08070a;
+  background: var(--bg-subtle);
   align-items: flex-start;
   flex-direction: row;
   gap: 28px;
@@ -18,24 +24,33 @@ body.lt3-body {
 .lt3-stage { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
 
 .lt3-panel {
-  width: 246px; flex: none; display: flex; flex-direction: column; gap: 14px;
-  font-family: var(--font-ui); color: var(--text-2); padding-top: 6px;
+  width: 258px; flex: none; display: flex; flex-direction: column; gap: 16px;
+  font-family: var(--font-ui); color: var(--text-secondary);
+  background: var(--surface-card); border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg); padding: 18px 16px 20px;
 }
-.lt3-panel h2 { font: var(--type-meta); letter-spacing: .16em; color: var(--primary); }
-.lt3-panel .grp { display: flex; flex-direction: column; gap: 7px; }
-.lt3-panel .lbl { font: var(--type-meta); letter-spacing: .16em; color: var(--text-3); }
+.lt3-panel h2 { font: var(--type-meta); letter-spacing: var(--tracking-caps); color: var(--text-brand); }
+.lt3-panel .grp { display: flex; flex-direction: column; gap: 8px; }
+.lt3-panel .lbl { font: var(--type-meta); letter-spacing: var(--tracking-caps); color: var(--text-tertiary); }
 .lt3-panel .btns { display: flex; flex-wrap: wrap; gap: 6px; }
 .lt3-panel button {
-  font-family: var(--font-ui); font-size: 12px; line-height: 1; color: var(--text-2);
-  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-  padding: 8px 11px; cursor: pointer;
+  font-family: var(--font-ui); font-size: var(--text-xs); font-weight: 500; line-height: 1;
+  color: var(--text-secondary); background: var(--surface-card);
+  border: 1px solid var(--border-default); border-radius: var(--radius-pill);
+  padding: 9px 13px; cursor: pointer; transition: var(--transition-press); white-space: nowrap;
 }
-.lt3-panel button:hover { border-color: rgba(233,178,106,.5); color: var(--text-1); }
-.lt3-panel button[aria-pressed='true'] { border-color: var(--primary); color: var(--primary); background: rgba(233,178,106,.12); }
-.lt3-panel .hint { font-size: 11px; line-height: 1.6; color: var(--text-3); }
+.lt3-panel button:hover { background: var(--bg-subtle); color: var(--text-primary); }
+.lt3-panel button[aria-pressed='true'] {
+  border-color: var(--border-accent); color: var(--text-brand); background: var(--accent-subtle);
+}
+.lt3-panel .hint { font-size: var(--text-xs); line-height: var(--leading-body); color: var(--text-tertiary); }
 
 /* ---- app shell ---------------------------------------------------------- */
-.phone .screen { background: var(--bg); color: var(--text-1); font-family: var(--font-ui); user-select: none; overflow: hidden; }
+.phone .screen {
+  background: var(--bg-app); color: var(--text-primary);
+  font-family: var(--font-ui); letter-spacing: var(--tracking-jp);
+  user-select: none; overflow: hidden;
+}
 .phone .screen * { box-sizing: border-box; }
 .lt3-view { position: absolute; inset: 0; display: flex; flex-direction: column; }
 .lt3-safe-top { padding-top: 62px; }
@@ -43,49 +58,69 @@ body.lt3-body {
 .lt3-fill { flex: 1; min-height: 0; }
 .lt3-scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .lt3-scroll::-webkit-scrollbar { width: 0; height: 0; }
-.lt3-tap { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.lt3-tap:active { opacity: .82; }
+/* スクロールバーは出さない（クロームの一部ではない） */
+.lt3-view *, .lt3-view { scrollbar-width: none; }
 
-.meta { font-family: var(--font-meta); font-weight: 500; font-size: 10px; line-height: 1.2; letter-spacing: .16em; color: var(--text-3); }
-.brand { font-family: var(--font-brand); }
-.count { font-family: var(--font-brand); font-variant-numeric: tabular-nums; line-height: 1; }
+/* 押下は 80ms で縮む。面の大きいカードだけは縮めずに沈める */
+.lt3-tap { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: var(--transition-press); }
+.lt3-tap:active { transform: scale(var(--press-scale)); }
+.slot-card.lt3-tap:active, .rep-card.lt3-tap:active, .pprof .post.lt3-tap:active,
+.myprof .hero.lt3-tap:active, .viewer.lt3-tap:active { transform: none; filter: brightness(.94); }
+
+/* 11px 大文字のアイブロウ。Kaiwa で唯一 ALL CAPS が許される文字 */
+.meta {
+  font-family: var(--font-ui); font-weight: var(--weight-bold); font-size: var(--text-2xs);
+  line-height: 1.2; letter-spacing: var(--tracking-caps); color: var(--text-tertiary);
+}
+.brand { font-family: var(--font-ui); font-weight: var(--weight-bold); }
+.count { font-family: var(--font-mono); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; line-height: 1; }
+/* ワードマーク。M PLUS Rounded 1c 800 の小文字組みで、three だけ Kaiwa green */
+.wordmark {
+  font-family: var(--font-display); font-weight: 800; line-height: 1.05;
+  letter-spacing: var(--tracking-display); color: var(--text-primary); white-space: nowrap;
+}
+.wordmark i { font-style: normal; color: var(--accent); }
+.mark { display: block; overflow: visible; }
+.mark .lightup { opacity: .14; animation: lt3-lightup var(--dur-slow) var(--ease-out) forwards; }
+@keyframes lt3-lightup { to { opacity: 1 } }
 
 /* ---- WdPhotoSlot -------------------------------------------------------- */
 .slot {
   position: relative; width: 100%; height: 100%; overflow: hidden;
-  background: linear-gradient(135deg, #2A2114, var(--surface));
+  background: var(--bg-sunken);
   display: flex; align-items: center; justify-content: center;
 }
 .slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .slot .ph {
-  font-family: var(--font-meta); font-weight: 500; font-size: 9.5px; letter-spacing: .14em;
-  color: var(--text-3); text-align: center; padding: 0 16px;
+  font-family: var(--font-ui); font-weight: 500; font-size: var(--text-xs);
+  letter-spacing: var(--tracking-jp); color: var(--text-tertiary); text-align: center; padding: 0 16px;
 }
-.slot.is-faded { filter: saturate(.15); transition: filter 800ms ease; }
-.slot.is-fading-soft { filter: saturate(.15); }
-.slot .grain {
-  position: absolute; inset: 0; pointer-events: none;
-  background:
-    repeating-linear-gradient(to bottom, rgba(255,255,255,.055) 0 1px, transparent 1px 2px),
-    repeating-linear-gradient(to right, rgba(0,0,0,.09) 0 1px, transparent 1px 2px);
-}
+/* 危機は色ではなく退色で表す（実装のまま） */
+.slot.is-faded { filter: saturate(.15); transition: filter 800ms var(--ease-in-out); }
+.slot .grain { display: none; } /* Kaiwa: ノイズ・グレインは置かない */
+/* プロトタイプ専用の足場（実写をドロップできる印）。製品 UI のアイブロウではないので
+   11px の底は適用せず、小さい器ではそもそも出さない */
 .slot .drop-hint {
-  position: absolute; inset: auto 6px 6px auto; font-family: var(--font-meta);
-  font-size: 7.5px; letter-spacing: .12em; color: rgba(245,241,234,.28); pointer-events: none;
+  position: absolute; inset: auto 8px 8px auto; font-family: var(--font-ui); font-weight: 600;
+  font-size: 8px; letter-spacing: .1em; color: var(--text-tertiary); pointer-events: none; white-space: nowrap;
 }
-.slot.is-over { outline: 1px dashed rgba(233,178,106,.6); outline-offset: -3px; }
+.tabbar .cam .drop-hint, .onb .avatar-row .pic .drop-hint, .companion-card .pic .drop-hint,
+.pair .hd .drop-hint { display: none; }
+.slot.is-over { outline: 2px dashed var(--accent); outline-offset: -4px; }
 
 /* ---- WdInitialAvatar ---------------------------------------------------- */
-.avatar { border-radius: 50%; background: #3A2E20; overflow: hidden; display: flex; align-items: center; justify-content: center; flex: none; }
+.avatar {
+  border-radius: 50%; background: var(--bg-sunken); overflow: hidden;
+  display: flex; align-items: center; justify-content: center; flex: none;
+}
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
-.avatar span { font-family: var(--font-brand); line-height: 1; color: var(--primary); }
-.avatar.is-dim span { color: var(--text-3); }
+.avatar span { font-family: var(--font-display); font-weight: 800; line-height: 1; color: var(--text-brand); }
+.avatar.is-dim span { color: var(--text-tertiary); }
 
-/* ---- animations (design の lt3-*) --------------------------------------- */
-@keyframes lt3-breathe { 0%,100% { opacity: .28 } 50% { opacity: .9 } }
+/* ---- animations --------------------------------------------------------- */
+@keyframes lt3-breathe { 0%,100% { opacity: .32 } 50% { opacity: 1 } }
 @keyframes lt3-in      { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
 @keyframes lt3-drop    { from { opacity: 0; transform: translateY(-14px) } to { opacity: 1; transform: none } }
-@keyframes lt3-ring    { 0% { transform: scale(.72); opacity: .55 } 100% { transform: scale(1.5); opacity: 0 } }
 @keyframes lt3-level   { 0%,100% { transform: scaleY(.22) } 50% { transform: scaleY(1) } }
 /* 粒子像 (figure.js が --dx/--dy/--bfrom/--bto を各 stage の実測値で流し込む) */
 @keyframes lt3-drift  { from { -webkit-mask-position: 0 0; mask-position: 0 0 }
@@ -93,400 +128,554 @@ body.lt3-body {
 @keyframes lt3-breath { 0%,100% { transform: scale(var(--bfrom)) } 50% { transform: scale(var(--bto)) } }
 @keyframes lt3-blink  { 0%,92%,100% { opacity: 1 } 95%,97% { opacity: .05 } }
 @keyframes lt3-mouth  { 0% { opacity: .12 } 22% { opacity: .78 } 46% { opacity: .30 } 70% { opacity: .86 } 100% { opacity: .12 } }
-.breathe { animation: lt3-breathe 4s ease-in-out infinite; }
-.enter   { animation: lt3-in 240ms ease; }
+.breathe { animation: lt3-breathe 4s var(--ease-in-out) infinite; }
+.enter   { animation: lt3-in var(--dur-base) var(--ease-out); }
 
 /* ---- 1. SplashView ------------------------------------------------------ */
-.splash { align-items: center; justify-content: center; }
-.splash .icon {
-  width: 201px; height: 201px; border-radius: 45px; overflow: hidden;
-  box-shadow: 0 0 64px 6px rgba(233,178,106,.16);
-  opacity: 0; transform: scale(1.08);
-  animation: splash-icon 630ms cubic-bezier(.22,.61,.36,1) forwards;
-}
-.splash .icon img { width: 100%; height: 100%; object-fit: cover; }
-.splash .title { margin-top: 39px; font-family: var(--font-brand); font-size: 28px; line-height: 1.15; opacity: 0; animation: splash-title 420ms ease 448ms forwards; }
-.splash .dots { margin-top: 19px; display: flex; gap: 7px; }
-.splash .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); opacity: .18; animation: splash-dot 196ms ease forwards; }
+/* マークの 3 点が 1 つずつ灯る。別のローディング表現は置かない */
+.splash { align-items: center; justify-content: center; background: var(--bg-app); }
+.splash .mark-wrap { opacity: 0; transform: scale(1.06); animation: splash-icon 630ms var(--ease-out) forwards; }
+.splash .wordmark { margin-top: 36px; opacity: 0; animation: splash-title var(--dur-slow) var(--ease-out) 448ms forwards; }
 @keyframes splash-icon  { to { opacity: 1; transform: scale(1) } }
 @keyframes splash-title { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
-@keyframes splash-dot   { to { opacity: 1 } }
 
 /* ---- 2. LoginView ------------------------------------------------------- */
-.login { padding: 62px 28px 34px; align-items: center; }
+.login { padding: 62px 24px 34px; align-items: center; }
 .login .spacer-3 { flex: 3; }
 .login .spacer-4 { flex: 4; }
-.login .title { font-family: var(--font-brand); font-size: 32px; line-height: 1.15; }
-.login .sub { margin-top: 14px; font-size: 13px; line-height: 1.5; color: var(--text-2); }
-.login .err { margin-bottom: 16px; font-size: 13px; line-height: 1.5; color: var(--primary); }
+.login .lockup { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.login .sub { margin-top: 14px; font-size: var(--text-base); line-height: var(--leading-body); color: var(--text-secondary); }
+.login .err { margin-bottom: 16px; font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--text-danger); }
 .login .auth-btn {
-  height: 52px; width: 100%; border-radius: 14px; display: flex; align-items: center; justify-content: center;
-  gap: 8px; font-size: 15px; font-weight: 700; line-height: 1;
+  height: var(--control-lg); width: 100%; border-radius: var(--radius-pill);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: var(--text-md); font-weight: var(--weight-bold); line-height: 1;
+  transition: var(--transition-press);
 }
-.login .auth-btn.filled { background: var(--white); color: #000; }
-.login .auth-btn.outline { background: var(--surface); border: 1px solid var(--border); color: var(--text-1); }
+.login .auth-btn.filled { background: var(--accent); color: var(--text-on-accent); }
+.login .auth-btn.filled:active { background: var(--accent-press); }
+.login .auth-btn.outline { background: var(--surface-card); border: 1px solid var(--border-strong); color: var(--text-primary); }
+.login .auth-btn.outline:active { background: var(--bg-subtle); }
 .login .auth-btn + .auth-btn { margin-top: 12px; }
-.login .terms { margin-top: 24px; font-size: 11px; line-height: 1.6; color: var(--text-3); text-align: center; }
+.login .terms { margin-top: 24px; font-size: var(--text-xs); line-height: var(--leading-body); color: var(--text-tertiary); text-align: center; }
 .login .loading { height: 120px; display: flex; align-items: center; justify-content: center; }
-.spinner { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(233,178,106,.25); border-top-color: var(--primary); animation: spin 900ms linear infinite; }
+.spinner {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid var(--neutral-200); border-top-color: var(--accent);
+  animation: spin 900ms linear infinite;
+}
 @keyframes spin { to { transform: rotate(360deg) } }
 
 /* ---- 3. OnboardingChatView ---------------------------------------------- */
-.onb { position: absolute; inset: 0; }
-.onb .glow { position: absolute; left: 0; right: 0; top: 0; height: 300px; pointer-events: none;
-  background: radial-gradient(120% 300px at 50% 0%, rgba(233,178,106,.10) 0%, rgba(233,178,106,0) 62%); }
-.onb .scrim-top { position: absolute; left: 0; right: 0; top: 0; height: 210px; pointer-events: none;
-  background: linear-gradient(to bottom, rgba(0,0,0,.62) 0%, rgba(0,0,0,.45) 46%, rgba(0,0,0,0) 100%); }
-.onb .scrim-bottom { position: absolute; left: 0; right: 0; bottom: 0; pointer-events: none;
-  background: linear-gradient(to top, rgba(0,0,0,.78) 0%, rgba(0,0,0,.45) 40%, rgba(0,0,0,0) 72%);
-  transition: height 400ms ease; }
-.onb .header { position: absolute; left: 0; right: 0; top: 62px; padding: 8px 24px 14px; }
-.onb .header .top { display: flex; justify-content: space-between; align-items: baseline; }
+/* 白い面に粒子像。字幕から下はボトムシート（白面 + 上ヘアライン）に載せる */
+.onb { position: absolute; inset: 0; background: var(--bg-app); }
+.onb .glow, .onb .scrim-top, .onb .scrim-bottom { display: none; }
+.onb .header { position: absolute; left: 0; right: 0; top: 62px; padding: 8px 24px 14px; z-index: 2; }
+.onb .header .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .onb .header .bars { display: flex; gap: 4px; margin-top: 10px; }
-.onb .header .bars i { flex: 1; height: 2px; background: var(--border); transition: background 500ms ease; }
-.onb .header .bars i.lit { background: var(--primary); }
-.onb .bottom { position: absolute; left: 0; right: 0; bottom: 34px; padding: 0 24px 22px; max-height: 620px; overflow-y: auto; }
+.onb .header .bars i { flex: 1; height: 3px; border-radius: var(--radius-pill); background: var(--border-default); transition: background var(--dur-base) var(--ease-in-out); }
+.onb .header .bars i.lit { background: var(--accent); }
+.onb .bottom {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+  padding: 20px 20px calc(22px + 34px); max-height: 660px; overflow-y: auto;
+  background: var(--surface-card); border-top: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0; box-shadow: var(--shadow-sheet);
+}
 .onb .bottom::-webkit-scrollbar { width: 0 }
-.onb .caption-block { min-height: 132px; display: flex; flex-direction: column; justify-content: flex-end; cursor: pointer; }
-.onb .caption { margin-top: 14px; font-size: 20px; line-height: 1.7; }
-.onb .caption.climax { font-family: var(--font-brand); font-size: 26px; line-height: 1.35; }
-.onb .caption-sub { margin-top: 14px; font-size: 13.5px; line-height: 1.7; color: var(--text-2); }
-.onb .err { margin-top: 12px; font-size: 13px; line-height: 1.5; color: var(--primary); }
+/* intro〜ideal — シートを使わず View の中心に字幕。選択肢・ボタン・入力は下辺 */
+.onb .center-block {
+  position: absolute; left: 24px; right: 24px; top: 50%; transform: translateY(-50%); z-index: 3;
+  display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; cursor: pointer;
+}
+.onb .center-block .caption { margin-top: 0; white-space: pre-wrap; }
+.onb .foot {
+  position: absolute; left: 20px; right: 20px; bottom: calc(22px + 34px); z-index: 3;
+  max-height: 46%; overflow-y: auto;
+}
+.onb .foot::-webkit-scrollbar { width: 0 }
+.onb .foot .action, .onb .foot .chips { margin-top: 0; }
+.onb .foot .err { margin-top: 0; margin-bottom: 10px; text-align: center; }
+/* 生成中 — モザイク + 不定進行バー（スピナーは置かない） */
+.onb .mosaic { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(var(--cols), 1fr); grid-auto-rows: 1fr; }
+.onb .mosaic i { animation: lt3-mosaic 2.4s var(--ease-in-out) infinite; }
+.onb .fig-wrap:has(.mosaic) .drop-hint { display: none; }
+@keyframes lt3-mosaic { 0%, 100% { opacity: 1 } 50% { opacity: .34 } }
+@keyframes lt3-indet { 0% { transform: translateX(-105%) } 100% { transform: translateX(270%) } }
+.onb .caption-block { min-height: 116px; display: flex; flex-direction: column; justify-content: flex-end; cursor: pointer; }
+.onb .caption { margin-top: 12px; font-size: var(--text-lg); line-height: var(--leading-body); color: var(--text-primary); text-wrap: pretty; }
+.onb .caption.climax { font-size: var(--text-xl); font-weight: var(--weight-bold); line-height: var(--leading-snug); }
+.onb .caption-sub { margin-top: 14px; font-size: var(--text-sm); line-height: var(--leading-body); color: var(--text-secondary); }
+.onb .err { margin-top: 12px; font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--text-danger); }
 .onb .label-row { display: flex; align-items: center; gap: 8px; }
 .onb .level { display: flex; align-items: center; gap: 3px; height: 18px; }
-.onb .level i { width: 2px; height: 18px; background: var(--text-3); animation: lt3-level 900ms ease-in-out infinite; }
+.onb .level i { width: 2px; height: 18px; border-radius: 1px; background: var(--accent); animation: lt3-level 900ms var(--ease-in-out) infinite; }
+.onb .pick-hint {
+  font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--text-secondary);
+  text-align: center; font-variant-numeric: tabular-nums;
+}
+.onb .foot .pick-hint { margin-bottom: 10px; }
+.onb .bottom .pick-hint { margin-top: 18px; }
+.onb .bottom .pick-hint + .chips { margin-top: 8px; }
 .onb .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
 .onb .chip {
-  height: 44px; padding: 0 18px; border-radius: 22px; display: flex; align-items: center;
-  background: var(--surface); border: 1px solid var(--border); font-size: 14px; line-height: 1; color: var(--text-2);
+  height: var(--tap-min); padding: 0 18px; border-radius: var(--radius-pill); display: flex; align-items: center;
+  background: var(--surface-card); border: 1px solid var(--border-default);
+  font-size: var(--text-base); line-height: 1; color: var(--text-primary); white-space: nowrap;
+  transition: var(--transition-press);
 }
-.onb .chip.on { background: rgba(233,178,106,.16); border-color: var(--primary); color: var(--primary); }
+.onb .chip.on { background: var(--accent-subtle); border-color: var(--border-accent); color: var(--text-brand); font-weight: 700; }
 .onb .action {
-  height: 52px; width: 100%; border-radius: 26px; display: flex; align-items: center; justify-content: center;
-  background: var(--surface-raised); border: 1px solid rgba(233,178,106,.42);
-  font-size: 15px; font-weight: 700; line-height: 1; color: var(--primary); margin-top: 16px;
+  height: var(--composer-h); width: 100%; border-radius: var(--radius-pill);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-card); border: 1px solid var(--border-accent);
+  font-size: var(--text-md); font-weight: var(--weight-bold); line-height: 1; color: var(--text-brand);
+  margin-top: 16px; transition: var(--transition-press);
 }
+.onb .action:active { background: var(--accent-subtle); }
 .onb .input-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
 .onb .input-row .box {
-  flex: 1; height: 52px; padding: 0 20px; border-radius: 26px; display: flex; align-items: center;
-  background: var(--surface-raised); border: 1px solid var(--border);
+  flex: 1; height: var(--composer-h); padding: 0 20px; border-radius: var(--radius-pill);
+  display: flex; align-items: center; background: var(--field-bg); border: 1px solid var(--border-field);
+  transition: box-shadow var(--dur-fast) var(--ease-in-out), border-color var(--dur-fast) var(--ease-in-out);
 }
+.onb .input-row .box:focus-within { border-color: var(--accent); box-shadow: var(--focus-ring); background: var(--field-bg-focus); }
 .onb .input-row input {
-  width: 100%; background: none; border: 0; outline: none; color: var(--text-1);
-  font-family: var(--font-ui); font-size: 15px; line-height: 1.2;
+  width: 100%; background: none; border: 0; outline: none; color: var(--text-primary);
+  font-family: var(--font-ui); font-size: var(--text-md); line-height: 1.2;
 }
-.onb .input-row input::placeholder { color: var(--text-3); }
-.onb .send { width: 52px; height: 52px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; flex: none; }
-.onb .send.off { background: rgba(233,178,106,.4); }
+.onb .input-row input::placeholder { color: var(--field-placeholder); }
+.onb .send {
+  width: var(--composer-h); height: var(--composer-h); border-radius: 50%; background: var(--accent);
+  box-shadow: var(--shadow-fab); display: flex; align-items: center; justify-content: center; flex: none;
+}
+.onb .send.off { background: var(--neutral-300); box-shadow: none; }
 .onb .avatar-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-.onb .avatar-row .pic { width: 52px; height: 52px; border-radius: 50%; overflow: hidden; flex: none; }
-.onb .avatar-row .later { height: 52px; padding: 0 16px; display: flex; align-items: center; font-size: 14px; color: var(--text-3); }
+.onb .avatar-row .pic { width: var(--composer-h); height: var(--composer-h); border-radius: 50%; overflow: hidden; flex: none; }
+.onb .avatar-row .later { height: var(--tap-min); padding: 0 14px; display: flex; align-items: center; font-size: var(--text-base); color: var(--text-secondary); }
 .onb .slot-dots { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
-.onb .slot-dots i { width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--text-3); }
+.onb .slot-dots i { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--neutral-300); }
 .onb .start {
-  height: 52px; width: 100%; border-radius: 26px; margin-top: 26px; background: var(--primary);
-  display: flex; align-items: center; justify-content: center; color: var(--on-primary);
-  font-size: 15px; font-weight: 700; line-height: 1;
+  height: var(--composer-h); width: 100%; border-radius: var(--radius-pill); margin-top: 24px;
+  background: var(--accent); box-shadow: var(--shadow-fab);
+  display: flex; align-items: center; justify-content: center; color: var(--text-on-accent);
+  font-size: var(--text-md); font-weight: var(--weight-bold); line-height: 1;
 }
-.onb .start.busy { background: rgba(233,178,106,.4); }
-/* 相棒の立ち絵 / 結晶カード */
-.onb .companion, .onb .crystal {
-  position: absolute; overflow: hidden; border-radius: 18px;
-  background: var(--surface); border: 1px solid var(--border);
+.onb .start.busy { background: var(--neutral-300); box-shadow: none; color: var(--text-inverse); }
+/* 相棒の像は全画面。名前・肩書きはシートの頭に置く */
+.onb .stage { position: absolute; inset: 0; }
+.onb .gen {
+  position: absolute; left: 0; right: 0; top: 38%; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
 }
-.onb .companion { left: 51px; top: 132px; width: 300px; height: 400px; }
-.onb .crystal   { left: 51px; top: 152px; width: 300px; height: 402px; }
-.onb .companion .fig-wrap, .onb .crystal .fig-wrap { position: absolute; inset: 0; }
-.onb .companion .cap { position: absolute; left: 18px; right: 18px; bottom: 14px; }
-.onb .crystal .cap   { position: absolute; left: 18px; right: 18px; bottom: 16px; }
-.onb .companion .cap .nm, .onb .crystal .cap .nm { margin-top: 6px; font-family: var(--font-brand); font-size: 22px; line-height: 1.3; }
-.onb .companion .veil { position: absolute; left: 0; right: 0; bottom: 0; height: 110px; background: linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,0)); }
-.onb .crystal .veil   { position: absolute; left: 0; right: 0; bottom: 0; height: 132px; background: linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.45) 40%, rgba(0,0,0,0) 100%); }
+.onb .gen .pill {
+  height: 34px; padding: 0 18px; border-radius: var(--radius-pill); background: var(--ink-a56);
+  display: flex; align-items: center; color: #fff; font-size: var(--text-sm); font-weight: var(--weight-bold); line-height: 1;
+}
+.onb .gen .bar { position: relative; width: 160px; height: 3px; border-radius: var(--radius-pill); background: var(--ink-a24); overflow: hidden; }
+.onb .gen .bar i { position: absolute; top: 0; bottom: 0; width: 38%; background: var(--accent); animation: lt3-indet 1.5s var(--ease-in-out) infinite; }
+.onb .persona-line { margin-bottom: 18px; }
+.onb .persona-line .nm {
+  margin-top: 6px; font-size: var(--text-xl); font-weight: var(--weight-bold);
+  line-height: var(--leading-snug); color: var(--text-primary);
+}
 
 /* 粒子像 (WdParticleFigure = CSS radial-gradient × dot mask) */
-/* 外 = blur / 中 = 呼吸 / 内 = 点描 (specimen と同じ入れ子。filter を内側に置くと粒が溶けない) */
-.figure { position: absolute; left: 0; right: 0; height: 640px; pointer-events: none; transition: top 600ms ease; }
+/* 外 = blur / 中 = 呼吸 / 内 = 点描 (filter を内側に置くと粒が溶けない) */
+.figure { position: absolute; left: 0; right: 0; height: 640px; pointer-events: none; transition: top 600ms var(--ease-out); }
 
 /* ---- 4. MainView -------------------------------------------------------- */
-.main { position: absolute; inset: 0; display: flex; flex-direction: column; }
-.main .slots { flex: 1; min-height: 0; padding-top: 62px; display: flex; flex-direction: column; }
-.main .slots.filled { overflow-y: auto; }
+.main { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg-app); }
+/* 枠は上へ詰める。空き枠は置かないので、枠が少ないほどタイムラインが上がってくる */
+.main .slots { flex: 1; min-height: 0; padding-top: 62px; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
+.main .slots::-webkit-scrollbar { width: 0 }
 .slot-card { position: relative; width: 100%; aspect-ratio: 16 / 9; flex: none; overflow: hidden; }
-.slot-card .identity { position: absolute; inset: 0; background: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-.slot-card .identity .nm { font-size: 16px; line-height: 1.2; font-weight: 700; }
-.slot-card .scrim-top { position: absolute; left: 0; right: 0; top: 0; height: 74px; background: linear-gradient(to bottom, rgba(0,0,0,.62), rgba(0,0,0,0)); pointer-events: none; }
-.slot-card .scrim-bottom { position: absolute; left: 0; right: 0; bottom: 0; height: 104px; pointer-events: none;
-  background: linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.45) 40%, rgba(0,0,0,0) 100%); }
-.slot-card .who { position: absolute; left: 12px; top: 10px; display: flex; align-items: center; gap: 9px; }
-.slot-card .who .nm { font-size: 15px; line-height: 1.2; font-weight: 700; }
-.slot-card .center {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); max-width: 346px;
-  padding: 9px 14px; border-radius: 12px; background: rgba(0,0,0,.55); text-align: center; pointer-events: none;
+.slot-card + .slot-card { border-top: 1px solid var(--border-subtle); }
+.slot-card .identity {
+  position: absolute; inset: 0; background: var(--bg-subtle);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
 }
-.slot-card .center .cap { margin-top: 5px; font-size: 14px; line-height: 1.4; }
+.slot-card .identity .nm { font-size: var(--text-md); line-height: 1.2; font-weight: var(--weight-bold); color: var(--text-primary); }
+/* 写真の上の文字は、ぼかしではなくインクの平面に載せる */
+.slot-card .scrim-top, .slot-card .scrim-bottom { display: none; }
+.slot-card .who {
+  position: absolute; left: 12px; top: 12px; display: flex; align-items: center;
+  padding: 6px 14px; border-radius: var(--radius-pill); background: var(--ink-a56);
+}
+.slot-card .who .nm { font-size: var(--text-sm); line-height: 1.2; font-weight: var(--weight-bold); color: #fff; }
+.slot-card .center {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); max-width: 330px;
+  padding: 10px 16px; border-radius: var(--radius-lg); background: var(--ink-a56);
+  text-align: center; pointer-events: none;
+}
+.slot-card .center .cap { margin-top: 5px; font-size: var(--text-base); line-height: var(--leading-normal); color: #fff; }
 
-/* MainMatchReports */
-.reports { flex: 1; min-height: 0; padding: 8px 16px 12px; display: flex; flex-direction: column; }
-.reports .head { display: flex; align-items: center; gap: 8px; }
-.reports .head .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
-.reports .head .sp { flex: 1; }
-.reports .rows { flex: 1; min-height: 0; margin-top: 10px; overflow-x: auto; overflow-y: hidden; }
-.reports .rows::-webkit-scrollbar { height: 0 }
-.reports .cols { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
-/* 1 列 = 1 枠。高さと幅は screens.js が実測から決める (MainMatchReports.rowHeightFor) */
-.reports .rline { flex: none; display: flex; gap: 10px; }
-.reports .rline > * { flex: none; }
-.reports .empty { font-family: var(--font-meta); font-size: 10px; line-height: 1.7; letter-spacing: .02em; color: var(--text-3); white-space: pre-line; }
-.reports .waiting { border-radius: 16px; background: rgba(21,19,24,.3); border: 1px solid rgba(255,255,255,.06);
-  display: flex; align-items: center; justify-content: center; }
+/* MainFeed — 枠の下を流れる AI の思考ログ。1 件 = 見立て + 候補の像 + 合致の点。
+   投稿の作法（アバター / 名前・時刻 / 本文 / 画像）は X に倣い、面は Kaiwa の白 + ヘアライン */
+.feed { flex: none; background: var(--surface-card); border-top: 1px solid var(--border-subtle); }
+.feed .fhd {
+  position: sticky; top: 0; z-index: 3; display: flex; align-items: center; gap: 8px;
+  padding: 11px 16px; background: var(--bg-subtle); border-bottom: 1px solid var(--border-subtle);
+  /* 右上のデバッグボタンのレーンをあける（空き枠の数はこの 1 行だけが持つ） */
+  padding-right: 60px;
+}
+.feed .fhd .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+/* 見てきた候補の重なり円 + 人数 */
+.feed .fhd .faces { display: flex; flex: none; }
+.feed .fhd .faces .fc {
+  width: 22px; height: 22px; border-radius: 50%; overflow: hidden; flex: none;
+  background: var(--bg-sunken); border: 1.5px solid var(--bg-subtle);
+}
+.feed .fhd .faces .fc + .fc { margin-left: -7px; }
+.feed .fhd .faces .fc img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.feed .fhd .cnt { font-size: var(--text-xs); color: var(--text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.feed .fhd .dn { display: flex; align-items: center; flex: none; }
+.feed .more { padding: 18px 16px 28px; display: flex; justify-content: center; }
+.post { display: block; padding: 14px 16px 12px; border-bottom: 1px solid var(--border-subtle); }
+.post:active { background: var(--bg-subtle); }
+.post .ln { display: flex; align-items: baseline; gap: 6px; }
+.post .ln .nm { font-size: var(--text-base); font-weight: var(--weight-bold); color: var(--text-primary); }
+.post .ln .mt, .post .ln .tm { font-size: var(--text-sm); color: var(--text-tertiary); }
+.post .tx { margin-top: 5px; font-size: var(--text-base); line-height: var(--leading-body); color: var(--text-primary); text-wrap: pretty; }
+/* たたむ前はどちらの本文も 2 行で切る。押すと全文が出て、写真が縦長になる */
+.post:not(.open) .tx, .post:not(.open) .pic .ov .t {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+.post .rd { margin-top: 6px; font-size: var(--text-sm); line-height: 1.2; font-weight: 500; color: var(--text-brand); }
+.post.open { padding-bottom: 16px; }
+.post.open .pic { aspect-ratio: 4 / 5; }
+/* 理想の相手は写真の上。ぐらでーしょんではなくインクの平面を一枚かけて白を載せる */
+.post .pic { position: relative; margin-top: 10px; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-md); overflow: hidden; }
+.post .pic .ov {
+  position: absolute; inset: 0; padding: 14px 16px 15px; background: var(--ink-a56);
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; pointer-events: none;
+}
+.post .pic .ov .t { font-size: var(--text-base); line-height: var(--leading-body); color: #fff; text-wrap: pretty; }
+.post .ft { margin-top: 10px; display: flex; align-items: center; gap: 5px; }
+.post .ft i { width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid var(--neutral-300); }
+.post .ft i.on { background: var(--accent); border-color: var(--accent); }
+.post .ft em {
+  margin-left: 4px; font-style: normal; font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+  font-size: var(--text-2xs); color: var(--text-tertiary);
+}
+.post .ft .go { margin-left: auto; font-size: var(--text-sm); font-weight: 500; color: var(--text-brand); }
 
-.rep-card { position: relative; border-radius: 16px; overflow: hidden; background: rgba(21,19,24,.5);
-  border: 1px solid rgba(255,255,255,.08); display: flex; flex: none; }
-.rep-card.wanted { border-color: rgba(233,178,106,.42); }
-.rep-card .analysis { flex: 1; min-width: 0; padding: 10px 6px 10px 12px; display: flex; flex-direction: column; }
-.rep-card .nick { flex: none; height: 34px; font-size: 12.5px; line-height: 1.3; font-weight: 700; overflow: hidden; }
-/* 高さに入る行だけ見せる (Flutter: MatchReportCard.fitLines) */
-.rep-card .lines { flex: 0 1 auto; min-height: 0; margin-top: 6px; display: flex; flex-direction: column; overflow: hidden; }
-.rep-card .line { flex: none; height: 15px; display: flex; align-items: center; gap: 0; }
-.rep-card .line .b { width: 11px; font-family: var(--font-meta); font-size: 9px; color: var(--text-3); }
-.rep-card .line .b.hit { color: var(--primary); }
-.rep-card .line .t { flex: 1; min-width: 0; font-family: var(--font-meta); font-size: 9.5px; letter-spacing: .02em; color: var(--text-3);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.rep-card .line .t.hit { color: var(--text-2); }
-.rep-card .verdict { flex: none; margin-top: auto; height: 26px; font-family: var(--font-meta); font-size: 9px; line-height: 1.45; letter-spacing: .02em; color: var(--text-3); overflow: hidden; }
-.rep-card .verdict.wanted { color: var(--primary); }
-.rep-card .ideal { position: relative; flex: none; }
-.rep-card .ideal .fade { position: absolute; left: 0; top: 0; bottom: 0; width: 28px; background: linear-gradient(to right, var(--surface), rgba(21,19,24,0)); }
-.rep-card .ideal .tag { position: absolute; left: 6px; right: 6px; bottom: 6px; text-align: right; font-family: var(--font-meta); font-size: 7.5px; letter-spacing: .16em; color: var(--text-3); }
-.rep-card .fallback { position: absolute; inset: 0; background: var(--surface-raised); display: flex; align-items: center; justify-content: center; }
-
-/* MatchReportDetail */
-.rep-detail { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; background: var(--bg); }
-.rep-detail .hd { height: 52px; display: flex; align-items: center; justify-content: center; position: relative; }
-.rep-detail .hd .close { position: absolute; left: 0; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-2); }
-.rep-detail .pages { flex: 1; min-height: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
-.rep-detail .pages::-webkit-scrollbar { height: 0 }
-.rep-detail .page { flex: none; width: 86%; scroll-snap-align: center; padding: 4px 6px 20px; }
-.rep-detail .sheet { height: 100%; border-radius: 22px; overflow-y: auto; background: var(--surface); border: 1px solid var(--border); }
-.rep-detail .sheet::-webkit-scrollbar { width: 0 }
-.rep-detail .sheet.wanted { border-color: rgba(233,178,106,.42); }
-.rep-detail .hero { position: relative; width: 100%; aspect-ratio: 3 / 4; }
-.rep-detail .hero .veil { position: absolute; left: 0; right: 0; bottom: 0; height: 132px; background: linear-gradient(to top, var(--surface), rgba(21,19,24,0)); }
-.rep-detail .hero .cap { position: absolute; left: 18px; right: 18px; bottom: 14px; }
-.rep-detail .hero .cap .nm { margin-top: 6px; font-size: 19px; line-height: 1.3; font-weight: 700; }
-.rep-detail .body { padding: 16px 18px 22px; }
-.rep-detail .body .hl { font-family: var(--font-brand); font-size: 20px; line-height: 1.4; }
-.rep-detail .body .dt { margin-top: 12px; font-size: 14px; line-height: 1.85; color: var(--text-2); }
-.rep-detail .body .sec { margin-top: 20px; }
-.rep-detail .body .r { display: flex; align-items: flex-start; margin-top: 10px; }
-.rep-detail .body .r .b { width: 16px; font-family: var(--font-meta); font-size: 11px; color: var(--text-3); }
-.rep-detail .body .r .b.hit { color: var(--primary); }
-.rep-detail .body .r .k { width: 96px; font-size: 13px; line-height: 1.4; color: var(--text-3); }
-.rep-detail .body .r .v { flex: 1; font-size: 13.5px; line-height: 1.4; color: var(--text-2); }
-.rep-detail .body .r .v.hit { color: var(--primary); }
-
-/* MainTabBar */
-.tabbar { flex: none; background: var(--bg); border-top: 1px solid var(--border); padding-bottom: 34px; }
-.tabbar .inner { height: 66px; display: flex; align-items: center; justify-content: space-around; }
-.tabbar .tab { width: 64px; height: 56px; display: flex; align-items: center; justify-content: center; }
-.tabbar .cam { width: 54px; height: 54px; margin-bottom: 4px; border-radius: 50%; background: var(--surface-raised);
-  display: flex; align-items: center; justify-content: center; flex: none; overflow: hidden; }
-.tabbar .cam.on { background: var(--primary); }
-.tabbar .cam.mine { background: none; border: 2px solid var(--primary); }
-
-/* today's theme balloon */
-.balloon { position: absolute; left: 0; right: 0; bottom: 6px; display: flex; flex-direction: column; align-items: center; z-index: 5; }
-.balloon .tail { width: 9px; height: 9px; background: var(--surface); transform: rotate(45deg) translateY(0);
-  border-left: 1px solid rgba(233,178,106,.42); border-top: 1px solid rgba(233,178,106,.42); margin-bottom: -5px; }
-.balloon .body { padding: 9px 14px; border-radius: 14px; background: var(--surface); border: 1px solid rgba(233,178,106,.42); text-align: center; }
-.balloon .body .t { margin-top: 3px; font-size: 13.5px; line-height: 1.2; font-weight: 700; }
+/* MainTabBar — 白いクローム。選択中は FILL 軸で表す */
+.tabbar { position: relative; z-index: 6; flex: none; background: var(--surface-card); border-top: 1px solid var(--border-subtle); padding-bottom: 34px; }
+.tabbar .inner { height: var(--tabbar-h); display: flex; align-items: center; justify-content: space-around; }
+.tabbar .tab { width: 64px; height: var(--tap-min); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-pill); }
+.tabbar .tab:active { background: var(--bg-subtle); }
+.tabbar .cam {
+  width: 48px; height: 48px; border-radius: 50%; background: var(--bg-sunken);
+  display: flex; align-items: center; justify-content: center; flex: none; overflow: hidden;
+  transition: var(--transition-press);
+}
+.tabbar .cam.on { background: var(--accent); box-shadow: var(--shadow-fab); }
+/* お題がないあいだは撮れないので、薄い非活性で待つ */
+.tabbar .cam.off { opacity: .45; }
+.tabbar .cam.mine { background: none; box-shadow: 0 0 0 2px var(--accent); }
+.tabbar .cam:active { transform: scale(var(--press-scale-tile)); }
+/* お題ありのときはカメラを列から少し突出させ、真下にお題を置く */
+.tabbar .cam-slot { position: relative; z-index: 6; flex: none; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+/* 一番下の投稿に少しかぶってもよいので、ボタンは常に最前面 */
+.tabbar .cam-slot.raised { margin-top: -26px; margin-bottom: -26px; }
+.tabbar .cam-slot .theme-label {
+  max-width: 132px; text-align: center; font-size: var(--text-xs); line-height: var(--leading-snug);
+  font-weight: var(--weight-bold); color: var(--text-primary); text-wrap: pretty;
+}
 
 /* debug button */
-.dbg { position: absolute; right: 6px; top: 64px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; z-index: 6; }
-.dbg i { width: 26px; height: 26px; border-radius: 50%; background: rgba(21,19,24,.7); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center; font-family: var(--font-meta); font-size: 10px; color: var(--text-3); font-style: normal; }
+.dbg { position: absolute; right: 6px; top: 64px; width: var(--tap-min); height: var(--tap-min); display: flex; align-items: center; justify-content: center; z-index: 6; }
+.dbg i {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--surface-card);
+  border: 1px solid var(--border-default); box-shadow: var(--shadow-1);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-tertiary); font-style: normal;
+}
 
 /* ---- 5. MyProfileView --------------------------------------------------- */
-/* MY PROFILE は人物像を画面上端まで敷くので safe-top を通さない (Flutter の MainView と同じ) */
-.myprof { flex: 1; min-height: 0; overflow-y: auto; padding: 28px 16px 32px; }
+/* 頭は写真。上端まで敷くので safe-top を通さない (Flutter の MainView と同じ) */
+.myprof { flex: 1; min-height: 0; overflow-y: auto; background: var(--bg-subtle); }
 .myprof::-webkit-scrollbar { width: 0 }
-.myprof .big-avatar { width: 137px; height: 137px; margin: 0 auto; border-radius: 50%; background: var(--surface-raised);
-  border: 1px solid rgba(233,178,106,.28); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-.myprof .big-avatar span { font-size: 44px; line-height: 1; font-weight: 600; color: var(--text-2); }
-.myprof .big-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.myprof .nm { margin-top: 16px; text-align: center; font-size: 22px; line-height: 1.3; font-weight: 700; }
-.myprof .mt { margin-top: 8px; text-align: center; font-family: var(--font-meta); font-size: 11px; letter-spacing: .08em; color: var(--text-2); }
-.card-box { border-radius: 18px; background: var(--surface); border: 1px solid rgba(255,255,255,.08); overflow: hidden; }
-.card-box .hd { padding: 16px 18px 4px; display: flex; align-items: center; justify-content: space-between; }
-.kv { min-height: 52px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 12px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.myprof .hero { position: relative; width: 100%; aspect-ratio: 5 / 4; overflow: hidden; background: var(--bg-sunken); }
+.myprof .hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.myprof .hero .ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.myprof .hero .ph span { font-family: var(--font-display); font-weight: 800; font-size: 88px; line-height: 1; color: var(--neutral-300); }
+.myprof .hero .scrim-top, .myprof .hero .veil { display: none; }
+.myprof .hero .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 16px 16px; background: var(--ink-a56); }
+.myprof .hero .cap .nm { font-size: var(--text-2xl); line-height: var(--leading-snug); font-weight: var(--weight-bold); color: #fff; }
+.myprof .hero .cap .mt { margin-top: 5px; font-size: var(--text-sm); color: rgba(255,255,255,.78); }
+.myprof .hero .drop-hint {
+  position: absolute; right: 10px; top: 10px; font-family: var(--font-ui); font-weight: 600;
+  font-size: 8px; letter-spacing: .1em; color: var(--text-tertiary); pointer-events: none;
+}
+.myprof .pad { padding: 20px 16px 32px; }
+.card-box { border-radius: var(--radius-lg); background: var(--surface-card); border: 1px solid var(--border-subtle); overflow: hidden; }
+.card-box .hd { padding: 14px 16px 2px; display: flex; align-items: center; justify-content: space-between; }
+.kv { min-height: var(--row-h-compact); padding: 12px 16px; display: flex; align-items: flex-start; gap: 12px; border-bottom: 1px solid var(--border-subtle); }
 .kv:last-child { border-bottom: 0; }
-.kv .k { width: 108px; flex: none; font-size: 13.5px; line-height: 1.4; color: var(--text-2); }
-.kv .v { flex: 1; text-align: right; font-size: 14px; line-height: 1.4; font-weight: 500; }
-.view-card { padding: 16px 18px 18px; border-radius: 18px; background: var(--surface); border: 1px solid rgba(233,178,106,.24); }
-.view-card .t { margin-top: 8px; font-size: 15px; line-height: 1.8; }
-.sec-label { font-family: var(--font-meta); font-size: 9.5px; letter-spacing: .16em; color: var(--primary); }
-.companion-card { margin-top: 10px; padding: 14px; border-radius: 18px; background: var(--surface);
-  border: 1px solid rgba(233,178,106,.24); display: flex; align-items: center; gap: 14px; }
-.companion-card .pic { width: 64px; height: 64px; border-radius: 50%; background: var(--surface-raised); overflow: hidden; flex: none; }
-.companion-card .nm { margin-top: 6px; font-size: 15px; line-height: 1.4; font-weight: 600; }
-.chevron { width: 7px; height: 7px; border-right: 1.4px solid var(--text-3); border-top: 1.4px solid var(--text-3); transform: rotate(45deg); flex: none; }
+.kv .k { width: 108px; flex: none; font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--text-secondary); }
+.kv .v { flex: 1; text-align: right; font-size: var(--text-base); line-height: var(--leading-normal); font-weight: 500; color: var(--text-primary); }
+.view-card { padding: 16px; border-radius: var(--radius-lg); background: var(--surface-card); border: 1px solid var(--border-subtle); }
+.view-card .t { margin-top: 8px; font-size: var(--text-base); line-height: var(--leading-body); color: var(--text-primary); }
+.sec-label { font-family: var(--font-ui); font-weight: 700; font-size: var(--text-2xs); letter-spacing: var(--tracking-caps); color: var(--text-brand); }
+.companion-card {
+  margin-top: 10px; padding: 12px 14px; border-radius: var(--radius-lg); background: var(--surface-card);
+  border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 14px;
+}
+.companion-card .pic { width: 56px; height: 56px; border-radius: 50%; background: var(--bg-sunken); overflow: hidden; flex: none; }
+.companion-card .nm { margin-top: 5px; font-size: var(--text-md); line-height: var(--leading-normal); font-weight: var(--weight-bold); color: var(--text-primary); }
 
 /* ---- 6. ProfileEditView ------------------------------------------------- */
-.pedit { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; }
-.pedit .hd { height: 52px; display: flex; align-items: center; justify-content: center; position: relative; font-size: 15px; line-height: 1.2; font-weight: 600; }
-.pedit .hd .close { position: absolute; left: 0; padding: 0 16px; height: 52px; display: flex; align-items: center; }
-.pedit .list { flex: 1; min-height: 0; overflow-y: auto; padding: 0 16px 32px; }
-.pedit .list::-webkit-scrollbar { width: 0 }
-.pedit .pic { width: 108px; height: 108px; margin: 0 auto; border-radius: 50%; background: var(--surface-raised);
-  border: 1px solid rgba(233,178,106,.28); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-.pedit .pic span { font-size: 34px; line-height: 1; font-weight: 600; color: var(--text-2); }
-.pedit .pick { display: block; margin: 10px auto 0; padding: 6px 12px; font-family: var(--font-meta); font-size: 10px; color: var(--primary); text-align: center; }
-.pedit .field { margin-top: 16px; }
-.pedit .field input {
-  width: 100%; margin-top: 8px; padding: 14px 16px; border-radius: 14px; border: 0; outline: none;
-  background: var(--surface-input); color: var(--text-1); font-family: var(--font-ui); font-size: 15px; line-height: 1.4;
+.pedit { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; background: var(--bg-app); }
+.pedit .hd {
+  height: var(--navbar-h); flex: none; display: flex; align-items: center; justify-content: center; position: relative;
+  font-size: var(--text-md); line-height: 1.2; font-weight: var(--weight-bold); color: var(--text-primary);
+  border-bottom: 1px solid var(--border-subtle);
 }
-.pedit .field input::placeholder { color: var(--text-3); }
+.pedit .hd .close { position: absolute; left: 0; padding: 0 16px; height: 100%; display: flex; align-items: center; }
+.pedit .list { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 16px 32px; }
+.pedit .list::-webkit-scrollbar { width: 0 }
+.pedit .pic {
+  width: 100%; aspect-ratio: 5 / 4; border-radius: var(--radius-md); background: var(--bg-sunken);
+  overflow: hidden; display: flex; align-items: center; justify-content: center;
+}
+.pedit .pic span { font-family: var(--font-display); font-weight: 800; font-size: 64px; line-height: 1; color: var(--neutral-300); }
+.pedit .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pedit .pick { display: block; margin: 10px auto 0; padding: 8px 14px; font-size: var(--text-sm); font-weight: 700; color: var(--text-brand); text-align: center; }
+.pedit .field { margin-top: 18px; }
+.pedit .field input {
+  width: 100%; margin-top: 8px; padding: 13px 14px; border-radius: var(--radius-md);
+  border: 1px solid var(--border-field); outline: none;
+  background: var(--field-bg); color: var(--text-primary);
+  font-family: var(--font-ui); font-size: var(--text-md); line-height: var(--leading-normal);
+  transition: box-shadow var(--dur-fast) var(--ease-in-out), border-color var(--dur-fast) var(--ease-in-out);
+}
+.pedit .field input:focus { border-color: var(--accent); box-shadow: var(--focus-ring); background: var(--field-bg-focus); }
+.pedit .field input::placeholder { color: var(--field-placeholder); }
 .pedit .chips { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
-.pedit .chips .c { padding: 10px 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); font-size: 13.5px; line-height: 1.2; }
-.pedit .chips .c.on { background: rgba(233,178,106,.16); border-color: var(--primary); color: var(--primary); }
-.pedit .ro { margin-top: 24px; padding: 14px 18px 16px; border-radius: 18px; background: var(--surface); border: 1px solid rgba(255,255,255,.08); }
-.pedit .ro .r { display: flex; justify-content: space-between; margin-top: 8px; font-size: 13.5px; line-height: 1.2; color: var(--text-2); }
-.pedit .ro .r .v { font-size: 14px; color: var(--text-3); }
-.pedit .save { margin-top: 28px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center;
-  background: rgba(233,178,106,.16); border: 1px solid var(--primary); color: var(--primary); font-size: 14.5px; line-height: 1.2; font-weight: 600; }
-.pedit .save.busy { background: var(--surface-raised); border-color: var(--border); color: var(--text-disabled); }
-.pedit .err { margin-top: 16px; font-size: 13px; line-height: 1.4; color: var(--primary); }
+.pedit .chips .c {
+  min-height: var(--tap-min); padding: 11px 16px; border-radius: var(--radius-pill);
+  background: var(--surface-card); border: 1px solid var(--border-default);
+  font-size: var(--text-sm); line-height: 1.2; color: var(--text-primary); display: flex; align-items: center;
+  white-space: nowrap; transition: var(--transition-press);
+}
+.pedit .chips .c.on { background: var(--accent-subtle); border-color: var(--border-accent); color: var(--text-brand); font-weight: 700; }
+.pedit .ro { margin-top: 24px; padding: 14px 16px 16px; border-radius: var(--radius-lg); background: var(--bg-subtle); }
+.pedit .ro .r { display: flex; justify-content: space-between; margin-top: 10px; font-size: var(--text-sm); line-height: 1.2; color: var(--text-secondary); }
+.pedit .ro .r .v { font-size: var(--text-sm); color: var(--text-tertiary); }
+.pedit .save {
+  margin-top: 28px; height: var(--control-lg); border-radius: var(--radius-pill);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent); color: var(--text-on-accent); box-shadow: var(--shadow-fab);
+  font-size: var(--text-md); line-height: 1.2; font-weight: var(--weight-bold);
+}
+.pedit .save.busy { background: var(--neutral-100); color: var(--text-disabled); box-shadow: none; cursor: not-allowed; }
+.pedit .err { margin-top: 16px; font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--text-danger); }
 
 /* ---- 7. PersonaView ----------------------------------------------------- */
-.persona { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; }
-.persona .hd { height: 52px; display: flex; align-items: center; justify-content: center; position: relative; }
-.persona .hd .close { position: absolute; left: 0; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-2); }
-.persona .stage { flex: 1; min-height: 0; position: relative; overflow: hidden; }
-.persona .foot { background: var(--surface); padding: 16px 20px 20px; }
-.persona .foot .nm { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 20px; line-height: 1.4; font-weight: 700; }
+.persona { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; background: var(--bg-app); }
+.persona .hd { height: var(--navbar-h); flex: none; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid var(--border-subtle); }
+.persona .hd .close { position: absolute; left: 0; width: var(--tap-min); height: var(--tap-min); margin-left: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-secondary); }
+.persona .stage { flex: 1; min-height: 0; position: relative; overflow: hidden; background: var(--bg-sunken); }
+.persona .foot { background: var(--surface-card); border-top: 1px solid var(--border-subtle); padding: 16px 16px 20px; }
+.persona .foot .nm { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: var(--text-xl); line-height: var(--leading-snug); font-weight: var(--weight-bold); color: var(--text-primary); }
 .persona .foot .attrs { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
-.persona .foot .attrs i { font-style: normal; padding: 6px 10px; border-radius: 14px; border: 1px solid var(--border); font-family: var(--font-meta); font-size: 10px; letter-spacing: .16em; color: var(--text-3); }
-.persona .foot .flavor { margin-top: 10px; font-size: 13.5px; line-height: 1.7; color: var(--text-2); }
-.persona .foot .reason { margin-top: 10px; font-size: 12.5px; line-height: 1.7; color: var(--text-3); }
-.persona .foot .again { margin-top: 16px; height: 44px; border-radius: 24px; border: 1px solid rgba(233,178,106,.5);
-  display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1.2; font-weight: 600; color: var(--primary); }
+.persona .foot .attrs i {
+  font-style: normal; padding: 6px 12px; border-radius: var(--radius-pill); background: var(--bg-subtle);
+  font-size: var(--text-xs); letter-spacing: var(--tracking-jp); color: var(--text-secondary); white-space: nowrap;
+}
+.persona .foot .flavor { margin-top: 12px; font-size: var(--text-sm); line-height: var(--leading-body); color: var(--text-secondary); }
+.persona .foot .reason { margin-top: 8px; font-size: var(--text-sm); line-height: var(--leading-body); color: var(--text-tertiary); }
+.persona .foot .again {
+  margin-top: 16px; height: var(--tap-min); border-radius: var(--radius-pill); border: 1px solid var(--border-accent);
+  display: flex; align-items: center; justify-content: center; font-size: var(--text-base); line-height: 1.2;
+  font-weight: var(--weight-bold); color: var(--text-brand);
+}
+.persona .foot .again:active { background: var(--accent-subtle); }
 
 /* bottom sheet */
-.sheet-mask { position: absolute; inset: 0; background: rgba(0,0,0,.55); z-index: 20; display: flex; align-items: flex-end; }
-.sheet-panel { width: 100%; padding: 20px 20px 34px; background: var(--surface); border-radius: 20px 20px 0 0; animation: sheet-up 240ms ease; }
+.sheet-mask { position: absolute; inset: 0; background: var(--surface-scrim); z-index: 20; display: flex; align-items: flex-end; }
+.sheet-panel {
+  width: 100%; padding: 16px 20px 34px; background: var(--surface-card);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0; box-shadow: var(--shadow-sheet);
+  animation: sheet-up var(--dur-sheet) var(--ease-out);
+}
 @keyframes sheet-up { from { transform: translateY(24px); opacity: 0 } to { transform: none; opacity: 1 } }
-.sheet-panel .t { font-size: 20px; line-height: 1.4; font-weight: 700; }
-.sheet-panel .s { margin-top: 6px; font-size: 13px; line-height: 1.5; color: var(--text-2); }
-.sheet-panel input { width: 100%; margin-top: 16px; padding: 14px 16px; border-radius: 4px; background: transparent;
-  border: 1px solid var(--border); color: var(--text-1); font-family: var(--font-ui); font-size: 16px; line-height: 1.4; outline: none; }
-.sheet-panel .ok { margin-top: 12px; height: 44px; border-radius: 24px; background: rgba(233,178,106,.12); border: 1px solid rgba(233,178,106,.5);
-  display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1.2; font-weight: 600; color: var(--primary); }
-.sheet-panel .err { margin-top: 6px; font-size: 13px; line-height: 1.5; color: var(--primary); }
-.sheet-panel .grip { width: 36px; height: 4px; border-radius: 2px; background: var(--border); margin: 0 auto 16px; }
-.sheet-panel .row-item { height: 52px; padding: 0 16px; border-radius: 14px; background: var(--surface-raised);
-  border: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; font-size: 14.5px; line-height: 1.2; font-weight: 600; }
-.sheet-panel .row-item.danger { border-color: var(--primary); color: var(--primary); }
+.sheet-panel .t { font-size: var(--text-xl); line-height: var(--leading-snug); font-weight: var(--weight-bold); color: var(--text-primary); }
+.sheet-panel .s { margin-top: 6px; font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--text-secondary); }
+.sheet-panel input {
+  width: 100%; margin-top: 16px; padding: 13px 14px; border-radius: var(--radius-md);
+  background: var(--field-bg); border: 1px solid var(--border-field); color: var(--text-primary);
+  font-family: var(--font-ui); font-size: var(--text-md); line-height: var(--leading-normal); outline: none;
+}
+.sheet-panel input:focus { border-color: var(--accent); box-shadow: var(--focus-ring); background: var(--field-bg-focus); }
+.sheet-panel .ok {
+  margin-top: 14px; height: var(--control-lg); border-radius: var(--radius-pill); background: var(--accent);
+  display: flex; align-items: center; justify-content: center; font-size: var(--text-md); line-height: 1.2;
+  font-weight: var(--weight-bold); color: var(--text-on-accent);
+}
+.sheet-panel .err { margin-top: 8px; font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--text-danger); }
+.sheet-panel .grip { width: 36px; height: 4px; border-radius: var(--radius-pill); background: var(--neutral-300); margin: 0 auto 16px; }
+.sheet-panel .row-item {
+  min-height: var(--control-lg); padding: 0 16px; border-radius: var(--radius-md); background: var(--bg-subtle);
+  display: flex; align-items: center; font-size: var(--text-md); line-height: 1.2; font-weight: 500; color: var(--text-primary);
+}
+.sheet-panel .row-item.danger { color: var(--text-danger); }
 
 /* ---- 8. PairTimelineView ------------------------------------------------ */
-.pair { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; }
-.pair .hd { height: 58px; flex: none; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
-.pair .hd .nm { font-size: 16px; line-height: 1.2; font-weight: 700; }
-.pair .hd .btn { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
-.pair .countdown { flex: none; padding: 16px 20px 14px; text-align: center; border-bottom: 1px solid var(--border); }
-.pair .countdown .num { margin-top: 7px; font-family: var(--font-brand); font-size: 46px; line-height: 1; font-variant-numeric: tabular-nums; }
-.pair .countdown .sub { margin-top: 7px; font-size: 12.5px; line-height: 1.5; color: var(--text-2); }
-.pair .list { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 14px 10px; display: flex; flex-direction: column; gap: 12px; }
+/* ふたりだけのトーク。地はチャット壁紙、吹き出しは白（相手）とミント（自分） */
+.pair { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; background: var(--chat-bg); }
+/* ヘッダーは面を持たず、上端の白い透過グラデーションのスクリムで視認性を確保。フッターは白背景（セーフエリアまで） */
+.pair::before, .pair::after { content: ''; position: absolute; left: 0; right: 0; z-index: 1; pointer-events: none; }
+.pair::before { top: 0; height: 160px; background: linear-gradient(to bottom, rgba(255,255,255,.96) 0%, rgba(255,255,255,.78) 52%, rgba(255,255,255,0) 100%); }
+.pair::after { bottom: 0; height: 34px; background: var(--surface-card); }
+.pair:has(.countdown)::before { height: 280px; }
+.pair .hd { position: relative; z-index: 2; height: var(--navbar-h); flex: none; padding: 0 8px 0 4px; display: flex; align-items: center; justify-content: space-between; }
+.pair .hd .nm { flex: 1; min-width: 0; text-align: center; font-size: var(--text-md); line-height: 1.2; font-weight: var(--weight-bold); color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pair .hd .btn { width: var(--tap-min); height: var(--tap-min); display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.pair .hd .btn:active { background: var(--bg-subtle); }
+.pair .countdown { position: relative; z-index: 2; flex: none; padding: 14px 20px 16px; text-align: center; }
+.pair .countdown .num {
+  margin-top: 8px; font-family: var(--font-mono); font-weight: var(--weight-bold); font-size: var(--text-4xl);
+  line-height: 1; font-variant-numeric: tabular-nums; color: var(--text-danger);
+}
+.pair .countdown .sub { margin-top: 8px; font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--text-secondary); }
+.pair .list { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 12px 12px; display: flex; flex-direction: column; gap: 12px; }
 .pair .list::-webkit-scrollbar { width: 0 }
-.pair .divider { display: flex; align-items: center; gap: 10px; }
-.pair .divider .ln { flex: 1; height: 1px; background: var(--border); }
-.pair .photo { position: relative; border-radius: 16px; overflow: hidden; }
+/* 日付の区切りはインク 30% のピル (Kaiwa ChatDayDivider) */
+.pair .divider { display: flex; align-items: center; justify-content: center; }
+.pair .divider .ln { display: none; }
+.pair .divider .meta { padding: 5px 12px; border-radius: var(--radius-pill); background: rgba(20,24,28,.30); color: #fff; }
+.pair .photo { position: relative; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-bubble); }
 .pair .photo.mine { width: 76%; height: 150px; align-self: flex-end; }
 .pair .photo.theirs { width: 100%; height: 180px; }
-.pair .photo .chip { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); max-width: 86%;
-  padding: 8px 13px; border-radius: 12px; background: rgba(0,0,0,.55); text-align: center; pointer-events: none; }
-.pair .photo .chip .cap { margin-top: 4px; font-size: 14px; line-height: 1.4; }
-.pair .bubble { max-width: 78%; padding: 12px 16px; font-size: 14.5px; line-height: 1.6; }
-.pair .bubble.mine { align-self: flex-end; background: var(--surface-raised); border-radius: 18px 18px 4px 18px; }
-.pair .bubble.theirs { align-self: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: 18px 18px 18px 4px; color: rgba(245,241,234,.86); }
-.pair .likes { display: flex; align-items: center; padding-left: 2px; }
-.pair .likes .b { height: 44px; display: flex; align-items: center; gap: 7px; padding: 0 12px; font-family: var(--font-meta); font-size: 11px; color: var(--text-2); }
-.pair .likes .b .hh { font-family: var(--font-ui); font-size: 19px; line-height: 1; }
-.pair .likes .b.on .hh { color: var(--primary); }
-.pair .input { flex: none; padding: 10px 14px 8px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
-.pair .input .rnd { width: 48px; height: 48px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; }
-.pair .input .rnd.ghost { background: var(--surface-raised); border: 1px solid var(--border); }
-.pair .input .rnd.gold { background: var(--primary); }
-.pair .input .box { flex: 1; height: 48px; padding: 0 18px; border-radius: 24px; background: var(--surface-raised); border: 1px solid var(--border); display: flex; align-items: center; }
-.pair .input .box input { width: 100%; background: none; border: 0; outline: none; color: var(--text-1); font-family: var(--font-ui); font-size: 14.5px; line-height: 1.2; }
-.pair .input .box input::placeholder { color: var(--text-3); }
-.pair .fading-foot { flex: none; padding: 14px 16px 8px; background: var(--surface); border-top: 1px solid var(--border); text-align: center; }
-.pair .fading-foot .keep { height: 52px; border-radius: 26px; background: var(--primary); color: var(--on-primary);
-  display: flex; align-items: center; justify-content: center; font-size: 15px; line-height: 1; font-weight: 700; }
-.pair .fading-foot .let-go { height: 44px; margin-top: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1; color: var(--text-3); }
-.pair .empty { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-2); }
+.pair .photo .chip {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); max-width: 86%;
+  padding: 9px 14px; border-radius: var(--radius-lg); background: var(--ink-a56); text-align: center; pointer-events: none;
+}
+.pair .photo .chip .cap { margin-top: 4px; font-size: var(--text-base); line-height: var(--leading-normal); color: #fff; }
+/* 吹き出しは 18px、話しかける角だけ 4px の切り欠き（尻尾は描かない） */
+.pair .bubble { max-width: 78%; padding: 10px 14px; font-size: var(--text-base); line-height: var(--leading-body); box-shadow: var(--shadow-bubble); }
+.pair .bubble.mine { align-self: flex-end; background: var(--bubble-me-bg); color: var(--bubble-me-text); border-radius: var(--radius-bubble) var(--radius-bubble) var(--radius-xs) var(--radius-bubble); }
+.pair .bubble.theirs { align-self: flex-start; background: var(--bubble-them-bg); color: var(--bubble-them-text); border-radius: var(--radius-bubble) var(--radius-bubble) var(--radius-bubble) var(--radius-xs); }
+.pair .likes { display: flex; align-items: center; gap: 6px; }
+.pair .likes .b {
+  height: var(--tap-min); display: flex; align-items: center; gap: 6px; padding: 0 12px;
+  border-radius: var(--radius-pill); background: var(--white-a88); white-space: nowrap;
+  font-size: var(--text-xs); font-weight: 500; color: var(--text-secondary);
+}
+.pair .likes .b.on { color: var(--text-brand); }
+.pair .input { position: relative; z-index: 2; flex: none; min-height: var(--composer-h); padding: 8px 10px; background: var(--surface-card); border-top: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 8px; }
+.pair .input .rnd { width: var(--tap-min); height: var(--tap-min); border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; }
+.pair .input .rnd.ghost { background: none; }
+.pair .input .rnd.ghost:active { background: var(--bg-subtle); }
+.pair .input .rnd.gold { background: var(--accent); box-shadow: var(--shadow-fab); }
+.pair .input .box { flex: 1; height: var(--tap-min); padding: 0 16px; border-radius: var(--radius-pill); background: var(--field-bg); border: 1px solid var(--border-field); display: flex; align-items: center; }
+.pair .input .box:focus-within { border-color: var(--accent); box-shadow: var(--focus-ring); background: var(--field-bg-focus); }
+.pair .input .box input { width: 100%; background: none; border: 0; outline: none; color: var(--text-primary); font-family: var(--font-ui); font-size: var(--text-md); line-height: 1.2; }
+.pair .input .box input::placeholder { color: var(--field-placeholder); }
+.pair .fading-foot { position: relative; z-index: 2; flex: none; padding: 14px 16px 10px; background: var(--surface-card); border-top: 1px solid var(--border-subtle); text-align: center; }
+.pair .fading-foot .keep {
+  height: var(--composer-h); border-radius: var(--radius-pill); background: var(--accent); color: var(--text-on-accent);
+  box-shadow: var(--shadow-fab); display: flex; align-items: center; justify-content: center;
+  font-size: var(--text-md); line-height: 1; font-weight: var(--weight-bold);
+}
+.pair .fading-foot .let-go { height: var(--tap-min); margin-top: 6px; display: flex; align-items: center; justify-content: center; font-size: var(--text-base); line-height: 1; color: var(--text-secondary); }
+.pair .empty { flex: 1; display: flex; align-items: center; justify-content: center; }
+.pair .empty span { padding: 8px 16px; border-radius: var(--radius-pill); background: var(--white-a88); font-size: var(--text-sm); color: var(--text-secondary); }
 
 /* ---- 9. PartnerProfileView ---------------------------------------------- */
-.pprof { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; }
-.pprof .hd { height: 58px; flex: none; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
-.pprof .hd .btn { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
+.pprof { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; background: var(--bg-app); }
+.pprof .hd { height: var(--navbar-h); flex: none; padding: 0 8px 0 4px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); }
+.pprof .hd .btn { width: var(--tap-min); height: var(--tap-min); display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 .pprof .body { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 16px 24px; }
 .pprof .body::-webkit-scrollbar { width: 0 }
 .pprof .identity { display: flex; align-items: center; gap: 16px; }
-.pprof .identity .nm { font-size: 22px; line-height: 1.3; font-weight: 700; }
-.pprof .identity .mt { margin-top: 4px; font-family: var(--font-meta); font-size: 11px; letter-spacing: .08em; color: var(--text-2); }
+.pprof .identity .nm { font-size: var(--text-xl); line-height: var(--leading-snug); font-weight: var(--weight-bold); color: var(--text-primary); }
+.pprof .identity .mt { margin-top: 4px; font-size: var(--text-sm); color: var(--text-secondary); }
 .pprof .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.pprof .fact { padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid rgba(255,255,255,.08); }
-.pprof .fact .v { margin-top: 5px; font-size: 14px; line-height: 1.3; font-weight: 500; }
-.pprof .posts-head { display: flex; align-items: center; justify-content: space-between; padding: 0 2px; }
-.pprof .post { position: relative; height: 170px; border-radius: 16px; overflow: hidden; margin-top: 10px; }
-.pprof .post .veil { position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,0)); }
-.pprof .post .cap { position: absolute; left: 14px; right: 14px; bottom: 10px; }
-.pprof .post .cap .t { margin-top: 3px; font-size: 13.5px; line-height: 1.3; }
-.pprof .more { margin-top: 10px; height: 48px; border-radius: 24px; border: 1px solid rgba(255,255,255,.14);
-  display: flex; align-items: center; justify-content: center; font-size: 13.5px; line-height: 1; color: var(--text-2); }
+.pprof .fact { padding: 12px 14px; border-radius: var(--radius-lg); background: var(--bg-subtle); }
+.pprof .fact .v { margin-top: 5px; font-size: var(--text-base); line-height: var(--leading-snug); font-weight: 500; color: var(--text-primary); }
+.pprof .posts-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 2px; }
+.pprof .posts-head .meta { white-space: nowrap; }
+.pprof .post { position: relative; height: 170px; border-radius: var(--radius-lg); overflow: hidden; margin-top: 10px; }
+.pprof .post .veil { display: none; }
+.pprof .post .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 14px 12px; background: var(--ink-a56); }
+.pprof .post .cap .t { margin-top: 3px; font-size: var(--text-base); line-height: var(--leading-snug); color: #fff; }
+.pprof .more {
+  margin-top: 12px; height: var(--control-lg); border-radius: var(--radius-pill); border: 1px solid var(--border-default);
+  display: flex; align-items: center; justify-content: center; font-size: var(--text-sm); line-height: 1; color: var(--text-secondary);
+}
+.pprof .more:active { background: var(--bg-subtle); }
 
 /* ---- 10. CameraView ----------------------------------------------------- */
-.camera { position: absolute; inset: 0; background: #000; overflow: hidden; }
-/* 端末は縦のまま UI だけ 90 度倒す (Flutter: RotatedBox(quarterTurns: 1)) */
-.camera .rot { position: absolute; left: 50%; top: 50%; width: 874px; height: 402px; transform: translate(-50%,-50%) rotate(90deg);
-  display: flex; align-items: center; justify-content: center; }
-/* Align(center, AspectRatio(16/9)) と同じで、高さいっぱいに収める (幅は 402×16/9) */
-.camera .preview { position: relative; height: 100%; width: auto; aspect-ratio: 16 / 9; flex: none; }
-.camera .preview .ratio { position: absolute; right: 8px; bottom: 6px; font-family: var(--font-meta); font-size: 9px; letter-spacing: .16em; color: rgba(245,241,234,.6); }
-.camera .scrim-top { position: absolute; left: 0; right: 0; top: 0; height: 72px; background: linear-gradient(to bottom, rgba(0,0,0,.62), rgba(0,0,0,0)); pointer-events: none; }
-.camera .scrim-bottom { position: absolute; left: 0; right: 0; bottom: 0; height: 130px; pointer-events: none;
-  background: linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.45) 50%, rgba(0,0,0,0) 100%); }
-.camera .close { position: absolute; left: 12px; top: 18px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 22px; line-height: 1; }
-.camera .switch { position: absolute; right: 12px; top: 18px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
-.camera .theme { position: absolute; left: 0; right: 0; top: 26px; display: flex; justify-content: center; }
-.camera .theme .box { padding: 7px 14px; border-radius: 12px; background: rgba(0,0,0,.55); text-align: center; }
-.camera .theme .box .t { margin-top: 2px; font-size: 14px; line-height: 1.3; font-weight: 700; }
-.camera .shutter-block { position: absolute; left: 0; right: 0; bottom: 14px; display: flex; flex-direction: column; align-items: center; }
-.camera .rec-label { margin-bottom: 12px; font-family: var(--font-meta); font-size: 11px; letter-spacing: .16em; color: var(--primary); }
-.camera .shutter { width: 76px; height: 76px; border-radius: 50%; border: 4px solid rgba(245,241,234,.92);
-  display: flex; align-items: center; justify-content: center; }
-.camera .shutter.rec { border-color: var(--primary); }
-.camera .shutter i { width: 58px; height: 58px; border-radius: 50%; background: rgba(233,178,106,.9); }
-.camera .shutter.rec i { background: var(--primary); }
-.camera .bar { width: 180px; height: 2px; margin-top: 12px; border-radius: 1px; background: rgba(255,255,255,.18); overflow: hidden; }
-.camera .bar i { display: block; height: 100%; background: var(--primary); width: 0; }
+.camera { position: absolute; inset: 0; background: var(--neutral-950); overflow: hidden; }
+/* 端末は縦のまま UI だけ 90 度倒す (Flutter: RotatedBox(quarterTurns: 1))
+   rot 空間の右端 = 端末を縦に持ったときの下辺。操作をこの帯にまとめ、
+   シャッターを短辺の中央 = 親指の位置に置く (横構え前提の配置) */
+.camera .rot { position: absolute; left: 50%; top: 50%; width: 874px; height: 402px; transform: translate(-50%,-50%) rotate(90deg); }
+/* rot 空間の左端 = 端末上辺の SafeArea 62 / 右端 = 下辺の 34。その内側が撮影の可視領域 */
+.camera .stage { position: absolute; left: 62px; right: 34px; top: 0; bottom: 0; }
+/* 16:9 を SafeArea の高さいっぱいで最大化し、画面中央に置く */
+.camera .preview { position: absolute; left: 50%; top: 0; transform: translateX(-50%); height: 100%; aspect-ratio: 16 / 9; }
+/* カメラは黒いクローム。実写が入っていないときもプレビューの地は暗くして、
+   ステータスバー（白）と矛盾させない */
+.camera .preview .slot { background: var(--neutral-800); }
+.camera .preview .slot .ph { color: rgba(255,255,255,.55); }
+.camera .preview .slot .drop-hint { color: rgba(255,255,255,.32); }
+/* お題は横構えで見たときの画面中央上部 */
+.camera .theme { position: absolute; left: 50%; top: 16px; transform: translateX(-50%); max-width: 340px; text-align: center; }
+.camera .theme .box { padding: 9px 16px; border-radius: var(--radius-lg); background: var(--ink-a56); }
+.camera .theme .box .t { margin-top: 4px; font-size: var(--text-base); line-height: var(--leading-snug); font-weight: var(--weight-bold); color: #fff; text-wrap: pretty; }
+/* 操作は右端 = 端末を縦に持ったときの下辺。プレビューが広いぶん帯は面を持たず、
+   スクリムだけ敷いて数十 px プレビューに重ねる */
+.camera .band {
+  position: absolute; right: 34px; top: 0; bottom: 0; width: 152px; display: flex; flex-direction: column;
+  align-items: center; justify-content: space-between; padding: 21px 0;
+  background: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,.34) 60%, rgba(0,0,0,.66) 100%);
+  pointer-events: none;
+}
+.camera .band .btn, .camera .band .ring, .camera .band .rec-label { pointer-events: auto; }
+.camera .band .btn { width: var(--tap-min); height: var(--tap-min); display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--ink-a56); }
+/* リングは 3 つの子の真ん中 = 帯の中心軸。ラベルは流れから抜いてシャッターの左隣へ */
+.camera .rec-label {
+  position: absolute; left: 50%; top: 112px; transform: translate(-50%,-50%); white-space: nowrap;
+  padding: 3px 10px; border-radius: var(--radius-pill); background: var(--ink-a56);
+  font-family: var(--font-ui); font-weight: 700; font-size: var(--text-2xs); line-height: 1.2;
+  letter-spacing: var(--tracking-caps); color: rgba(255,255,255,.55);
+}
+.camera .rec-label.on { color: var(--green-300); }
+/* 2 秒の進行はシャッターの縁そのもの。別のバーは置かない */
+.camera .ring { width: 92px; height: 92px; border-radius: 50%; padding: 4px; flex: none; }
+.camera .shutter { width: 100%; height: 100%; border-radius: 50%; background: var(--neutral-950); display: flex; align-items: center; justify-content: center; }
+.camera .shutter i { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); transition: all var(--dur-base) var(--ease-in-out); }
+.camera .shutter.rec i { width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--accent); }
 
 /* ---- 11. ComposeView ---------------------------------------------------- */
-.compose { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; }
-.compose .hd { height: 52px; flex: none; padding: 0 18px; display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 1; color: var(--text-2); }
+.compose { position: absolute; inset: 0; padding-top: 62px; padding-bottom: 34px; display: flex; flex-direction: column; background: var(--bg-app); }
+.compose .hd { height: var(--navbar-h); flex: none; padding: 0 12px; display: flex; align-items: center; gap: 6px; font-size: var(--text-base); line-height: 1; color: var(--text-secondary); }
 .compose .stage { flex: 1; min-height: 0; display: flex; align-items: center; }
-.compose .frame { position: relative; width: 100%; aspect-ratio: 16 / 9; background: var(--surface); overflow: hidden; }
-.compose .frame .chip { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); max-width: 86%;
-  padding: 9px 14px; border-radius: 12px; background: rgba(0,0,0,.55); text-align: center; pointer-events: none; }
-.compose .frame .chip .t { margin-top: 5px; font-size: 14px; line-height: 1.4; }
-.compose .foot { flex: none; padding: 12px 14px 8px; }
-.compose .foot .box { height: 48px; padding: 0 18px; border-radius: 24px; background: var(--surface-raised); border: 1px solid var(--border); display: flex; align-items: center; }
-.compose .foot .box input { width: 100%; background: none; border: 0; outline: none; color: var(--text-1); font-family: var(--font-ui); font-size: 14.5px; line-height: 1.2; }
-.compose .foot .box input::placeholder { color: var(--text-3); }
-.compose .foot .post { margin-top: 10px; height: 52px; border-radius: 26px; background: var(--primary); color: var(--on-primary);
-  display: flex; align-items: center; justify-content: center; font-size: 15px; line-height: 1; font-weight: 700; }
-.compose .foot .post.busy { background: rgba(233,178,106,.5); }
+.compose .frame { position: relative; width: 100%; aspect-ratio: 16 / 9; background: var(--bg-sunken); overflow: hidden; }
+/* ひとことはそのまま動画に載るので、入力欄を投稿の中央に置く */
+.compose .frame .chip {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 86%;
+  padding: 10px 16px; border-radius: var(--radius-lg); background: var(--ink-a56); text-align: center;
+}
+.compose .frame .chip:focus-within { box-shadow: var(--focus-ring); }
+.compose .frame .chip .cap {
+  margin-top: 5px; width: 100%; background: none; border: 0; border-bottom: 1px solid rgba(255,255,255,.4); outline: none; text-align: center;
+  color: #fff; font-family: var(--font-ui); font-size: var(--text-base); line-height: var(--leading-normal);
+  display: block; resize: none; overflow: hidden; max-height: 96px; padding: 0 0 3px;
+}
+.compose .frame .chip .cap:focus { border-bottom-color: var(--accent); }
+.compose .frame .chip .cap::placeholder { color: rgba(255,255,255,.82); }
+.compose .foot { flex: none; padding: 12px; }
+.compose .foot .post {
+  height: var(--composer-h); border-radius: var(--radius-pill); background: var(--accent);
+  color: var(--text-on-accent); box-shadow: var(--shadow-fab);
+  display: flex; align-items: center; justify-content: center; font-size: var(--text-md); line-height: 1; font-weight: var(--weight-bold);
+}
+.compose .foot .post.busy { background: var(--neutral-100); color: var(--text-disabled); box-shadow: none; cursor: not-allowed; }
 
 /* full-screen photo viewer (自分の 1 枚) */
-.viewer { position: absolute; inset: 0; background: #000; z-index: 30; }
+.viewer { position: absolute; inset: 0; background: var(--neutral-950); z-index: 30; }

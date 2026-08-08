@@ -13,15 +13,22 @@
   var avatar = LT3.avatar;
   var icon = LT3.icon;
 
-  var C = { // DesignColors (色は CSS 変数が正。SVG の stroke にだけ直値で渡す)
-    primary: '#E9B26A', onPrimary: '#0B0A0C', text1: '#F5F1EA',
-    text2: 'rgba(245,241,234,.64)', text3: 'rgba(245,241,234,.38)',
-    tabInactive: 'rgba(245,241,234,.55)', camDisabled: 'rgba(245,241,234,.30)',
+  var C = { // Kaiwa のセマンティックトークン（CSS 変数が正。アイコンの color にだけ直値で渡す）
+    primary: '#0EAE63', onPrimary: '#FFFFFF', text1: '#14181C',
+    text2: '#59626B', text3: '#A4ABB2',
+    tabInactive: '#79828B', camDisabled: '#A4ABB2',
+    onPhoto: 'rgba(255,255,255,.78)',   // インク scrim の上
+    accentOnPhoto: '#9CE3BE',            // green-200（インク scrim の上のアクセント）
+    accentOnDark: '#63D298',             // green-300（黒地の上）
+    onDark: '#FFFFFF',
   };
 
+  /// 11px 大文字のアイブロウ。Kaiwa で ALL CAPS が許される唯一の文字なので
+  /// これより小さい指定が来ても 11px に丸める。
   function meta(text, opt) {
     opt = opt || {};
-    var st = 'font-size:' + (opt.size || 10) + 'px;letter-spacing:' + ((opt.size || 10) * (opt.ls == null ? 0.16 : opt.ls)) + 'px';
+    var size = Math.max(11, opt.size || 11);
+    var st = 'font-size:' + size + 'px;letter-spacing:' + (size * (opt.ls == null ? 0.12 : opt.ls)) + 'px';
     if (opt.color) st += ';color:' + opt.color;
     if (opt.lh) st += ';line-height:' + opt.lh;
     return '<div class="meta" style="' + st + '">' + esc(text) + '</div>';
@@ -35,12 +42,10 @@
   LT3.screens.splash = {
     enter: function () { LT3.after(2200, function () { LT3.replace('login'); }); },
     view: function () {
+      // ローディングの 3 点はマークそのもの。灯りが 1 つずつ点いてロゴになる
       return '<div class="lt3-view splash lt3-safe-top lt3-safe-bottom">' +
-        '<div class="icon">' + photo('app/icon', { label: 'APP ICON', src: '../../assets/images/app-icon-rings-photo.png' }) + '</div>' +
-        '<div class="title">the last three</div>' +
-        '<div class="dots">' +
-          '<i style="animation-delay:812ms"></i><i style="animation-delay:1008ms"></i><i style="animation-delay:1204ms"></i>' +
-        '</div>' +
+        '<div class="mark-wrap">' + LT3.mark({ size: 108, stagger: true }) + '</div>' +
+        LT3.wordmark({ size: 30 }) +
       '</div>';
     },
     actions: {},
@@ -59,7 +64,7 @@
           '</div>';
       return '<div class="lt3-view login">' +
         '<div class="spacer-3"></div>' +
-        '<div class="title">The Last Three</div>' +
+        '<div class="lockup">' + LT3.mark({ size: 52 }) + LT3.wordmark({ size: 34 }) + '</div>' +
         '<div class="sub">同時に向き合えるのは、3人まで。</div>' +
         '<div class="spacer-4"></div>' +
         (s.error.login ? '<div class="err">' + esc(s.error.login) + '</div>' : '') +
@@ -101,6 +106,8 @@
   ];
   var SEGMENT_COUNT = 5;
   var TYPE_INTERVAL = 42;
+  // intro は View の中心に置くので、意味の単位で改行を打ってから流す（\n は pre-wrap で出る）
+  var INTRO_TEXT = 'あなたの理想の相手を\n1 体の相棒として生成します。';
 
   function onb() { return LT3.state.onb; }
 
@@ -119,26 +126,21 @@
       LT3.every(1000, function () { onb().elapsed += 1; paintClock(); });
       var phase = new URLSearchParams(location.search).get('phase');
       if (phase) { jumpTo(phase); return; }
-      speak('こんにちは。これから、あなたの理想の相手を 1 体の相棒として生成します。まずは、その人のことを聞かせてください。');
+      speak(INTRO_TEXT);
     },
     view: function (s) {
       var o = s.onb;
       if (!o) return '<div class="lt3-view"></div>';
-      var stage = figureStage(o);
+      var mid = centered(o);
       var scrimH = o.climax ? 420 : (showOptions(o) ? 400 : 340);
+      // 人のシルエットは置かない。生成に入ってからはカード（モザイク → 写真）だけ
       var figure = '';
-      if (o.done) {
-        figure = crystalHtml(s, o);
-      } else if (o.companionRevealed && s.persona) {
-        figure = companionHtml(s, o);
-      } else {
-        figure = '<div class="figure" style="top:' + figureTop(stage) + 'px">' +
-          LT3Figure.render(stage, { speaking: o.speaking }) + '</div>';
-      }
-      return '<div class="lt3-view onb">' +
+      if (o.done) figure = crystalHtml(s, o);
+      else if (o.phase === 'companion') figure = companionHtml(s, o);
+      return '<div class="lt3-view onb' + (mid ? ' centered' : '') + '">' +
         '<div class="glow"></div>' + figure +
         '<div class="scrim-top"></div><div class="scrim-bottom" style="height:' + scrimH + 'px"></div>' +
-        header(o) + bottom(s, o) +
+        header(o) + (mid ? centerStage(s, o) : bottom(s, o)) +
       '</div>';
     },
     actions: {
@@ -216,7 +218,7 @@
   function jumpTo(phase) {
     var o = onb();
     o.answered = 0;
-    if (phase === 'intro') { speak('こんにちは。これから、あなたの理想の相手を 1 体の相棒として生成します。まずは、その人のことを聞かせてください。'); }
+    if (phase === 'intro') { speak(INTRO_TEXT); }
     else if (phase === 'gender') { o.phase = 'gender'; askGender(); }
     else if (phase === 'ideal') { o.phase = 'ideal'; renderAi(nextTurn()); }
     else if (phase === 'climax') {
@@ -239,12 +241,6 @@
     LT3.render();
   }
 
-  function figureTop(stage) {
-    if (stage === 's0' || stage === 's1') return 84;
-    if (stage === 's2') return 60;
-    if (stage === 's3') return 56;
-    return 84;
-  }
   function figureStage(o) {
     if (o.done) return 'crystal';
     switch (o.phase) {
@@ -330,8 +326,50 @@
     return meta(subjectLabel(o));
   }
 
+  /// 写真生成（companion）に入るまではシートを使わず、字幕を View の中心に置く
+  function centered(o) { return !o.done && o.phase !== 'companion'; }
+
+  /// 中心 = 字幕 / 下辺 = ボタン・選択肢・入力
+  function centerStage(s, o) {
+    var foot = '';
+    if (o.error) foot += '<div class="err">' + esc(o.error) + '</div>';
+    if (o.phase === 'intro' && o.captionDone && !o.typing) {
+      foot += '<div class="action lt3-tap" data-act="beginGender">はじめる</div>';
+    }
+    foot += choicesHtml(o) + inputArea(o);
+    var sub = (o.climax && o.captionDone) ? '<div class="caption-sub">' + esc(M.battery.highlightSub) + '</div>' : '';
+    return '<div class="center-block" data-act="skipTyping">' + captionLabel(o) +
+      '<div class="caption' + (o.climax ? ' climax' : '') + '">' + esc(o.caption) + '</div>' + sub + '</div>' +
+      (foot ? '<div class="foot">' + foot + '</div>' : '');
+  }
+
+  function choicesHtml(o) {
+    if (!showOptions(o)) return '';
+    var labels = usesLabelChoice(o) ? o.basicsOptions : o.options.map(function (x) { return x.label; });
+    // 複数選べる問いは、上限をいつでも読めるようにしておく
+    var html = (o.isMulti && o.maxPick > 1)
+      ? '<div class="pick-hint">' + (o.picked.length
+          ? o.picked.length + ' / ' + o.maxPick + ' 選択'
+          : o.maxPick + 'つまで選べます') + '</div>'
+      : '';
+    html += '<div class="chips">' + labels.map(function (label, i) {
+      var on = !usesLabelChoice(o) && o.picked.indexOf(i) >= 0;
+      return '<div class="chip lt3-tap' + (on ? ' on' : '') + '" data-act="pick" data-arg="' + i + '">' + esc(label) + '</div>';
+    }).join('') + '</div>';
+    if (o.isMulti && o.picked.length) {
+      html += '<div class="action lt3-tap" data-act="submitPicked" style="margin-top:8px">これで送る（' + o.picked.length + '）</div>';
+    }
+    return html;
+  }
+
   function bottom(s, o) {
+    var card = s.persona;
     var html = '<div class="bottom">';
+    if (card && (o.done || o.companionRevealed)) {
+      html += '<div class="persona-line">' +
+        meta(o.done ? 'YOUR COMPANION · 05:00' : (card.epithet || ''), { color: C.primary }) +
+        '<div class="nm">' + esc(card.name || '') + '</div></div>';
+    }
     html += '<div class="caption-block" data-act="skipTyping">' + captionLabel(o) +
       '<div class="caption' + (o.climax ? ' climax' : '') + '">' + esc(o.caption) + '</div>';
     if (o.climax && o.captionDone) {
@@ -351,14 +389,7 @@
         html += '<div class="action lt3-tap" data-act="continueToSelf">つづける</div>';
       }
       if (showOptions(o)) {
-        var labels = usesLabelChoice(o) ? o.basicsOptions : o.options.map(function (x) { return x.label; });
-        html += '<div class="chips">' + labels.map(function (label, i) {
-          var on = !usesLabelChoice(o) && o.picked.indexOf(i) >= 0;
-          return '<div class="chip lt3-tap' + (on ? ' on' : '') + '" data-act="pick" data-arg="' + i + '">' + esc(label) + '</div>';
-        }).join('') + '</div>';
-        if (o.isMulti && o.picked.length) {
-          html += '<div class="action lt3-tap" data-act="submitPicked" style="margin-top:8px">これで送る（' + o.picked.length + '）</div>';
-        }
+        html += choicesHtml(o);
       }
       html += inputArea(o);
     }
@@ -388,24 +419,25 @@
     '</div>';
   }
 
+  /// 相棒の像は全画面。生成中はモザイク + 進行、文字はシート側が持つ
   function companionHtml(s, o) {
-    var card = s.persona;
-    return '<div class="companion">' +
-      '<div class="fig-wrap" style="filter:blur(14px)">' + photo('persona/figure', { label: '' }) + '</div>' +
-      '<div class="veil"></div>' +
-      '<div class="cap">' + (card.epithet ? meta(card.epithet, { color: C.primary }) : '') +
-        '<div class="nm">' + esc(card.name) + '</div></div>' +
+    var forming = !o.done && !o.companionRevealed;
+    return '<div class="stage">' + photo('persona/figure', { label: '' }) +
+      (forming ? mosaicHtml() + '<div class="gen"><div class="pill">生成中</div><div class="bar"><i></i></div></div>' : '') +
     '</div>';
   }
+  /// 生成中のモザイク。並びは決め打ちなので再描画しても模様が跳ばない
+  function mosaicHtml() {
+    var COLS = 10, ROWS = 14, out = '';
+    for (var i = 0; i < COLS * ROWS; i++) {
+      var t = ((i * 37) % 100) / 100;
+      out += '<i style="background:rgba(20,24,28,' + (0.06 + t * 0.16).toFixed(3) +
+        ');animation-delay:' + ((i % 11) * 0.18).toFixed(2) + 's"></i>';
+    }
+    return '<div class="mosaic" style="--cols:' + COLS + '">' + out + '</div>';
+  }
   function crystalHtml(s, o) {
-    var card = s.persona;
-    var inner = card
-      ? '<div class="fig-wrap">' + photo('persona/figure', { label: '' }) + '</div>'
-      : '<div class="fig-wrap"><div class="figure" style="top:-116px;left:-51px;width:402px;right:auto">' +
-          LT3Figure.render('crystal', {}) + '</div></div>';
-    return '<div class="crystal">' + inner + '<div class="veil"></div>' +
-      '<div class="cap">' + meta('YOUR COMPANION · 05:00') +
-      '<div class="nm">' + esc(card && card.name ? card.name : 'あなたが探している人') + '</div></div></div>';
+    return '<div class="stage">' + photo('persona/figure', { label: '' }) + '</div>';
   }
 
   /* ---- 進行 (OnboardingChatController の写し) --------------------------- */
@@ -586,7 +618,7 @@
   LT3.screens.main = {
     view: function (s) {
       var body = s.tab === 0 ? slotsHtml(s) : myProfileHtml(s);
-      return '<div class="lt3-view main">' + body + tabBar(s) + '</div>' + balloon(s) + debugBtn();
+      return '<div class="lt3-view main">' + body + tabBar(s) + '</div>' + debugBtn();
     },
     actions: Object.assign({
       goHome: function () { LT3.state.tab = 0; LT3.render(); },
@@ -599,7 +631,14 @@
         LT3.go('camera');
       },
       openMyPost: function () { LT3.state.viewer = 'me/today'; LT3.render(); },
-      openReport: function (i) { LT3.go('reportDetail', { index: Number(i) }); },
+      // 投稿全体（または「続きを読む」）を押すと拡大。名前が帯のすぐ下に来る位置まで送る
+      expandPost: function (arg) {
+        var s = LT3.state;
+        var i = Number(arg);
+        s.feedOpen = s.feedOpen === i ? null : i;
+        s.feedScrollTo = i;
+        LT3.render();
+      },
       openDebug: function () { LT3.state.sheet = 'debug'; LT3.render(); },
       openPersona: function () { LT3.go('persona'); },
       openEdit: function () { LT3.go('profileEdit'); },
@@ -610,33 +649,44 @@
         '<div style="height:14px"></div>' +
         '<div class="row-item lt3-tap" data-act="resetOnboarding">オンボーディングからやり直す</div>';
     },
-    // 1 列の高さとカード幅は実測値から決める (Flutter: MainMatchReports.rowHeightFor)
+    // 枠は上へ詰め、その下をタイムラインが下へ無限に流れる。
+    // 底が近づいたら次の巡回ぶんを継ぎ足す (再描画はしない = スクロール位置が飛ばない)。
     after: function (s, screen) {
-      var rows = screen.querySelector('.reports .rows');
-      if (!rows) return;
-      var list = rows.querySelectorAll('.rline');
-      var n = list.length;
-      if (!n) return;
-      var even = (rows.clientHeight - 10 * (n - 1)) / n;
-      var rowHeight = Math.max(0, Math.min(even, 190));
-      var cardWidth = rowHeight * 1.25; // MatchReportCard.aspectRatio = 5 / 4
-      Array.prototype.forEach.call(list, function (row) {
-        row.style.height = rowHeight + 'px';
-        Array.prototype.forEach.call(row.children, function (card) {
-          card.style.height = rowHeight + 'px';
-          card.style.width = cardWidth + 'px';
-        });
-      });
+      var slots = screen.querySelector('.slots');
+      var stream = screen.querySelector('.feed .stream');
+      if (!slots || !stream) return;
+      if (s.feedScrollTo != null) {
+        var target = stream.querySelector('.post[data-arg="' + s.feedScrollTo + '"]');
+        var head = screen.querySelector('.feed .fhd');
+        s.feedScrollTo = null;
+        if (target) {
+          // 帯は sticky。送ったあとの帯の下辺 = スクロール領域の上辺 + 上の余白 + 帯の高さ
+          var pad = parseFloat(getComputedStyle(slots).paddingTop) || 0;
+          var line = slots.getBoundingClientRect().top + pad + (head ? head.offsetHeight : 0);
+          slots.scrollTop += target.getBoundingClientRect().top - line;
+        }
+      }
+      var grow = function () {
+        if (s.feedCount >= FEED_MAX) return;
+        if (slots.scrollTop + slots.clientHeight < slots.scrollHeight - 400) return;
+        var start = s.feedCount;
+        s.feedCount = start + FEED_STEP;
+        var html = '';
+        for (var i = start; i < s.feedCount; i++) html += feedPost(i);
+        stream.insertAdjacentHTML('beforeend', html);
+        var cnt = screen.querySelector('.feed .fhd .cnt');
+        if (cnt) cnt.textContent = '× ' + s.feedCount;
+      };
+      slots.addEventListener('scroll', grow, { passive: true });
+      grow();
     },
   };
   LT3.screens.main.actions.resetOnboarding = function () { LT3.offAll('onboarding'); };
 
+  // 枠は上へ詰める。空き枠には何も置かず、その分タイムラインが上がってくる。
   function slotsHtml(s) {
     var partners = LT3.partners();
-    var filled = partners.length >= 3;
-    var cards = partners.map(slotCard).join('');
-    if (filled) return '<div class="slots filled">' + cards + '</div>';
-    return '<div class="slots">' + cards + reportsHtml(s, 3 - partners.length) + '</div>';
+    return '<div class="slots">' + partners.map(slotCard).join('') + feedHtml(s) + '</div>';
   }
 
   function slotCard(p) {
@@ -655,81 +705,139 @@
       photo(key, { label: p.name + ' の投稿', faded: p.isFading }) +
       '<div class="scrim-top"></div><div class="scrim-bottom"></div>' +
       '<div class="who" data-act="openPartnerProfile" data-arg="' + esc(p.id) + '">' +
-        avatar(p.initial, { size: 28, key: 'partner/' + p.id + '/avatar', lit: !p.isFading }) +
         '<div class="nm">' + esc(p.name) + '</div></div>' +
-      '<div class="center">' + meta(p.postMeta, { size: 9.5, color: C.text2 }) +
+      '<div class="center">' + meta(p.postMeta, { size: 9.5, color: C.onPhoto }) +
         '<div class="cap">' + esc(p.caption) + '</div></div>' +
     '</div>';
   }
 
-  function reportsHtml(s, freeSlots) {
-    var reports = M.matchReports;
-    var rows = Math.min(Math.max(freeSlots, 1), 3);
-    var body;
-    if (!reports.length) {
-      body = '<div class="empty">AI が、誰かの理想像とあなたを照らし合わせています。\n分析が終わるたび、ここに 1 枚ずつ並びます。</div>';
-    } else {
-      var cols = '';
-      for (var r = 0; r < rows; r++) {
-        var slice = [];
-        for (var i = r; i < reports.length; i += rows) slice.push({ rep: reports[i], index: i });
-        cols += '<div class="rline">' + (slice.length
-          ? slice.map(function (x) { return reportCard(x.rep, x.index); }).join('')
-          : '<div class="waiting" style="aspect-ratio:5/4;height:100%">' + meta('次の巡回を待っています', { size: 9.5 }) + '</div>') +
-          '</div>';
-      }
-      body = '<div class="rows"><div class="cols">' + cols + '</div></div>';
-    }
-    return '<div class="reports">' +
-      '<div class="head"><div class="dot"></div>' + meta('ANALYZING', { size: 9.5, color: C.primary }) +
-      '<div class="sp"></div>' + meta(freeSlots + ' SLOT' + (freeSlots > 1 ? 'S' : '') + ' OPEN', { size: 9.5 }) + '</div>' +
-      body + '</div>';
-  }
-
   function isWanted(outcome) { return outcome === 'mutual' || outcome === 'theirIdeal'; }
 
-  function reportCard(rep, index) {
-    var lines = rep.lines.map(function (l) {
-      return '<div class="line"><div class="b' + (l.hit ? ' hit' : '') + '">' + (l.hit ? '○' : '·') + '</div>' +
-        '<div class="t' + (l.hit ? ' hit' : '') + '">' + esc(l.label + ' ' + l.value) + '</div></div>';
+  /* ---- MainFeed ---------------------------------------------------------
+     枠の下を流れる、AI の思考ログ。自分の投稿ではなく「候補を照らし合わせた結果」で、
+     1 件 = 見立て 1 本 + 候補の理想像 + 合致の点。下へ無限に続く。 */
+  var FEED_STEP = 6;   // 継ぎ足す単位
+  var FEED_MAX = 96;
+
+  /// 1 件 = 人 1 人。2 段構成で、上が「この人はどういう人か」、
+  /// 下が「この人が求めている相手」（写真にインクの膜をかけて重ねる）。
+  var FEED_PEOPLE = [
+    { name: '夜にだけ灯る人', meta: '29 · 中野',
+      intro: '昼は事務、夜は古い映画を 1 本。人見知りですが、決めたことは続けます。台所に立つ時間が好き。休みの日は昼まで寝て、夕方から動きます。人の輪の真ん中は苦手ですが、少人数なら長く話せます。',
+      ideal: '返事を急かさない人。同じ映画を黙って最後まで見られる人がいいです。毎日でなくていいので、返事はきちんとほしいです。家で過ごす時間を面倒がらない人だと、続くと思います。' },
+    { name: '台所に立つ人', meta: '33 · 三鷹',
+      intro: '週末はだいたい仕込み。声は大きくないほうで、うるさい店より家で話す時間が長いです。外食は月に数回。器を集めています。急な予定変更にはあまり強くありません。',
+      ideal: '食べたものの感想をきちんと言う人。予定を前もって決められる人が合います。一緒に台所に立たなくても、食べる時間を合わせてくれれば十分です。' },
+    { name: '朝がいちばん元気な人', meta: '27 · 大井町',
+      intro: '5 時起き、走ってから仕事。休みの日ほど早く起きます。用事は先に片づける性格。夜は 22 時を過ぎると使いものになりません。予定は前の週には決めておきたいほうです。',
+      ideal: '朝に付き合わなくても、起きる時間を笑わない人。連絡はこまめが好きです。朝の連絡に返せなくても構いません。ただ、約束の時間は守ってほしいです。' },
+    { name: 'まだ像を結ばない人', meta: '31 · 高円寺',
+      intro: '登録したばかりで、書いてあることがまだ少ない人です。写真も 1 枚だけ。プロフィールは数行で、分析に使える手がかりがまだ足りていません。',
+      ideal: '求める形はまだ書かれていません。次の巡回でもう一度見ます。書き足されたら、あらためて照らし合わせます。' },
+    { name: '同じ路線の人', meta: '30 · 阿佐ヶ谷',
+      intro: '通勤で毎日同じ電車。本は月に 3 冊。休みの日は歩いて店を探します。喫茶店で 2 時間くらい平気で過ごします。荷物は少なめ、歩くのは速いほうです。',
+      ideal: '待ち合わせに遅れない人。無理に話さなくても平気でいられる関係がいいです。沈黙が続いても気にしない人だと、用事がなくても連絡できます。' },
+    { name: '週末だけ遠出する人', meta: '28 · 川崎',
+      intro: '平日は家、土日は車で遠くへ。運転は苦になりません。写真は撮りっぱなし。年に何度か長い休みを取って、車で寝ます。人混みは避けます。',
+      ideal: '助手席で寝ていてもいい人。行き先を一緒に決めてくれる人が好きです。朝が早い日でも文句を言わない人だと、遠くまで行けます。' },
+    { name: '早く寝る人', meta: '34 · 蒲田',
+      intro: '22 時には寝ます。仕事は現場で体力勝負。無口ですが、聞くのは得意です。朝は 5 時前に家を出ます。休みは体を休めることに使います。',
+      ideal: '夜更かしを求めない人。短くても毎日連絡がある関係が続きやすいです。生活の時間が近ければ、夜に長く話せなくても平気です。' },
+    { name: '本の話ができる人', meta: '26 · 本郷',
+      intro: '大学の図書館で働いています。小説と、たまに詩。人の話を最後まで聞きます。積んである本が 40 冊ほど。声は小さいですが、書く言葉は多いほうです。',
+      ideal: '読んだものの話ができる人。すぐに返せなくても怒らない人がいいです。長い文章を送っても引かない人だと、会えない期間があっても平気でいられます。' },
+    { name: '犬と暮らす人', meta: '32 · 世田谷',
+      intro: '朝晩の散歩が生活の芯。料理は簡単なものだけ。友だちは少なく、長いです。13 歳の犬がいます。旅行は年に一度あるかどうかです。',
+      ideal: '動物が平気な人。予定を急に変えない人だと、こちらも安心できます。家に来ることを嫌がらず、犬の予定が先になる日を責めない人だと助かります。' },
+    { name: '声の低い人', meta: '35 · 白金',
+      intro: '話すのは仕事だけで十分な性格。休みは家で音楽。長電話は苦手です。レコードを 300 枚ほど。休みの日はほとんど家にいます。',
+      ideal: '文字でやり取りできる人。会うときはきちんと時間を取る人が好きです。音を出していても気にしない人で、返事の短さを冷たいと取らない人がいいです。' },
+    { name: '甘いものが苦手な人', meta: '29 · 浅草',
+      intro: '酒場より喫茶店。将棋を指します。曲がったことが好きではありません。朝は珈琲だけ。将棋は 20 年続けています。',
+      ideal: '嘘をつかない人。約束の時間に来る人であれば、あとは合わせられます。言いにくいことも、あとで言われるより先に言ってほしいです。' },
+    { name: 'ひとりの時間が要る人', meta: '31 · 国立',
+      intro: '週の半分は誰にも会いません。絵を描きます。心配はしていません。月に一度は展示を見に行きます。話すのは嫌いではありません。',
+      ideal: '毎日連絡を求めない人。会えば長く話せる関係がちょうどいいです。距離を測れる人で、会わない週があっても関係が薄くならないと思える人がいいです。' },
+  ];
+
+  function feedHtml(s) {
+    if (!s.feedCount) s.feedCount = 12;
+    // 見てきた候補を重なりの円で見せ、人数を添える（継ぎ足しで更新）
+    var faces = [0, 1, 2].map(function (n) {
+      var u = LT3.media.get('report/' + n);
+      return '<i class="fc">' + (u ? '<img src="' + esc(u) + '" alt="">' : '') + '</i>';
     }).join('');
-    return '<div class="rep-card lt3-tap' + (isWanted(rep.outcome) ? ' wanted' : '') + '" style="aspect-ratio:5/4;height:100%"' +
-      ' data-act="openReport" data-arg="' + index + '">' +
-      '<div class="analysis"><div class="nick">' + esc(rep.nickname) + '</div>' +
-        '<div class="lines">' + lines + '</div>' +
-        (rep.verdict ? '<div class="verdict' + (isWanted(rep.outcome) ? ' wanted' : '') + '">' + esc(rep.verdict) + '</div>' : '') +
-      '</div>' +
-      '<div class="ideal" style="aspect-ratio:.55;height:100%">' +
-        (rep.idealImageUrl ? photo('report/' + index, { label: '' })
-          : '<div class="fallback">' + meta('像を結ぶ前', { size: 8 }) + '</div>') +
-        '<div class="fade"></div><div class="tag">THEIR IDEAL</div>' +
-      '</div></div>';
+    var items = '';
+    for (var i = 0; i < s.feedCount; i++) items += feedPost(i);
+    return '<div class="feed">' +
+      '<div class="fhd"><i class="dot breathe"></i>' + meta('ANALYZING', { size: 9.5, color: C.primary }) +
+        '<span class="faces">' + faces + '</span><span class="cnt">× ' + s.feedCount + '</span>' +
+        '<span class="dn">' + icon.down(C.tabInactive, 18) + '</span></div>' +
+      '<div class="stream">' + items + '</div>' +
+      '<div class="more">' + meta('巡回中', { size: 9.5 }) + '</div>' +
+    '</div>';
+  }
+
+  /// 1 件 = 名前・時刻 / この人の紹介 / 理想の相手（写真の上に重ねる）/ 合致の点。
+  /// たたむ前はどちらの本文も 2 行で切れる。たたむと全文が出て、写真は縦長になる。
+  function feedPost(i) {
+    var reports = M.matchReports;
+    var index = i % reports.length;
+    var rep = reports[index];
+    var who = FEED_PEOPLE[i % FEED_PEOPLE.length];
+    var open = LT3.state.feedOpen === i;
+    var hit = rep.lines.filter(function (l) { return l.hit; }).length;
+    var dots = rep.lines.map(function (l) { return '<i class="' + (l.hit ? 'on' : '') + '"></i>'; }).join('');
+    return '<div class="post lt3-tap' + (open ? ' open' : '') + '" data-act="expandPost" data-arg="' + i + '">' +
+      '<div class="ln"><span class="nm">' + esc(who.name) + '</span>' +
+        '<span class="mt">' + esc(who.meta) + '</span>' +
+        '<span class="tm">· ' + esc(feedAgo(i)) + '</span></div>' +
+      '<div class="tx">' + esc(who.intro) + '</div>' +
+      '<div class="rd">' + (open ? '閉じる' : '続きを読む') + '</div>' +
+      '<div class="pic">' + photo('report/' + (i % 3), { label: '' }) +
+        '<div class="ov">' + meta('理想の相手', { size: 9.5, color: C.onPhoto }) +
+          '<div class="t">' + esc(who.ideal) + '</div></div></div>' +
+      '<div class="ft">' + dots + '<em>' + hit + ' / ' + rep.lines.length + '</em></div>' +
+    '</div>';
+  }
+
+  /// 1 日までは相対、それより前は日付（Kaiwa の時刻表記）。
+  function feedAgo(i) {
+    var m = i * 23 + (i % 4) * 7;
+    if (m < 1) return 'いま';
+    if (m < 60) return m + '分前';
+    var h = Math.floor(m / 60);
+    if (h < 24) return h + '時間前';
+    var d = Math.floor(h / 24);
+    if (d === 1) return '昨日';
+    var dt = new Date(Date.now() - d * 86400000);
+    return (dt.getMonth() + 1) + '/' + dt.getDate();
   }
 
   function tabBar(s) {
+    // お題があるときだけカメラを一段持ち上げ、真下にお題そのものを置く。
+    // お題がないときは薄い非活性のまま列に収まる
+    var themeText = (s.theme && s.theme.theme) || (s.myPost && s.myPost.theme) || '';
     var camera;
     if (s.myPost) {
       camera = '<div class="cam mine lt3-tap" data-act="openMyPost">' + photo('me/today', { label: '' }) + '</div>';
     } else {
       var active = !!s.theme && !s.posted;
-      camera = '<div class="cam' + (active ? ' on' : '') + ' lt3-tap" data-act="openCamera">' +
-        icon.camera(active ? C.onPrimary : C.camDisabled) + '</div>';
+      camera = '<div class="cam' + (active ? ' on' : ' off') + ' lt3-tap" data-act="openCamera">' +
+        (active ? LT3.iconFill.camera(C.onPrimary) : icon.camera(C.camDisabled)) + '</div>';
     }
+    camera = '<div class="cam-slot' + (themeText ? ' raised' : '') + '">' + camera +
+      (themeText ? '<div class="theme-label">' + esc(themeText) + '</div>' : '') + '</div>';
+    // FILL 軸が選択状態を持つ（選択中 = 塗り・緑 / 待機 = 線・グレー）
     return '<div class="tabbar"><div class="inner">' +
-      '<div class="tab lt3-tap" data-act="goHome">' + icon.home(s.tab === 0 ? C.primary : C.tabInactive) + '</div>' +
+      '<div class="tab lt3-tap" data-act="goHome">' +
+        (s.tab === 0 ? LT3.iconFill.home(C.primary) : icon.home(C.tabInactive)) + '</div>' +
       camera +
-      '<div class="tab lt3-tap" data-act="goMyProfile">' + icon.person(s.tab === 1 ? C.primary : C.tabInactive) + '</div>' +
+      '<div class="tab lt3-tap" data-act="goMyProfile">' +
+        (s.tab === 1 ? LT3.iconFill.person(C.primary) : icon.person(C.tabInactive)) + '</div>' +
     '</div></div>';
   }
 
-  function balloon(s) {
-    var text = (s.theme && s.theme.theme) || (s.myPost && s.myPost.theme) || '';
-    if (!text) return '';
-    return '<div class="balloon"><div class="lt3-tap" data-act="openCamera" style="display:flex;flex-direction:column;align-items:center">' +
-      '<div class="tail"></div>' +
-      '<div class="body">' + meta("TODAY'S THEME", { size: 8.5, color: C.primary }) +
-      '<div class="t">' + esc(text) + '</div></div></div></div>';
-  }
   function debugBtn() { return '<div class="dbg lt3-tap" data-act="openDebug"><i>D</i></div>'; }
 
   /* ======================================================================
@@ -744,14 +852,19 @@
     var me = s.me, b = s.basics;
     var facts = (me.note && me.note.facts) || [];
     function factsOf(domain) { return facts.filter(function (f) { return f.domain === domain; }); }
+    // 頭は写真。円アバターをやめ、埋まった枠と同じ作法 (スクリムに沈む名前) に揃える
+    var url = LT3.media.get('me/avatar');
     var html = '<div class="myprof">';
-    html += '<div class="big-avatar" data-slot="me/avatar">' +
-      (LT3.media.get('me/avatar') ? '<img src="' + esc(LT3.media.get('me/avatar')) + '">'
-        : '<span>' + esc((me.name || '?').substring(0, 1)) + '</span>') + '</div>';
-    html += '<div class="nm">' + esc(me.name) + '</div>';
-    html += '<div class="mt">' + esc([me.meta, b.gender === 'female' ? '女性' : '男性'].filter(Boolean).join(' · ')) + '</div>';
+    html += '<div class="hero" data-slot="me/avatar">' +
+      (url ? '<img src="' + esc(url) + '" alt="">'
+           : '<div class="ph"><span>' + esc((me.name || '?').substring(0, 1)) + '</span></div>') +
+      '<div class="scrim-top"></div><div class="veil"></div>' +
+      '<div class="cap"><div class="nm">' + esc(me.name) + '</div>' +
+        '<div class="mt">' + esc([me.meta, b.gender === 'female' ? '女性' : '男性'].filter(Boolean).join(' · ')) + '</div></div>' +
+      (url ? '' : '<div class="drop-hint">DROP PHOTO</div>') + '</div>';
+    html += '<div class="pad">';
     // 基本情報 (申告値。性別と年齢は変えられない)
-    html += '<div style="height:24px"></div><div class="card-box">' +
+    html += '<div class="card-box">' +
       '<div class="hd">' + meta('基本情報', { size: 9.5, color: C.primary }) +
       '<div class="lt3-tap" data-act="openEdit">' + meta('編集', { ls: 0, color: C.primary }) + '</div></div>' +
       kv('身長', (b.heightCm / 100).toFixed(2) + 'm') +
@@ -777,48 +890,17 @@
         '<div class="pic">' + photo('persona/figure', { label: '' }) + '</div>' +
         '<div style="flex:1">' + meta(s.persona.worldLabel, { size: 9.5, color: C.primary }) +
         '<div class="nm">「' + esc(s.persona.epithet) + '」 ' + esc(s.persona.name) + '</div></div>' +
-        '<div class="chevron"></div></div>';
+        icon.chevron(C.text3) + '</div>';
     }
     if (wishes.length) {
       html += '<div style="height:12px"></div><div class="card-box">' +
         wishes.map(function (f) { return kv(f.k, f.v); }).join('') + '</div>';
     }
-    return html + '</div>';
+    return html + '</div></div>';
   }
   function kv(k, v) {
     return '<div class="kv"><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) + '</div></div>';
   }
-
-  /* ======================================================================
-     6 · MatchReportDetail — 縦長レポートを横へ送って読む
-     ====================================================================== */
-  LT3.screens.reportDetail = {
-    view: function (s) {
-      var reports = M.matchReports;
-      var pages = reports.map(function (rep, i) {
-        var lines = rep.lines.map(function (l) {
-          return '<div class="r"><div class="b' + (l.hit ? ' hit' : '') + '">' + (l.hit ? '○' : '·') + '</div>' +
-            '<div class="k">' + esc(l.label) + '</div><div class="v' + (l.hit ? ' hit' : '') + '">' + esc(l.value) + '</div></div>';
-        }).join('');
-        return '<div class="page" id="rep-' + i + '"><div class="sheet' + (isWanted(rep.outcome) ? ' wanted' : '') + '">' +
-          '<div class="hero">' +
-            (rep.idealImageUrl ? photo('report/' + i, { label: '' })
-              : '<div class="slot"><div class="ph">像を結ぶ前</div></div>') +
-            '<div class="veil"></div>' +
-            '<div class="cap">' + meta('THEIR IDEAL', { size: 8.5, color: C.primary }) +
-            '<div class="nm">' + esc(rep.nickname) + '</div></div>' +
-          '</div>' +
-          '<div class="body"><div class="hl">' + esc(rep.headline || rep.verdict) + '</div>' +
-            (rep.detail ? '<div class="dt">' + esc(rep.detail) + '</div>' : '') +
-            '<div class="sec">' + meta('この人のこと', { size: 9.5 }) + '</div>' + lines +
-          '</div></div></div>';
-      }).join('');
-      return '<div class="lt3-view rep-detail">' +
-        '<div class="hd">' + meta('ANALYSIS') + '<div class="close lt3-tap" data-act="back">×</div></div>' +
-        '<div class="pages" id="rep-pages">' + pages + '</div></div>';
-    },
-    actions: {},
-  };
 
   /* ======================================================================
      7 · ProfileEditView
@@ -966,7 +1048,7 @@
       var entries = LT3.entriesFor(p.id);
       var list = entries.length
         ? '<div class="list">' + entries.map(function (e) { return entryHtml(p, e, fading); }).join('') + '</div>'
-        : '<div class="empty">まだ発信はありません</div>';
+        : '<div class="empty"><span>まだ発信はありません</span></div>';
       return '<div class="lt3-view pair">' +
         '<div class="hd">' +
           '<div class="btn lt3-tap" data-act="back">' + icon.back(C.text1) + '</div>' +
@@ -1040,7 +1122,7 @@
     var faded = fading && !isMine;
     var showChip = !!e.caption || !LT3.media.get(key);
     var chip = showChip
-      ? '<div class="chip">' + meta(e.meta, { size: 9.5, ls: 0.14, color: C.text2 }) +
+      ? '<div class="chip">' + meta(e.meta, { size: 9.5, ls: 0.12, color: C.onPhoto }) +
         (e.caption ? '<div class="cap">' + esc(e.caption) + '</div>' : '') + '</div>'
       : '';
     var card = '<div class="photo ' + (isMine ? 'mine' : 'theirs') + '">' +
@@ -1050,13 +1132,13 @@
     return '<div>' + card +
       '<div class="likes" style="margin-top:6px">' +
         '<div class="b lt3-tap' + (liked ? ' on' : '') + '" data-act="like" data-arg="' + esc(p.id + '|' + e.likeKey) + '">' +
-          '<span class="hh">' + (liked ? '♥︎' : '♡︎') + '</span>' + (liked ? 'いいね済み' : 'いいね') + '</div>' +
-        '<div class="b lt3-tap" data-act="focusInput">' + icon.reply(C.text2) + 'リプライ</div>' +
+          (liked ? LT3.icon.heartFill(C.primary, 20) : icon.heart(C.text2, 20)) + (liked ? 'いいね済み' : 'いいね') + '</div>' +
+        '<div class="b lt3-tap" data-act="focusInput">' + icon.reply(C.text2, 20) + 'リプライ</div>' +
       '</div></div>';
   }
   function inputBar() {
     return '<div class="input">' +
-      '<div class="rnd ghost lt3-tap" data-act="postImage">' + icon.photo('rgba(245,241,234,.72)') + '</div>' +
+      '<div class="rnd ghost lt3-tap" data-act="postImage">' + icon.photo(C.text2) + '</div>' +
       '<div class="box"><input data-model="reply" data-submit="send" placeholder="リプライを送る"></div>' +
       '<div class="rnd gold lt3-tap" data-act="send">' + icon.plane(C.onPrimary) + '</div>' +
     '</div>';
@@ -1112,7 +1194,7 @@
     return '<div class="post">' +
       photo('partner/' + p.id + '/post' + i, { label: post.theme, faded: p.isFading }) +
       '<div class="veil"></div>' +
-      '<div class="cap">' + meta('お題「' + post.theme + '」 · ' + post.meta, { size: 9, ls: 0.14, color: C.text2 }) +
+      '<div class="cap">' + meta('お題「' + post.theme + '」 · ' + post.meta, { size: 9, ls: 0.12, color: C.onPhoto }) +
       (post.caption ? '<div class="t">' + esc(post.caption) + '</div>' : '') + '</div></div>';
   }
 
@@ -1123,19 +1205,22 @@
     enter: function (s) { s.camera = { rec: false, progress: 0 }; },
     view: function (s) {
       var c = s.camera;
-      var label = '● REC 0:0' + Math.min(2, Math.floor(c.progress * 2)) + ' / 0:02';
+      var pct = Math.round(Math.min(1, c.progress) * 100);
+      var label = c.rec ? '0:0' + Math.min(2, Math.floor(c.progress * 2)) + ' / 0:02' : '2 SEC';
+      // 帯 (band) は rot 空間の右端 = 端末を縦に持ったときの下辺。シャッターが親指の位置に来る
       return '<div class="lt3-view camera"><div class="rot">' +
-        '<div class="preview">' + photo('camera/preview', { label: 'カメラプレビュー' }) +
-          '<div class="ratio">16:9</div></div>' +
-        '<div class="scrim-top"></div><div class="scrim-bottom"></div>' +
-        '<div class="close lt3-tap" data-act="back">×</div>' +
-        '<div class="switch lt3-tap" data-act="switchCam">' + icon.swap('rgba(245,241,234,.92)') + '</div>' +
-        (s.theme ? '<div class="theme"><div class="box">' + meta("TODAY'S THEME", { size: 9, color: C.primary }) +
-          '<div class="t">' + esc(s.theme.theme) + '</div></div></div>' : '') +
-        '<div class="shutter-block">' +
-          (c.rec ? '<div class="rec-label">' + label + '</div>' : '') +
-          '<div class="shutter' + (c.rec ? ' rec' : '') + ' lt3-tap" data-act="startRec"><i></i></div>' +
-          '<div class="bar"><i style="width:' + (c.progress * 100) + '%"></i></div>' +
+        '<div class="stage">' +
+          '<div class="preview">' + photo('camera/preview', { label: 'カメラプレビュー' }) + '</div>' +
+          (s.theme ? '<div class="theme"><div class="box">' + meta("TODAY'S THEME", { size: 9, color: C.accentOnDark }) +
+            '<div class="t">' + esc(s.theme.theme) + '</div></div></div>' : '') +
+        '</div>' +
+        '<div class="band">' +
+          '<div class="btn lt3-tap" data-act="back">' + icon.close(C.onDark) + '</div>' +
+          '<div class="ring" style="background:conic-gradient(var(--accent) ' + pct + '%, rgba(255,255,255,.28) 0)">' +
+            '<div class="shutter' + (c.rec ? ' rec' : '') + ' lt3-tap" data-act="startRec"><i></i></div>' +
+          '</div>' +
+          '<div class="btn lt3-tap" data-act="switchCam">' + icon.swap(C.onDark) + '</div>' +
+          '<div class="rec-label' + (c.rec ? ' on' : '') + '">' + label + '</div>' +
         '</div>' +
       '</div></div>';
     },
@@ -1164,25 +1249,39 @@
   /* ======================================================================
      12 · ComposeView — 撮ったクリップにひとことを添えて投稿
      ====================================================================== */
+  // ひとことは最大幅に達したら折り返す。行が増えた分だけ入力欄の高さを合わせる
+  function fitCap() {
+    var el = document.querySelector('.compose .frame .cap');
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
   LT3.screens.compose = {
-    enter: function (s) { s.draft.caption = ''; s.busy.post = false; s.uploadProgress = 0; },
+    enter: function (s) {
+      s.draft.caption = ''; s.busy.post = false; s.uploadProgress = 0;
+      // ひとことを入力する前提の画面なので、開いた時点で中央の入力欄にフォーカスする
+      setTimeout(function () {
+        var el = document.querySelector('.compose .frame .cap');
+        if (el) { el.focus(); fitCap(); }
+      }, 0);
+    },
     view: function (s) {
-      var text = (s.draft.caption || '').trim();
       return '<div class="lt3-view compose">' +
-        '<div class="hd lt3-tap" data-act="retake">' + icon.back(C.text1, 12) + '撮り直す</div>' +
+        '<div class="hd lt3-tap" data-act="retake">' + icon.back(C.text2, 20) + '撮り直す</div>' +
         '<div class="stage"><div class="frame">' +
-          photo('camera/preview', { label: text ? '' : '撮影したクリップ' }) +
-          (text ? '<div class="chip">' + meta(s.theme ? s.theme.composeMeta : '', { size: 9.5, color: C.text2 }) +
-            '<div class="t">' + esc(text) + '</div></div>' : '') +
+          photo('camera/preview', { label: '' }) +
+          '<div class="chip">' + meta(s.theme ? s.theme.composeMeta : '', { size: 9.5, color: C.onPhoto }) +
+            '<textarea class="cap" rows="1" data-model="caption" data-live="live" placeholder="ひとことを添える"></textarea>' +
+          '</div>' +
         '</div></div>' +
         '<div class="foot">' +
-          '<div class="box"><input data-model="caption" data-live="live" placeholder="ひとことを添える（そのまま動画に載ります）"></div>' +
           '<div class="post lt3-tap' + (s.busy.post ? ' busy' : '') + '" data-act="post">' +
             (s.busy.post ? '送信中 ' + Math.round((s.uploadProgress || 0) * 100) + '%' : '投稿する') + '</div>' +
         '</div></div>';
     },
     actions: {
-      live: function () { LT3.render(); },
+      live: function () { LT3.render(); setTimeout(fitCap, 0); },
       retake: function () { LT3.replace('camera'); },
       post: function () {
         var s = LT3.state;

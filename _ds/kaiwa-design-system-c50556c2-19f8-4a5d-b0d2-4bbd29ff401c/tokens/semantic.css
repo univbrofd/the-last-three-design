@@ -1,0 +1,92 @@
+/* Semantic aliases — components reference THESE, not the raw scales. */
+:root{
+  --bg-app:var(--neutral-0);
+  --bg-subtle:var(--neutral-50);
+  --bg-sunken:var(--neutral-100);
+  --surface-card:var(--neutral-0);
+  --surface-raised:var(--neutral-0);
+  --surface-chrome:var(--white-a88);
+  --surface-scrim:var(--ink-a56);
+  --surface-selected:var(--green-50);
+
+  --text-primary:var(--neutral-900);
+  --text-secondary:var(--neutral-600);
+  --text-tertiary:var(--neutral-400);
+  --text-disabled:var(--neutral-300);
+  --text-inverse:var(--neutral-0);
+  --text-link:var(--blue-500);
+  --text-brand:var(--green-600);
+  --text-danger:var(--red-500);
+  --text-on-accent:var(--neutral-0);
+
+  --accent:var(--green-500);
+  --accent-hover:var(--green-400);
+  --accent-press:var(--green-600);
+  --accent-subtle:var(--green-50);
+  --accent-border:var(--green-200);
+
+  --info:var(--blue-500); --info-subtle:var(--blue-50);
+  --success:var(--green-500); --success-subtle:var(--green-50);
+  --warning:var(--yellow-500); --warning-subtle:var(--yellow-50);
+  --danger:var(--red-500); --danger-subtle:var(--red-50);
+
+  --border-default:var(--neutral-200);
+  --border-subtle:var(--neutral-100);
+  --border-strong:var(--neutral-300);
+  --border-field:var(--neutral-300);
+  --border-accent:var(--green-500);
+
+  --field-bg:var(--neutral-50);
+  --field-bg-focus:var(--neutral-0);
+  --field-placeholder:var(--neutral-400);
+
+  --chat-bg:var(--chat-wallpaper);
+  --bubble-me-bg:var(--green-100);
+  --bubble-me-text:var(--neutral-900);
+  --bubble-them-bg:var(--neutral-0);
+  --bubble-them-text:var(--neutral-900);
+  --bubble-meta:var(--white-a88);
+  --badge-unread:var(--red-500);
+}
+[data-theme="dark"]{
+  --bg-app:var(--neutral-900);
+  --bg-subtle:#1B2026;
+  --bg-sunken:var(--neutral-950);
+  --surface-card:#1F252B;
+  --surface-raised:#242B32;
+  --surface-chrome:rgba(20,24,28,.82);
+  --surface-scrim:rgba(0,0,0,.62);
+  --surface-selected:#123527;
+
+  --text-primary:#F2F4F5;
+  --text-secondary:var(--neutral-400);
+  --text-tertiary:var(--neutral-500);
+  --text-disabled:var(--neutral-600);
+  --text-inverse:var(--neutral-900);
+  --text-link:#7FAEFF;
+  --text-brand:var(--green-300);
+
+  --accent:var(--green-500);
+  --accent-hover:var(--green-400);
+  --accent-press:var(--green-600);
+  --accent-subtle:#12301F;
+  --accent-border:var(--green-700);
+
+  --border-default:#2C333A;
+  --border-subtle:#232A30;
+  --border-strong:#3D454D;
+  --border-field:#3D454D;
+
+  --field-bg:#1B2026;
+  --field-bg-focus:#242B32;
+  --field-placeholder:var(--neutral-500);
+
+  --chat-bg:var(--chat-wallpaper-dark);
+  --bubble-me-bg:var(--green-600);
+  --bubble-me-text:#FFFFFF;
+  --bubble-them-bg:#2A3138;
+  --bubble-them-text:#F2F4F5;
+
+  --hover-tint:var(--white-a12);
+  --press-tint:var(--white-a24);
+}

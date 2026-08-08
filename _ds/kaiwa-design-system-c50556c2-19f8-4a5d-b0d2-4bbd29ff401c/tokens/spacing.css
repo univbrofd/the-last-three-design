@@ -1,0 +1,22 @@
+/* Spacing, radii, sizes. 4px base with 2px and 6px half-steps for dense list UI. */
+:root{
+  --space-0:0; --space-05:2px; --space-1:4px; --space-15:6px; --space-2:8px; --space-3:12px;
+  --space-4:16px; --space-5:20px; --space-6:24px; --space-8:32px; --space-10:40px;
+  --space-12:48px; --space-16:64px; --space-20:80px; --space-24:96px;
+
+  /* Screen gutter: 16px on mobile, 24px on tablet+, 20px inside sheets. */
+  --gutter-mobile:16px; --gutter-wide:24px; --gutter-sheet:20px;
+
+  --radius-xs:4px; --radius-sm:6px; --radius-md:10px; --radius-lg:14px; --radius-xl:20px;
+  --radius-2xl:28px; --radius-bubble:18px; --radius-sheet:20px; --radius-pill:999px;
+  --radius-squircle:34%;
+
+  /* Fixed chrome + touch. 44px is the floor for anything tappable. */
+  --tap-min:44px;
+  --control-sm:32px; --control-md:40px; --control-lg:48px; --control-xl:56px;
+  --avatar-xs:24px; --avatar-sm:32px; --avatar-md:40px; --avatar-lg:52px; --avatar-xl:80px;
+  --navbar-h:52px; --tabbar-h:56px; --composer-h:52px; --row-h:64px; --row-h-compact:48px;
+  --icon-sm:18px; --icon-md:22px; --icon-lg:26px; --icon-xl:32px;
+  --width-phone:390px; --width-content:720px; --width-page:1200px;
+  --bubble-max:264px;
+}

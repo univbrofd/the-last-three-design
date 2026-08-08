@@ -22,13 +22,27 @@
 
   /* ---- media (image-slot: 写真枠へドロップした実写を localStorage に残す) --- */
   var MEDIA_KEY = 'lt3.appflow.media';
+  /* 同杴してある既定の実写。レポートの「相手の理想像」はここから出る。
+     ユーザーが枠に入れた写真（localStorage）があればそれが優先される */
+  var MEDIA_DEFAULTS = {
+    'report/0': 'assets/ideal/01-night.jpg',   // 夜にだけ灯る人
+    'report/1': 'assets/ideal/02-kitchen.jpg', // 台所に立つ人
+    'report/2': 'assets/ideal/03-morning.jpg', // 朝がいちばん元気な人
+    // Main の 3 枠に載るお題投稿（今日のお題「平日の昼ごはん」）と、自分が出した 1 枚。
+    // Unsplash のフリー素材（License: free to use）を assets/posts/ に同梱。
+    'partner/azumi/latest': 'assets/posts/lunch-azumi.jpg',  // まかないの残りで。
+    'partner/nosuke/latest': 'assets/posts/shop-nosuke.jpg', // 今日も同じ店。
+    'partner/mio/latest': 'assets/posts/desk-mio.jpg',       // 退色の見本になる枠
+    'me/today': 'assets/posts/lunch-me.jpg',                 // 自分の 1 枚（タブに出る）
+  };
+  LT3.mediaDefaults = MEDIA_DEFAULTS;
   var media = {};
   try { media = JSON.parse(localStorage.getItem(MEDIA_KEY) || '{}'); } catch (e) { media = {}; }
   function saveMedia() {
     try { localStorage.setItem(MEDIA_KEY, JSON.stringify(media)); } catch (e) { /* quota: 揮発でよい */ }
   }
   LT3.media = {
-    get: function (key) { return media[key] || ''; },
+    get: function (key) { return media[key] || MEDIA_DEFAULTS[key] || ''; },
     set: function (key, url) { media[key] = url; saveMedia(); render(); },
     clear: function () { media = {}; saveMedia(); render(); },
   };
@@ -166,52 +180,67 @@
            : '<span style="font-size:' + fs + 'px">' + esc(initial) + '</span>') + '</div>';
   };
 
-  /// Flutter の CustomPainter / Material アイコンに対応する線画。
-  LT3.icon = {
-    home: function (color) {
-      return svg(22, 22, '<path d="M4 11 L12 4 L20 11 L20 19 A1 1 0 0 1 19 20 L15 20 L15 14 L9 14 L9 20 L5 20 A1 1 0 0 1 4 19 Z" ' +
-        'fill="none" stroke="' + color + '" stroke-width="1.7" stroke-linejoin="round"/>', 24);
-    },
-    person: function (color) {
-      return svg(22, 22, '<circle cx="12" cy="8" r="3.4" fill="none" stroke="' + color + '" stroke-width="1.7"/>' +
-        '<path d="M5.5 19 C6.9 16 9.5 14.6 12 14.6 C14.5 14.6 17.1 16 18.5 19" fill="none" stroke="' + color +
-        '" stroke-width="1.7" stroke-linecap="round"/>', 24);
-    },
-    camera: function (color) {
-      return svg(21, 16, '<rect x="0.85" y="0.85" width="19.3" height="14.3" rx="4" fill="none" stroke="' + color + '" stroke-width="1.7"/>' +
-        '<circle cx="10.5" cy="8" r="3.5" fill="none" stroke="' + color + '" stroke-width="1.5"/>', null, '0 0 21 16');
-    },
-    photo: function (color) {
-      return svg(18, 15, '<rect x="0.8" y="0.8" width="16.4" height="13.4" rx="4" fill="none" stroke="' + color + '" stroke-width="1.6"/>' +
-        '<circle cx="4.8" cy="4.8" r="2" fill="none" stroke="' + color + '" stroke-width="1.2"/>' +
-        '<path d="M9 17 L16.5 9.5 L22 16" fill="none" stroke="' + color + '" stroke-width="1.6"/>', null, '0 0 18 15');
-    },
-    plane: function (color) {
-      return svg(20, 20, '<path d="M3 11.5 L21 3 L14.5 21 L11.3 13.7 Z" fill="none" stroke="' + color +
-        '" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>' +
-        '<path d="M11.3 13.7 L15.5 9.5" fill="none" stroke="' + color + '" stroke-width="1.8" stroke-linecap="round"/>', 24);
-    },
-    back: function (color, size) {
-      size = size || 14;
-      return svg(size, size, '<path d="M15 4 L7 12 L15 20" fill="none" stroke="' + color + '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>', 24);
-    },
-    reply: function (color) {
-      return svg(18, 18, '<path d="M9 7 L4 11.5 L9 16 M4 11.5 H14 A5 5 0 0 1 19 16.5 V19" fill="none" stroke="' + color +
-        '" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>', 24);
-    },
-    edit: function (color) {
-      return svg(16, 16, '<path d="M4 20 H8 L19 9 L15 5 L4 16 Z M14 6 L18 10" fill="none" stroke="' + color +
-        '" stroke-width="1.6" stroke-linejoin="round"/>', 24);
-    },
-    swap: function (color) {
-      return svg(24, 24, '<path d="M4 8 H16 L13 5 M20 16 H8 L11 19" fill="none" stroke="' + color +
-        '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="0" fill="none"/>', 24);
-    },
+  /// アイコン一式 = Material Symbols Rounded (Kaiwa の唯一のアイコン体系)。
+  /// 手描き SVG は置かない。FILL 軸が状態を持つ: 1 = 選択中 / 0 = 待機・メタ。
+  /// サイズはトークンの 18 / 22 / 26 / 32。当たり判定 44 は呼ぶ側の器が持つ。
+  var GLYPH = {
+    home:    ['home', 26],
+    person:  ['person', 26],
+    camera:  ['photo_camera', 26],
+    photo:   ['image', 22],
+    plane:   ['send', 22],
+    back:    ['arrow_back_ios_new', 22],
+    chevron: ['chevron_right', 22],
+    close:   ['close', 22],
+    swap:    ['cameraswitch', 22],
+    reply:   ['reply', 22],
+    edit:    ['edit_square', 18],
+    heart:   ['favorite', 22],
+    down:    ['expand_more', 22],
   };
-  function svg(w, hh, body, grid, viewBox) {
-    var vb = viewBox || ('0 0 ' + (grid || w) + ' ' + (grid || hh));
-    return '<svg width="' + w + '" height="' + hh + '" viewBox="' + vb + '" xmlns="http://www.w3.org/2000/svg">' + body + '</svg>';
+  function iconSvg(name, color, size, filled) {
+    var g = GLYPH[name];
+    if (!g) return '';
+    var px = size || g[1];
+    return '<span class="msr" aria-hidden="true" style="font-size:' + px + 'px;color:' + (color || 'currentColor') +
+      ";font-variation-settings:'FILL' " + (filled ? 1 : 0) + ",'wght' 400,'GRAD' 0,'opsz' " + px + '">' + g[0] + '</span>';
   }
+  LT3.iconSvg = iconSvg;
+  LT3.iconNames = Object.keys(GLYPH);
+  LT3.icon = {};
+  LT3.iconFill = {};
+  LT3.iconNames.forEach(function (name) {
+    LT3.icon[name] = function (color, size) { return iconSvg(name, color, size); };
+    LT3.iconFill[name] = function (color, size) { return iconSvg(name, color, size, true); };
+  });
+  LT3.icon.heartFill = function (color, size) { return iconSvg('heart', color, size, true); };
+
+  /// ロゴマーク「三つの灯り」。灯り 3 点 + 囲みのヘアライン。
+  /// 灯りは Kaiwa green 1 色。消えている灯りは輪郭だけ = 空き枠の表し方と同じ。
+  LT3.mark = function (opt) {
+    opt = opt || {};
+    var size = opt.size || 64;
+    var lit = opt.lit == null ? 3 : opt.lit;
+    var hair = Math.max(0.36, 24 / size); // 実寸 1px のヘアライン
+    var pts = [[12, 5.8], [6.63, 15.1], [17.37, 15.1]];
+    var body = opt.ring === false ? ''
+      : '<circle cx="12" cy="12" r="10.6" fill="none" stroke="' + (opt.ringColor || '#DFE3E6') +
+        '" stroke-width="' + hair + '"/>';
+    pts.forEach(function (p, i) {
+      var on = i < lit;
+      var st = opt.stagger ? ' class="lightup" style="animation-delay:' + (812 + i * 196) + 'ms"' : '';
+      body += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="2.25"' +
+        (on ? ' fill="' + (opt.color || '#0EAE63') + '"'
+            : ' fill="none" stroke="#C7CCD1" stroke-width="' + hair + '"') + st + '/>';
+    });
+    return '<svg class="mark" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">' + body + '</svg>';
+  };
+
+  /// ワードマーク。M PLUS Rounded 1c 800 の小文字組みで、"three" だけ Kaiwa green。
+  LT3.wordmark = function (opt) {
+    opt = opt || {};
+    return '<div class="wordmark" style="font-size:' + (opt.size || 32) + 'px">the last <i>three</i></div>';
+  };
 
   /* ---- render ----------------------------------------------------------- */
   function render() {
@@ -344,7 +373,7 @@
     ['splash', 'Splash'], ['login', 'Login'], ['onboarding', 'Onboarding'],
     ['main', 'Main'], ['pair', 'PairTimeline'], ['partner', 'PartnerProfile'],
     ['camera', 'Camera'], ['compose', 'Compose'], ['persona', 'Persona'],
-    ['profileEdit', 'ProfileEdit'], ['reportDetail', 'ReportDetail'],
+    ['profileEdit', 'ProfileEdit'],
   ];
   function renderPanel() {
     var el = document.getElementById('panel');

@@ -1,15 +1,15 @@
 /* ============================================================================
-   THE LAST THREE DESIGN SYSTEM — Color & Type tokens (v0.1 確定)
-   Source of truth: この repo が色の canonical。Flutter 側
-   lib/component/ui/resource/DesignColors/DesignColors.dart がこれを鏡写しする。
-   ブランド: 暗い部屋に、三つだけ灯りがある。写真が主役、UI は縁に徹する。
-   アクセントは提灯色 --primary 1 色のみ。危機は赤ではなく退色で表す。
-   ========================================================================== */
+   THE LAST THREE — color & type (Kaiwa Design System 準拠 / v0.2)
+   canonical は Kaiwa Design System。色・書体・余白・陰影・モーションは
+   すべて `_ds/kaiwa-…/styles.css` のトークンが正で、この repo は独自値を持たない。
+   ここに残っているのは、旧・役割トークン (--bg / --primary / --text-1 …) を
+   Kaiwa のセマンティックトークンへ写すだけの薄い層。
 
-/* ---- Webfonts -------------------------------------------------------------
-   Instrument Serif = ブランド／数字（喪失の時間）
-   Zen Kaku Gothic New = UI 日本語 / IBM Plex Mono = メタラベル */
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+   ブランド: 白い面に、みどりのアクセントが 1 つだけ。写真とスタンプが主役、
+   UI は静かに引く。線は 1px のヘアラインが担い、面は白か薄いグレーの平面。
+   グラデーションは使わない。
+   ========================================================================== */
+@import url('../_ds/kaiwa-design-system-c50556c2-19f8-4a5d-b0d2-4bbd29ff401c/styles.css');
 
 :root {
   /* === BASE ============================================================= */
@@ -17,49 +17,69 @@
   --white: #ffffff;
 
   /* ======================================================================
-     ROLE TOKENS — コンポーネントは必ずこの役割トークンを使う。
-     直値・Material 定数色は使わない。
+     ROLE TOKENS — 旧トークン → Kaiwa セマンティック。
+     新しく書くコードは Kaiwa 側の名前 (--bg-app / --accent / --text-primary…)
+     を直に使う。ここは既存コードの互換のためだけに残す。
      ====================================================================== */
   /* 面 */
-  --bg:             #0B0A0C; /* 画面地。ほぼ黒、わずかに紫寄りの冷たさ */
-  --surface:        #151318; /* カード・シート */
-  --surface-raised: #1E1B22; /* 入力欄・チップ・モーダル */
-  --surface-input:  #1E1B22; /* = surface-raised（旧トークン互換） */
-  /* Borders */
-  --border:          rgba(255, 255, 255, 0.10); /* 1px ヘアラインのみ。太い枠は使わない */
-  --border-hairline: rgba(255, 255, 255, 0.10);
+  --bg:             var(--bg-app);      /* 画面地 = 白 */
+  --surface:        var(--surface-card); /* カード・シート = 白 */
+  --surface-raised: var(--bg-subtle);    /* 入力欄・チップ・帯 = 薄グレー */
+  --surface-input:  var(--field-bg);
+  /* Borders — 1px ヘアラインのみ。太い枠は使わない */
+  --border:          var(--border-default);
+  --border-hairline: var(--border-subtle);
 
-  /* 灯り（唯一のアクセント。埋まった枠 / 絆 / CTA / 通知のみ） */
-  --primary:    #E9B26A;
-  --on-primary: #0B0A0C;
+  /* アクセント（Kaiwa green 1 色。CTA / 送信 / 選択 / 絆にだけ使う） */
+  --primary:    var(--accent);
+  --on-primary: var(--text-on-accent);
 
   /* 文字 */
-  --text-1:        #F5F1EA;                   /* 見出し・本文 */
-  --text-2:        rgba(245, 241, 234, 0.64); /* 補助・キャプション */
-  --text-3:        rgba(245, 241, 234, 0.38); /* メタ・非活性 */
-  --text-disabled: rgba(245, 241, 234, 0.38); /* = text-3（非活性は色替えで表す） */
+  --text-1: var(--text-primary);
+  --text-2: var(--text-secondary);
+  --text-3: var(--text-tertiary);
 
-  /* 写真上の可読性の下限。これより薄いスクリムで文字を置かない */
-  --scrim-min: rgba(0, 0, 0, 0.45);
-
-  /* State — 赤・緑のセマンティックカラーは使わない（危機 = 退色で表す） */
+  /* 写真の上に文字を置くときの下限。グラデーションのぼかしではなく
+     インクの平面（scrim）で敷く */
+  --scrim-min: var(--ink-a56);
+  --on-photo:        rgba(255, 255, 255, 0.78);
+  --accent-on-photo: var(--green-200);
+  --accent-on-dark:  var(--green-300);
 
   /* === TYPE ============================================================= */
-  --font-brand: 'Instrument Serif', Georgia, serif;
-  --font-ui:    'Zen Kaku Gothic New', 'Hiragino Sans', system-ui, sans-serif;
-  --font-meta:  'IBM Plex Mono', ui-monospace, monospace;
+  /* --font-ui / --font-display / --font-mono は Kaiwa 側の定義が正。 */
+  --font-brand: var(--font-display); /* ワードマーク・マーケ見出しのみ */
+  --font-meta:  var(--font-ui);      /* 11px 大文字のアイブロウも UI 書体で組む */
+  --font-num:   var(--font-mono);    /* カウントダウン・ID・コード */
   /* 旧エイリアス */
-  --font-latin: var(--font-brand);
+  --font-latin: var(--font-ui);
   --font-jp:    var(--font-ui);
 
-  --type-display: 400 34px/1.15 var(--font-brand);
-  --type-title:   700 20px/1.4  var(--font-ui);
-  --type-body:    400 15px/1.65 var(--font-ui);
-  --type-caption: 400 13px/1.5  var(--font-ui);
-  --type-meta:    500 10px/1.2  var(--font-meta); /* letter-spacing: .16em; 常に大文字 */
-  --type-count:   400 40px/1    var(--font-brand); /* font-variant-numeric: tabular-nums */
+  --type-display: 800 var(--text-3xl)/var(--leading-tight) var(--font-display);
+  --type-title:   var(--weight-bold) var(--text-xl)/var(--leading-snug) var(--font-ui);
+  --type-body:    var(--weight-regular) var(--text-base)/var(--leading-body) var(--font-ui);
+  --type-caption: var(--weight-regular) var(--text-sm)/var(--leading-normal) var(--font-ui);
+  --type-meta:    var(--weight-bold) var(--text-2xs)/1.2 var(--font-ui); /* letter-spacing: var(--tracking-caps) */
+  --type-count:   var(--weight-bold) var(--text-3xl)/1 var(--font-mono); /* font-variant-numeric: tabular-nums */
 
   /* legacy aliases (card.css 互換) */
   --fg-2: var(--text-2);
   --fg-3: var(--text-3);
+}
+
+/* Material Symbols Rounded — アイコンは必ずこの 1 系統。手描き SVG は置かない。
+   FILL 軸が状態を持つ: 1 = 選択中・ブランドクローム / 0 = 待機・メタ */
+.msr {
+  font-family: 'Material Symbols Rounded';
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1;
+  display: inline-block;
+  direction: ltr;
+  white-space: nowrap;
+  letter-spacing: normal;
+  text-transform: none;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
 }

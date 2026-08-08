@@ -2,36 +2,32 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { width: 100%; }
 body {
-  font-family: var(--font-latin);
-  background: #0d0d0f;
-  color: var(--white);
+  font-family: var(--font-ui);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   padding: 22px 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
-.card-photo-bg {            /* for cards that want a glass-over-photo feel */
-  background:
-    linear-gradient(160deg, rgba(0,0,0,0.45), rgba(0,0,0,0.7)),
-    radial-gradient(120% 120% at 80% 110%, #3a2a52, #11131f 70%);
-}
+.card-photo-bg { background: var(--bg-sunken); }
 .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .col { display: flex; flex-direction: column; gap: 4px; }
 .eyebrow {
-  font-family: var(--font-latin); font-weight: 600; font-size: 10px;
-  letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-3);
+  font-family: var(--font-ui); font-weight: 700; font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-tertiary);
 }
-.mono { font-family: var(--font-latin); font-size: 10.5px; color: var(--fg-2); letter-spacing: .01em; }
+.mono { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
 
 /* swatches */
 .sw { display: flex; flex-direction: column; gap: 7px; }
 .sw .chip {
-  width: 100%; height: 56px; border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.10);
+  width: 100%; height: 56px; border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
 }
-.sw .nm { font-weight: 600; font-size: 11.5px; color: var(--white); }
-.sw .hx { font-size: 10px; color: var(--fg-2); font-variant-numeric: tabular-nums; }
+.sw .nm { font-weight: 700; font-size: 12px; color: var(--text-primary); }
+.sw .hx { font-size: 11px; color: var(--text-secondary); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .grid { display: grid; gap: 12px; }
 
 /* ============================================================================
@@ -42,15 +38,15 @@ body {
    ========================================================================== */
 .phone {
   position: relative; width: 402px; height: 874px; flex: none; margin: 0 auto;
-  border-radius: 55px; overflow: hidden; background: var(--bg);
-  box-shadow: 0 0 0 2px #2a2a31, 0 0 0 12px #0a0a0e, 0 0 0 13px #303039,
-              0 36px 90px rgba(0,0,0,.62);
-  isolation: isolate; font-family: var(--font-jp); -webkit-font-smoothing: antialiased;
+  border-radius: 55px; overflow: hidden; background: var(--bg-app);
+  box-shadow: 0 0 0 2px #C7CCD1, 0 0 0 12px #252B31, 0 0 0 13px #3D454D,
+              var(--shadow-4);
+  isolation: isolate; font-family: var(--font-ui); -webkit-font-smoothing: antialiased;
 }
 .phone * { box-sizing: border-box; }
 /* legacy 393×852 notch frame — apply as `class="phone phone-legacy"` */
 .phone-legacy { width: 393px; height: 852px; border-radius: 44px;
-  box-shadow: 0 0 0 2px #2a2a31, 0 0 0 11px #0a0a0e, 0 0 0 12px #303039, 0 36px 90px rgba(0,0,0,.62); }
+  box-shadow: 0 0 0 2px #C7CCD1, 0 0 0 11px #252B31, 0 0 0 12px #3D454D, var(--shadow-4); }
 
 /* full-bleed content + safe-area zones (used by screen specimens) */
 .phone .screen { position: absolute; inset: 0; }
@@ -70,9 +66,12 @@ body {
 .statusbar {
   position: absolute; top: 0; left: 0; right: 0; height: 62px; z-index: 60;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 36px; pointer-events: none; font-family: var(--font-latin); color: #fff;
+  padding: 0 36px; pointer-events: none; font-family: var(--font-ui); color: var(--text-primary);
 }
-.statusbar .time { font-weight: 600; font-size: 16px; letter-spacing: .02em; }
+/* カメラのように地が黒い画面だけ、ステータスバーと home indicator を白へ返す */
+.phone:has(.camera) .statusbar { color: #fff; }
+.phone:has(.camera) .home-ind { background: rgba(255,255,255,.9); }
+.statusbar .time { font-weight: 700; font-size: 16px; letter-spacing: .02em; }
 .statusbar .sys { display: flex; align-items: center; gap: 7px; }
 .statusbar .sys svg { display: block; }
 .phone-legacy .statusbar { height: 54px; padding-top: 14px; align-items: flex-start; }
@@ -80,6 +79,6 @@ body {
 /* home indicator — 34pt safe area; white bar 140×5 at bottom 8 */
 .home-ind {
   position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%);
-  width: 140px; height: 5px; border-radius: 99px; background: rgba(255,255,255,.9);
+  width: 140px; height: 5px; border-radius: var(--radius-pill); background: var(--neutral-900);
   z-index: 60; pointer-events: none;
 }

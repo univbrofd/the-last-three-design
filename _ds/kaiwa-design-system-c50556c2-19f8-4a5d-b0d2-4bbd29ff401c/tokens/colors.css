@@ -1,0 +1,34 @@
+/* Kaiwa palette — base values. Semantic aliases live in semantic.css. */
+:root{
+  /* Kaiwa green — the single brand accent. 500 is the brand colour. */
+  --green-50:#EAF9F0; --green-100:#CBF0DC; --green-200:#9CE3BE; --green-300:#63D298;
+  --green-400:#2CC077; --green-500:#0EAE63; --green-600:#0C9756; --green-700:#0A7C47;
+  --green-800:#075E36; --green-900:#043D23;
+
+  /* Blue — links, info, and the default chat wallpaper family. Never a second brand colour. */
+  --blue-50:#EDF4FE; --blue-100:#D3E4FC; --blue-200:#B4CFEC; --blue-300:#8CB2D8;
+  --blue-500:#2E7CF6; --blue-600:#1E63D0; --blue-700:#174FA6;
+
+  /* Yellow — coins, points, sticker/premium highlights. Accent only, never a surface. */
+  --yellow-50:#FFF7E6; --yellow-300:#FFD166; --yellow-500:#FFB020; --yellow-700:#B87500;
+
+  /* Red — unread badges, destructive, errors. */
+  --red-50:#FEEEEC; --red-300:#F5928A; --red-500:#E93A32; --red-700:#B3221B;
+
+  /* Neutrals — very slightly cool, so white surfaces read clean next to the green. */
+  --neutral-0:#FFFFFF; --neutral-25:#FAFBFC; --neutral-50:#F4F6F7; --neutral-100:#EBEEF0;
+  --neutral-200:#DFE3E6; --neutral-300:#C7CCD1; --neutral-400:#A4ABB2; --neutral-500:#79828B;
+  --neutral-600:#59626B; --neutral-700:#3D454D; --neutral-800:#252B31; --neutral-900:#14181C;
+  --neutral-950:#0B0E11;
+
+  /* Chat-specific raws (the one place colour is decorative, not functional). */
+  --chat-wallpaper:#8CB2D8;
+  --chat-wallpaper-alt:#A9C6E0;
+  --chat-wallpaper-dark:#1B2430;
+
+  /* Alpha ramps for scrims, presses and hairlines over unknown backgrounds. */
+  --ink-a04:rgba(20,24,28,.04); --ink-a08:rgba(20,24,28,.08); --ink-a12:rgba(20,24,28,.12);
+  --ink-a24:rgba(20,24,28,.24); --ink-a40:rgba(20,24,28,.40); --ink-a56:rgba(20,24,28,.56);
+  --white-a12:rgba(255,255,255,.12); --white-a24:rgba(255,255,255,.24);
+  --white-a72:rgba(255,255,255,.72); --white-a88:rgba(255,255,255,.88);
+}

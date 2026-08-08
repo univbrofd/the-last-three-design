@@ -4,12 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>the last three — AppFlow プロトタイプ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Kaiwa Design System が色・書体・余白・陰影・モーションの canonical -->
+<link rel="stylesheet" href="../../_ds/kaiwa-design-system-c50556c2-19f8-4a5d-b0d2-4bbd29ff401c/styles.css">
 <link rel="stylesheet" href="../../DesignSystem/colors_and_type.css">
 <link rel="stylesheet" href="../../DesignSystem/preview/card.css">
 <link rel="stylesheet" href="app.css">
 </head>
 <body class="lt3-body">
+<style>
+  /* screen-only モード (?screen / #screen): studio chrome と端末 chrome を外し、
+     app 画面だけを縦フルスクリーン描画する。既定の studio 表示は変えない */
+  body.screen-only { padding: 0; gap: 0; min-height: 100dvh; align-items: center; justify-content: center; }
+  body.screen-only .lt3-stage { gap: 0; }
+  body.screen-only .lt3-panel,
+  body.screen-only .dynamic-island,
+  body.screen-only .statusbar,
+  body.screen-only .home-ind { display: none; }
+  body.screen-only .phone {
+    width: min(100vw, calc(100dvh * 402 / 874)); height: 100dvh;
+    border-radius: 0; box-shadow: none; margin: 0;
+  }
+</style>
+<script>
+  if (/[?&]screen\b/.test(location.search) || /\bscreen\b/.test(location.hash)) document.body.classList.add('screen-only');
+</script>
 
 <div class="lt3-stage">
   <!-- iPhone 17 / 402×874 (DesignSystem/preview/card.css の .phone が canonical) -->
@@ -18,9 +38,9 @@
     <div class="statusbar">
       <div class="time">9:41</div>
       <div class="sys">
-        <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
-        <svg width="17" height="12" viewBox="0 0 17 12" fill="#fff"><path d="M8.5 11.4 5.9 8.6a3.7 3.7 0 0 1 5.2 0zM3.4 6.1a7.3 7.3 0 0 1 10.2 0l1.7-1.8a9.7 9.7 0 0 0-13.6 0z"/></svg>
-        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" fill="none" stroke="rgba(255,255,255,.4)"/><rect x="2" y="2" width="16" height="9" rx="2" fill="#fff"/><path d="M24 4.5v4a2.2 2.2 0 0 0 0-4z" fill="rgba(255,255,255,.5)"/></svg>
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 11.4 5.9 8.6a3.7 3.7 0 0 1 5.2 0zM3.4 6.1a7.3 7.3 0 0 1 10.2 0l1.7-1.8a9.7 9.7 0 0 0-13.6 0z"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2" y="2" width="16" height="9" rx="2" fill="currentColor"/><path d="M24 4.5v4a2.2 2.2 0 0 0 0-4z" fill="currentColor" fill-opacity=".5"/></svg>
       </div>
     </div>
 

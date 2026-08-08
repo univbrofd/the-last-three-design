@@ -1,0 +1,22 @@
+/* Type. JP-first: every stack falls back to a Japanese system gothic. */
+:root{
+  --font-ui:'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',system-ui,sans-serif;
+  --font-display:'M PLUS Rounded 1c','Hiragino Maru Gothic ProN','Zen Kaku Gothic New',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --font-icon:'Material Symbols Rounded';
+
+  /* Ladder — curated, ~1.22 step. Mobile UI lives between 11 and 21. */
+  --text-2xs:11px; --text-xs:12px; --text-sm:13px; --text-base:15px; --text-md:16px;
+  --text-lg:18px; --text-xl:21px; --text-2xl:25px; --text-3xl:31px; --text-4xl:39px; --text-5xl:49px;
+
+  /* Line heights. JP needs more air than Latin: body never below 1.6. */
+  --leading-tight:1.15; --leading-snug:1.3; --leading-normal:1.5; --leading-body:1.7; --leading-loose:1.85;
+
+  --weight-regular:400; --weight-medium:500; --weight-bold:700; --weight-black:900;
+
+  /* Tracking. JP gothic gets a hair of positive tracking; display gets negative. */
+  --tracking-display:-.02em; --tracking-tight:-.01em; --tracking-normal:0; --tracking-jp:.01em;
+  --tracking-caps:.12em;
+
+  --numeric-tabular:'tnum' 1,'lnum' 1; /* @kind other */
+}

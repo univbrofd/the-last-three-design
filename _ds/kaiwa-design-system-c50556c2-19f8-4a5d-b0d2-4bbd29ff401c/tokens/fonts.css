@@ -1,0 +1,9 @@
+/* Webfonts. SUBSTITUTION NOTE: no font binaries were supplied with the brief, so
+   the closest Google Fonts equivalents are used and loaded from the Google CDN.
+   Zen Kaku Gothic New = neutral JP/Latin gothic for UI + body.
+   M PLUS Rounded 1c   = friendly rounded display for brand & marketing.
+   JetBrains Mono      = tokens, code, IDs.
+   Replace with licensed binaries + local @font-face when available. */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Iconography: Material Symbols Rounded (see readme ICONOGRAPHY — substitution) */
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
